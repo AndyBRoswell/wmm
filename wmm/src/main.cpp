@@ -36,15 +36,18 @@ int main(int argc, char* argv[]) {
 
     // default theme
     {
-//        QQuickStyle::setStyle("Universal"); // default theme of the start window
+        QQuickStyle::setStyle("Universal"); // default theme of the start window
+
 //        QFile DarkThemeStyleSheetFile("src/thm/dark/style.qss");
 //        DarkThemeStyleSheetFile.open(QIODevice::ReadOnly);
 //        App.setStyleSheet(DarkThemeStyleSheetFile.readAll());
     }
     {
-        qApp->setStyle(QStyleFactory::create("fusion"));
+//        qApp->setStyle(QStyleFactory::create("fusion"));
+        qApp->setStyle(QStyleFactory::create("windows"));
+
         QPalette palette;
-        palette.setColor(QPalette::Window, QColor(53,53,53));
+        palette.setColor(QPalette::Window, Qt::black);
         palette.setColor(QPalette::WindowText, Qt::white);
         palette.setColor(QPalette::Base, QColor(15,15,15));
         palette.setColor(QPalette::AlternateBase, QColor(53,53,53));
