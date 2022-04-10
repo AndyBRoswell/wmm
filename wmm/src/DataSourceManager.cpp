@@ -3,8 +3,7 @@
 
 #include <QGridLayout>
 
-namespace WMM = WritingMaterialsManager;
-using namespace WMM;
+using namespace WritingMaterialsManager;
 
 DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), UI(new Ui::DataSourceManager) {
     UI->setupUi(this);

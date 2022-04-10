@@ -5,6 +5,7 @@
 #include <QTranslator>
 
 #include <QQuickStyle>
+#include <QFile>
 
 // headers of wmm
 #include "DataSourceManager.h"
@@ -31,7 +32,11 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // default theme
     QQuickStyle::setStyle("Universal"); // default theme of the start window
+    QFile DarkThemeStyleSheetFile("src/thm/dark/style.qss");
+    DarkThemeStyleSheetFile.open(QIODevice::ReadOnly);
+    App.setStyleSheet(DarkThemeStyleSheetFile.readAll());
 
     QQmlApplicationEngine QMLEngine;
 //    const QUrl MainQMLFile(u"qrc:/wmm/src/main.qml"_qs);
