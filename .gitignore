@@ -1,7 +1,7 @@
 /.vs/*
 /x64/*
 /x86/*
-/3rd/*
+/wmm/3rd/*
 /build/*
 /out/*
 /wmm/.idea/*
