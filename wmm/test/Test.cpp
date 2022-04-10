@@ -61,7 +61,7 @@ int WATest::Start() {
     std::vector<std::function<void(void)>> TestFunctions{
 //        SimpleTest,
 //        Qt::EncodingOfFileRW,
-        Qt::Quick::TextAreaKeyEvent,
+//        Qt::Quick::TextAreaKeyEvent,
 //        simdjson::Demo,
 //        RapidJSON::Demo,
 //        mongocxx::Tutorial,
@@ -116,27 +116,11 @@ void WATest::Qt::EncodingOfFileRW() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-//void WATest::Qt::Widgets::MixWithWidgetsTest() {
-//    using namespace std::chrono_literals;
-
-//    LastStartedFn.assign(__FUNCTION__);
-
-//    // Widgets must be created in the GUI thread
-//    // If typename and identifier are identical when using Widgets, compilation may fail and maybe without any error indications.
-//    // So far I didn't notice this problem of ambiguity when using Quick.
-//    TextEditor* const TextEditor = new class TextEditor();
-//    TextEditor->showMaximized();
-////    std::this_thread::sleep_for(3s);
-////    delete TextEditor;
-
-//    LastFinishedFn.assign(__FUNCTION__);
-//}
-
 void WATest::Qt::Quick::TextAreaKeyEvent() {
     LastStartedFn.assign(__FUNCTION__);
 
     // preparation
-    QList < QObject * > TextEditors = MainWindow->findChildren<QObject*>("TextEditor");
+    QList<QObject*> TextEditors = MainWindow->findChildren<QObject*>("TextEditor");
     const QByteArray DemoJSONString("{\n\"text\": \"Hello JSON\"\n}");
     const QJsonDocument DemoJSONDocument = QJsonDocument::fromJson(DemoJSONString);
     const QByteArray IndentedDemoJSONString = DemoJSONDocument.toJson(); // QJsonDocument::Indented as default arg

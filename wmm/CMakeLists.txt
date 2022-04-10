@@ -31,6 +31,8 @@ set(SOURCES
         src/predefined.h
         src/global.cpp
 
+        src/MongoDBAccessor.cpp
+
         # test
         test/Test.cpp
         )
