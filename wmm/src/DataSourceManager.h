@@ -16,7 +16,7 @@ namespace WritingMaterialsManager {
         ~DataSourceManager();
 
     private:
-        Ui::DataSourceManager* ui;
+        Ui::DataSourceManager* UI;
     };
 }
 

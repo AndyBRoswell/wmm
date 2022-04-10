@@ -6,14 +6,14 @@
 namespace WMM = WritingMaterialsManager;
 using namespace WMM;
 
-DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), ui(new WMM::Ui::DataSourceManager) {
-    ui->setupUi(this);
+DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), UI(new Ui::DataSourceManager) {
+    UI->setupUi(this);
 
     // preparation
     centralWidget()->setLayout(new QGridLayout);
-    centralWidget()->layout()->addWidget(ui->DataSourceTab);
+    centralWidget()->layout()->addWidget(UI->DataSourceTab);
 }
 
 DataSourceManager::~DataSourceManager() {
-    delete ui;
+    delete UI;
 }
