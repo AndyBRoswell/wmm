@@ -1,10 +1,13 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 
 #include <QLocale>
 #include <QTranslator>
 
 #include <QQuickStyle>
+
+// headers of wmm
+#include "DataSourceManager.h"
 
 // tests
 #include "test/Test.h"
@@ -15,12 +18,12 @@ using namespace std;
 using namespace std::chrono_literals;
 using namespace WritingMaterialsManager;
 
-int main(int argc, char *argv[]) {
-    QGuiApplication App(argc, argv);
+int main(int argc, char* argv[]) {
+    QApplication App(argc, argv);
 
     QTranslator Translator;
     const QStringList UILanguages = QLocale::system().uiLanguages();
-    for (const QString &Locale : UILanguages) {
+    for (const QString& Locale: UILanguages) {
         const QString baseName = "wmm_" + QLocale(Locale).name();
         if (Translator.load(":/i18n/" + baseName)) {
             App.installTranslator(&Translator);
@@ -34,11 +37,14 @@ int main(int argc, char *argv[]) {
 //    const QUrl MainQMLFile(u"qrc:/wmm/src/main.qml"_qs);
     const QUrl MainQMLFile = QUrl::fromLocalFile(u"src/main.qml"_qs);
     QObject::connect(&QMLEngine, &QQmlApplicationEngine::objectCreated, &App,
-                     [MainQMLFile](QObject *Obj, const QUrl &ObjURL) { if (!Obj && MainQMLFile == ObjURL) QCoreApplication::exit(-1); },
+                     [MainQMLFile](QObject* Obj, const QUrl& ObjURL) { if (!Obj && MainQMLFile == ObjURL) QCoreApplication::exit(-1); },
                      Qt::QueuedConnection);
     QMLEngine.load(MainQMLFile);
 
     int ret = Test::Start();
+
+    auto DataSourceManager = new class DataSourceManager();
+    DataSourceManager->showMaximized();
 
     return App.exec();
 }
