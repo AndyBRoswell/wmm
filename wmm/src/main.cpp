@@ -22,7 +22,8 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle("Universal"); // default theme of the start window
 
     QQmlApplicationEngine engine;
-    const QUrl url(u"qrc:/wmm/main.qml"_qs);
+//    const QUrl url(u"qrc:/wmm/src/main.qml"_qs);
+    const QUrl url = QUrl::fromLocalFile(u"src/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated, &app,
                      [url](QObject *obj, const QUrl &objUrl) { if (!obj && url == objUrl) QCoreApplication::exit(-1); },
                      Qt::QueuedConnection);

@@ -1,0 +1,44 @@
+#include "MongoDBAccessor.h"
+
+// mongocxx
+#include <bsoncxx/json.hpp>
+
+using namespace WritingMaterialsManager;
+
+const mongocxx::instance MongoDBAccessor::mongocxxDriver{};
+
+MongoDBAccessor::MongoDBAccessor(const char* const MongoDBURI) :
+    DBURI(mongocxx::uri(MongoDBURI)),
+    Client(DBURI) {}
+
+QByteArray MongoDBAccessor::GetDatabasesInformation() {
+    mongocxx::cursor DBInfoCur = Client.list_databases();
+    QByteArray Result = "[";
+    for (auto&& DBInfoDoc: DBInfoCur) {
+        Result.append(bsoncxx::to_json(DBInfoDoc).c_str()).append(',');
+    }
+    Result.replace(Result.length() - 2, 1, "]");
+    return Result;
+}
+
+QByteArray MongoDBAccessor::GetCollectionsInformation(mongocxx::database& Database) {
+    mongocxx::cursor CollInfoCur = Database.list_collections();
+    QByteArray Result = "[";
+    for (auto&& CollInfoDoc: CollInfoCur) {
+        Result.append(bsoncxx::to_json(CollInfoDoc).c_str()).append(',');
+    }
+    Result.replace(Result.length() - 2, 1, "]");
+    return Result;
+}
+
+QByteArray MongoDBAccessor::GetDBsAndCollsInfo() {
+    mongocxx::cursor DBInfoCur = Client.list_databases();
+    QByteArray Result = "[";
+    for (auto&& DBInfoDoc: DBInfoCur) {
+        Result.append(bsoncxx::to_json(DBInfoDoc).c_str()).append(R"(,"Collections":)");
+        mongocxx::database Database = Client[DBInfoDoc["name"].get_utf8().value];
+        Result.append(GetCollectionsInformation(Database));
+    }
+    Result.replace(Result.length() - 2, 1, "]");
+    return Result;
+}
