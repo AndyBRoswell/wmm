@@ -1,7 +1,12 @@
 #ifndef DATASOURCEMANAGER_H
 #define DATASOURCEMANAGER_H
 
+#include <memory>
+
 #include <QMainWindow>
+#include <QTreeView>
+
+#include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
     namespace Ui {
@@ -16,7 +21,16 @@ namespace WritingMaterialsManager {
         ~DataSourceManager();
 
     private:
+        class Page: public QWidget {
+        public:
+            Page();
+
+            std::shared_ptr<QTreeView> TreeView;
+        };
+
         Ui::DataSourceManager* UI;
+
+        MongoDBAccessor MongoDBAccessor;
     };
 }
 

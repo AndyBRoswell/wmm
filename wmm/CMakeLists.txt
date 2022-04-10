@@ -36,6 +36,9 @@ set(SOURCES
         src/DataSourceManager.cpp
         src/DataSourceManager.h
         src/DataSourceManager.ui
+        
+        src/QtGUITreeModel.cpp
+        src/QtGUITreeModel.h
 
         src/MongoDBAccessor.cpp
         src/MongoDBAccessor.h
