@@ -1,0 +1,10 @@
+prefix=D:/UserData/repos/writing-assistant/writing_assistant/3rd/install/mongo-c-driver-1.21.0/Release
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${exec_prefix}/include
+
+Name: libbson
+Description: The libbson BSON serialization library.
+Version: 1.21.0
+Libs: -L${libdir} -lbson-1.0
+Cflags: -I${includedir}/libbson-1.0
