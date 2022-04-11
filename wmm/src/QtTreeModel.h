@@ -8,25 +8,27 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
+        using lsize_t = int; // l -> local
+
         class TreeItem {
         public:
             explicit TreeItem(const QList<QVariant>& Data, TreeItem* Parent = nullptr);
             ~TreeItem();
 
-            TreeItem* Child(int Number);
-            int ChildCount() const;
-            int ColumnCount() const;
-            QVariant Data(int Column) const;
-            bool InsertChildren(int Position, int Count, int Columns);
-            bool InsertColumns(int Position, int Columns);
+            TreeItem* Child(lsize_t Number);
+            lsize_t ChildCount() const;
+            lsize_t ColumnCount() const;
+            QVariant Data(lsize_t Column) const;
+            bool InsertChildren(lsize_t Position, lsize_t Count, lsize_t Columns);
+            bool InsertColumns(lsize_t Position, lsize_t Columns);
             TreeItem* Parent();
-            bool RemoveChildren(int Position, int Count);
-            bool RemoveColumns(int Position, int Columns);
-            int ChildNumber() const;
-            bool SetData(int Column, const QVariant& Value);
+            bool RemoveChildren(lsize_t Position, lsize_t Count);
+            bool RemoveColumns(lsize_t Position, lsize_t Columns);
+            lsize_t ChildNumber() const;
+            bool SetData(lsize_t Column, const QVariant& Value);
 
         private:
-            QList<TreeItem*> ChildItems;
+            QList<TreeItem*> ChildItem;
             QList<QVariant> ItemData;
             TreeItem* ParentItem;
         };
@@ -34,17 +36,20 @@ namespace WritingMaterialsManager {
         explicit QtTreeModel(QObject* Parent = nullptr);
 
         // Header:
+
         QVariant headerData(int Section, Qt::Orientation Orientation, int Role = Qt::DisplayRole) const override;
         bool setHeaderData(int Section, Qt::Orientation Orientation, const QVariant& Value, int Role = Qt::EditRole) override;
 
         // Basic functionality:
-        QModelIndex index(int Row, int Column, const QModelIndex& Parent = QModelIndex()) const override;
+
+        QModelIndex index(lsize_t Row, lsize_t Column, const QModelIndex& Parent = QModelIndex()) const override;
         QModelIndex parent(const QModelIndex& Index) const override;
 
-        int rowCount(const QModelIndex& Parent = QModelIndex()) const override;
-        int columnCount(const QModelIndex& Parent = QModelIndex()) const override;
+        lsize_t rowCount(const QModelIndex& Parent = QModelIndex()) const override;
+        lsize_t columnCount(const QModelIndex& Parent = QModelIndex()) const override;
 
         // Fetch data dynamically:
+
         bool hasChildren(const QModelIndex& Parent = QModelIndex()) const override;
 
         bool canFetchMore(const QModelIndex& Parent) const override;
@@ -53,17 +58,20 @@ namespace WritingMaterialsManager {
         QVariant data(const QModelIndex& Index, int Role = Qt::DisplayRole) const override;
 
         // Editable:
+
         bool setData(const QModelIndex& Index, const QVariant& Value, int Role = Qt::EditRole) override;
 
         Qt::ItemFlags flags(const QModelIndex& Index) const override;
 
         // Add data:
-        bool insertRows(int Row, int Count, const QModelIndex& Parent = QModelIndex()) override;
-        bool insertColumns(int Column, int Count, const QModelIndex& Parent = QModelIndex()) override;
+
+        bool insertRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
+        bool insertColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
 
         // Remove data:
-        bool removeRows(int Row, int Count, const QModelIndex& Parent = QModelIndex()) override;
-        bool removeColumns(int Column, int Count, const QModelIndex& Parent = QModelIndex()) override;
+
+        bool removeRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
+        bool removeColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
     private:
     };
 }
