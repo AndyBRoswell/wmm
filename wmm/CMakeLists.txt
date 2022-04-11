@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(writing_assistant VERSION 0.1 LANGUAGES CXX)
+project(wmm VERSION 0.1 LANGUAGES CXX)
 
 # basic options
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -30,26 +30,41 @@ set(SOURCES
         src/main.cpp
         src/predefined.h
         src/global.cpp
+        src/global.h
+
+        src/thm/dark/style.qrc
+        src/DataSourceManager.cpp
+        src/DataSourceManager.h
+        src/DataSourceManager.ui
+
+        src/QtGUITreeModel.cpp
+        src/QtGUITreeModel.h
+
+        src/MongoDBAccessor.cpp
+        src/MongoDBAccessor.h
 
         # test
         test/Test.cpp
+        test/QFileSystemModelDialog.cpp
+        test/QFileSystemModelDialog.h
+        test/QFileSystemModelDialog.ui
         )
 
 set(TS_FILES
-        writing_assistant_en_US.ts
+        wmm_en_US.ts
         )
 
-qt_add_executable(appwriting_assistant
+qt_add_executable(appwmm
         ${SOURCES}
         )
 
-qt_add_qml_module(appwriting_assistant
-        URI writing_assistant
+qt_add_qml_module(appwmm
+        URI wmm
         VERSION 1.0
         QML_FILES src/main.qml
         )
 
-set_target_properties(appwriting_assistant PROPERTIES
+set_target_properties(appwmm PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -57,17 +72,16 @@ set_target_properties(appwriting_assistant PROPERTIES
         WIN32_EXECUTABLE TRUE
         )
 
-target_compile_definitions(appwriting_assistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(appwriting_assistant PUBLIC Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
+target_compile_definitions(appwmm PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+target_link_libraries(appwmm PUBLIC Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
 
 if (QT_VERSION_MAJOR EQUAL 6)
-    qt_import_qml_plugins(appwriting-assistant)
-    qt_finalize_executable(appwriting-assistant)
+    qt_import_qml_plugins(appwmm)
+    qt_finalize_executable(appwmm)
 endif ()
 
 # includes
-include_directories(appwriting-assistant PUBLIC "include")
-include_directories(appwriting-assistant PUBLIC "src")
+include_directories(appwmm PUBLIC "src")
 
 # root paths
 set(DEP_ROOT "3rd/install/${CMAKE_CXX_COMPILER_ID}")
@@ -87,22 +101,23 @@ list(APPEND MONGO_LIBS ${BSON})
 list(APPEND MONGO_LIBS ${MONGOC})
 list(APPEND MONGO_LIBS ${BSONCXX})
 list(APPEND MONGO_LIBS ${MONGOCXX})
-target_link_libraries(appwriting_assistant LINK_PUBLIC ${MONGO_LIBS})
-include_directories(appwriting_assistant PUBLIC ${MONGO_INCLUDE_DIR})
+target_link_libraries(appwmm LINK_PUBLIC ${MONGO_LIBS})
+include_directories(appwmm PUBLIC ${MONGO_INCLUDE_DIR})
 
 # dependency: JSON libs
 find_library(SIMDJSON simdjson "${DEP_ROOT}/simdjson-1.0.2/${CMAKE_BUILD_TYPE}/lib")
 list(APPEND JSON_INCLUDE_DIR "${DEP_ROOT}/simdjson-1.0.2/${CMAKE_BUILD_TYPE}/include")
 list(APPEND JSON_INCLUDE_DIR "${DEP_ROOT}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")
 list(APPEND JSON_LIBS ${SIMDJSON})
-target_link_libraries(appwriting_assistant LINK_PUBLIC ${JSON_LIBS})
-include_directories(appwriting_assistant PUBLIC ${JSON_INCLUDE_DIR})
+target_link_libraries(appwmm LINK_PUBLIC ${JSON_LIBS})
+include_directories(appwmm PUBLIC ${JSON_INCLUDE_DIR})
 
 # dependency: DuckX
 find_library(DUCKX duckx "${DEP_ROOT}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/lib")
-target_link_libraries(appwriting_assistant LINK_PUBLIC ${DUCKX})
-include_directories(appwriting_assistant PUBLIC ${DEP_ROOT}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include)
+target_link_libraries(appwmm LINK_PUBLIC ${DUCKX})
+include_directories(appwmm PUBLIC ${DEP_ROOT}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include)
 
 # copy essential data
 file(COPY "src/main.qml" DESTINATION "${PROJECT_BINARY_DIR}/src")
+file(COPY "src/thm" DESTINATION "${PROJECT_BINARY_DIR}/src")
 file(COPY "test/test-data" DESTINATION "${PROJECT_BINARY_DIR}/test")
