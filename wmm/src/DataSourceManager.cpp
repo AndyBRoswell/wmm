@@ -18,6 +18,14 @@ DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(
     centralWidget()->setLayout(new QGridLayout);
     centralWidget()->layout()->addWidget(UI->DataSourceTab);
 
+    {
+        auto* dirModel = new QFileSystemModel(this);
+        dirModel->setRootPath("C:/");
+        auto* treeView = new QTreeView(this);
+        treeView->setModel(dirModel);
+        centralWidget()->layout()->addWidget(treeView);
+    }
+
     Page* const MongoDBPage = new Page(centralWidget());
     QtGUITreeModel MongoDBInfoTree(MongoDBPage);
     MongoDBInfoTree.FromJSON(MongoDBAccessor.GetDBsAndCollsInfo());
@@ -25,11 +33,10 @@ DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(
 
     Page* const FileSystemPage = new Page(centralWidget());
     QFileSystemModel FileSystemTree(FileSystemPage);
-//    FileSystemTree.setRootPath(QDir::currentPath());
-    FileSystemTree.setRootPath("C:/");
+    FileSystemTree.setRootPath(QDir::currentPath());
     FileSystemTree.setFilter(QDir::AllDirs);
     FileSystemPage->TreeView->setModel(&FileSystemTree);
-//    FileSystemPage->TreeView->setRootIndex(FileSystemTree.index(QDir::currentPath()));
+    FileSystemPage->TreeView->setRootIndex(FileSystemTree.index(QDir::currentPath()));
 
     UI->DataSourceTab->addTab(MongoDBPage, "MongoDB");
     UI->DataSourceTab->addTab(FileSystemPage, "File System");
