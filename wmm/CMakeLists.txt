@@ -45,6 +45,9 @@ set(SOURCES
 
         # test
         test/Test.cpp
+        test/QFileSystemModelDialog.cpp
+        test/QFileSystemModelDialog.h
+        test/QFileSystemModelDialog.ui
         )
 
 set(TS_FILES

@@ -45,6 +45,8 @@
 // custom includes
 #include "global.h"
 
+#include "QFileSystemModelDialog.h"
+
 //#include "TextEditor.h"
 #include "MongoDBAccessor.h"
 
@@ -119,7 +121,8 @@ void WMMTest::Qt::EncodingOfFileRW() {
 void WMMTest::Qt::Widgets::Demo() {
     LastStartedFn.assign(__FUNCTION__);
 
-    
+    auto* qFileSystemDialog = new QFileSystemModelDialog();
+    qFileSystemDialog->showMaximized();
 
     LastFinishedFn.assign(__FUNCTION__);
 }

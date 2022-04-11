@@ -26,6 +26,7 @@ DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(
     Page* const FileSystemPage = new Page(centralWidget());
     QFileSystemModel FileSystemTree(FileSystemPage);
     FileSystemTree.setRootPath(QDir::currentPath());
+    FileSystemTree.setFilter(QDir::AllDirs);
     FileSystemPage->TreeView->setModel(&FileSystemTree);
     FileSystemPage->TreeView->setRootIndex(FileSystemTree.index(QDir::currentPath()));
 
