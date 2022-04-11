@@ -23,7 +23,7 @@ DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), UI(
     MongoDBPage->TreeView->setModel(&MongoDBInfoTree);
 
     Page* const FileSystemPage = new Page;
-    QFileSystemModel FileSystemTree;
+    QFileSystemModel FileSystemTree(FileSystemPage);
     FileSystemTree.setRootPath(QDir::currentPath());
     FileSystemPage->TreeView->setModel(&FileSystemTree);
     FileSystemPage->TreeView->setRootIndex(FileSystemTree.index(QDir::currentPath()));
