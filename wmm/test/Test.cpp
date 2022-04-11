@@ -69,7 +69,7 @@ int WMMTest::Start() {
 //        mongocxx::Tutorial,
         mongocxx::CustomDataDemo,
 //        DuckX::QuickStart,
-        Qt::Widgets::Demo,
+//        Qt::Widgets::Demo,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
