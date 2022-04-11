@@ -1,10 +1,7 @@
 #include "qfilesystemmodeldialog.h"
 #include "ui_qfilesystemmodeldialog.h"
 
-QFileSystemModelDialog::QFileSystemModelDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::QFileSystemModelDialog)
-{
+QFileSystemModelDialog::QFileSystemModelDialog(QWidget *parent) : QDialog(parent), ui(new Ui::QFileSystemModelDialog) {
     ui->setupUi(this);
 
     // Creates our new model and populate
@@ -12,8 +9,7 @@ QFileSystemModelDialog::QFileSystemModelDialog(QWidget *parent) :
     dirModel = new QFileSystemModel(this);
 
     // Set filter
-    dirModel->setFilter(QDir::NoDotAndDotDot |
-                        QDir::AllDirs);
+    dirModel->setFilter(QDir::NoDotAndDotDot | QDir::AllDirs);
 
     // QFileSystemModel requires root path
     dirModel->setRootPath(mPath);
@@ -22,7 +18,6 @@ QFileSystemModelDialog::QFileSystemModelDialog(QWidget *parent) :
     ui->treeView->setModel(dirModel);
 }
 
-QFileSystemModelDialog::~QFileSystemModelDialog()
-{
+QFileSystemModelDialog::~QFileSystemModelDialog() {
     delete ui;
 }
