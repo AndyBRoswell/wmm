@@ -64,10 +64,34 @@ bool QtTreeModel::TreeItem::SetData(lsize_t Column, const QVariant& Value) {
     return true;
 }
 
+/**
+ * Insert empty subnodes at this node.
+ * @param Position The position of insertion. The existing element at Position will be moved to (Position + RowCount).
+ * @param RowCount The number of subnodes.
+ * @param ColumnCount The number of elements of each subnode.
+ * @return
+ */
+bool QtTreeModel::TreeItem::InsertChildren(const lsize_t Position, const lsize_t RowCount, const lsize_t ColumnCount) {
+    if (Position < 0 || Position > ChildItem.size()) return false;
+    const qsizetype OldSize = ChildItem.size();
+    for (qsizetype i = 0; i < RowCount; ++i) {
+        TreeItem* const Blank = new TreeItem(QList<QVariant>(ColumnCount), this);
+        ChildItem.emplace_back(Blank);
+    }
+    for (qsizetype i = OldSize - 1; i >= Position; --i) std::swap(ChildItem[i], ChildItem[i + RowCount]);
+    return true;
+}
+
+bool QtTreeModel::TreeItem::RemoveChildren(const lsize_t Position, const lsize_t Count) {
+    if (Position < 0 || Position + Count > ChildItem.size()) return false;
+    for (qsizetype i = Position; i < Position + Count; ++i) delete ChildItem[i];
+    ChildItem.remove(Position, Count);
+    return true;
+}
+
 /// QtTreeModel
 
-QtTreeModel::QtTreeModel(QObject* Parent)
-    : QAbstractItemModel(Parent) {
+QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) {
 }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
@@ -92,15 +116,13 @@ QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
 }
 
 lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
-    if (!Parent.isValid())
-        return 0;
+    if (!Parent.isValid()) return 0;
 
     // FIXME: Implement me!
 }
 
 lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
-    if (!Parent.isValid())
-        return 0;
+    if (!Parent.isValid()) return 0;
 
     // FIXME: Implement me!
 }
@@ -119,8 +141,7 @@ void QtTreeModel::fetchMore(const QModelIndex& Parent) {
 }
 
 QVariant QtTreeModel::data(const QModelIndex& Index, int Role) const {
-    if (!Index.isValid())
-        return QVariant();
+    if (!Index.isValid()) return QVariant();
 
     // FIXME: Implement me!
     return QVariant();
@@ -136,8 +157,7 @@ bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int R
 }
 
 Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
-    if (!Index.isValid())
-        return Qt::NoItemFlags;
+    if (!Index.isValid()) return Qt::NoItemFlags;
 
     return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable; // FIXME: Implement me!
 }

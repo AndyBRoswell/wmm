@@ -12,14 +12,14 @@ namespace WritingMaterialsManager {
 
         class TreeItem {
         public:
-            explicit TreeItem(const QList<QVariant>& Data, TreeItem* Parent = nullptr);
+            explicit TreeItem(const QList<QVariant>& Data = {}, TreeItem* Parent = nullptr);
             ~TreeItem();
 
             TreeItem* Child(lsize_t Number);
             lsize_t ChildCount() const;
             lsize_t ColumnCount() const;
             QVariant Data(lsize_t Column) const;
-            bool InsertChildren(lsize_t Position, lsize_t Count, lsize_t Columns);
+            bool InsertChildren(lsize_t Position, lsize_t RowCount, lsize_t ColumnCount);
             bool InsertColumns(lsize_t Position, lsize_t Columns);
             TreeItem* Parent();
             bool RemoveChildren(lsize_t Position, lsize_t Count);
