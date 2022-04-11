@@ -20,7 +20,7 @@ namespace WritingMaterialsManager {
             lsize_t ColumnCount() const;
             QVariant Data(lsize_t Column) const;
             bool InsertChildren(lsize_t Position, lsize_t RowCount, lsize_t ColumnCount);
-            bool InsertColumns(lsize_t Position, lsize_t Columns);
+            bool InsertColumns(lsize_t Position, lsize_t ColumnCount);
             TreeItem* Parent();
             bool RemoveChildren(lsize_t Position, lsize_t Count);
             bool RemoveColumns(lsize_t Position, lsize_t Columns);

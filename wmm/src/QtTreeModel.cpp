@@ -69,7 +69,7 @@ bool QtTreeModel::TreeItem::SetData(lsize_t Column, const QVariant& Value) {
  * @param Position The position of insertion. The existing element at Position will be moved to (Position + RowCount).
  * @param RowCount The number of subnodes.
  * @param ColumnCount The number of elements of each subnode.
- * @return
+ * @return Whether the operation was succeeded.
  */
 bool QtTreeModel::TreeItem::InsertChildren(const lsize_t Position, const lsize_t RowCount, const lsize_t ColumnCount) {
     if (Position < 0 || Position > ChildItem.size()) return false;
@@ -82,10 +82,32 @@ bool QtTreeModel::TreeItem::InsertChildren(const lsize_t Position, const lsize_t
     return true;
 }
 
+/**
+ * Remove child items at [Position, Position + Count)
+ * @param Position
+ * @param Count
+ * @return Whether the operation was succeeded.
+ */
 bool QtTreeModel::TreeItem::RemoveChildren(const lsize_t Position, const lsize_t Count) {
     if (Position < 0 || Position + Count > ChildItem.size()) return false;
     for (qsizetype i = Position; i < Position + Count; ++i) delete ChildItem[i];
     ChildItem.remove(Position, Count);
+    return true;
+}
+
+/**
+ * The functions for inserting and removing columns are used differently to those for inserting and removing child items,
+ * because they are expected to be called on every item in the tree.
+ * This is done by recursively calling this function on each child of the item.
+ * You mustn't call this function at non-root nodes.
+ * @param Position
+ * @param ColumnCount The number of empty columns.
+ * @return Whether the operation was succeeded.
+ */
+bool QtTreeModel::TreeItem::InsertColumns(const lsize_t Position, const lsize_t ColumnCount) {
+    if (Position < 0 || Position > ItemData.size()) return false;
+    ItemData.insert(Position, ColumnCount, QVariant());
+    for (TreeItem* CurrentChild: qAsConst(ChildItem)) CurrentChild->InsertColumns(Position, ColumnCount);
     return true;
 }
 
