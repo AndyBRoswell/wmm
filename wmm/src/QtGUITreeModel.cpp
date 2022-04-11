@@ -52,6 +52,10 @@ QVariant QtGUITreeModel::Node::Data(const lsize_t Column) const {
     return MData[Column];
 }
 
+QVariant& QtGUITreeModel::Node::SetData(const lsize_t Column, const QVariant& Data) { return MData[Column] = Data; }
+
+QVariant& QtGUITreeModel::Node::PushBack(const QVariant& Data) { return MData.emplace_back(Data); }
+
 //QVariant& QtGUITreeModel::Node::Data(const lsize_t Column) {
 ////    if (Column < 0 || Column >= MData.size()) throw std::out_of_range("Column (Index) out of range ERROR when accessing nodal data.");
 //    return MData[Column];
@@ -61,9 +65,7 @@ const QList<QVariant>& QtGUITreeModel::Node::Data() const { return MData; }
 QList<QVariant>& QtGUITreeModel::Node::Data() { return MData; }
 
 // Get the position of this node in its parent node
-lsize_t QtGUITreeModel::Node::RowInParent() const {
-    return MParentItem != nullptr ? MParentItem->MChildItems.indexOf(this) : 0;
-}
+lsize_t QtGUITreeModel::Node::RowInParent() const { return MParentItem != nullptr ? MParentItem->MChildItems.indexOf(this) : 0; }
 
 QtGUITreeModel::Node* QtGUITreeModel::Node::Parent() {
     return MParentItem;
@@ -147,6 +149,7 @@ void QtGUITreeModel::FromJSON(const QByteArray& JSONString) {
     stack<Node*, vector<Node*>> t;
     s.emplace(&JSONDocument);
     RootNode->MData.emplace_back("");
+
     t.emplace(RootNode);
     while (s.empty() == false) { // non-recursive DFS
         const Value* const ns = s.top();

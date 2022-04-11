@@ -35,6 +35,8 @@ namespace WritingMaterialsManager {
             [[nodiscard]] lsize_t ColumnCount() const;
             [[nodiscard]] lsize_t DataCount() const { return ColumnCount(); } // Same as ColumnCount()
             [[nodiscard]] QVariant Data(const lsize_t Column) const;
+            [[nodiscard]] QVariant& SetData(const lsize_t Column, const QVariant& Data);
+            [[nodiscard]] QVariant& PushBack(const QVariant& Data);
             [[nodiscard]] const QList<QVariant>& Data() const;
             [[nodiscard]] QList<QVariant>& Data();
             [[nodiscard]] lsize_t RowInParent() const;
