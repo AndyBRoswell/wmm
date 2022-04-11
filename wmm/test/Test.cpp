@@ -48,12 +48,12 @@
 //#include "TextEditor.h"
 #include "MongoDBAccessor.h"
 
-using WATest = WritingMaterialsManager::Test;
+using WMMTest = WritingMaterialsManager::Test;
 
-std::string WATest::LastStartedFn;
-std::string WATest::LastFinishedFn;
+std::string WMMTest::LastStartedFn;
+std::string WMMTest::LastFinishedFn;
 
-int WATest::Start() {
+int WMMTest::Start() {
     qDebug() << "Start running test ...";
 
     int ret;
@@ -67,7 +67,7 @@ int WATest::Start() {
 //        mongocxx::Tutorial,
         mongocxx::CustomDataDemo,
 //        DuckX::QuickStart,
-//        Qt::Widgets::MixWithWidgetsTest,
+        Qt::Widgets::Demo,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
@@ -79,7 +79,7 @@ int WATest::Start() {
     return EXIT_SUCCESS;
 }
 
-int WATest::SimpleTest() {
+int WMMTest::SimpleTest() {
     LastStartedFn.assign(__FUNCTION__);
 
     // Verify C++20 is supported
@@ -90,7 +90,7 @@ int WATest::SimpleTest() {
     return EXIT_SUCCESS;
 }
 
-void WATest::Qt::EncodingOfFileRW() {
+void WMMTest::Qt::EncodingOfFileRW() {
     using std::move;
 
     LastStartedFn.assign(__FUNCTION__);
@@ -116,7 +116,15 @@ void WATest::Qt::EncodingOfFileRW() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::Qt::Quick::TextAreaKeyEvent() {
+void WMMTest::Qt::Widgets::Demo() {
+    LastStartedFn.assign(__FUNCTION__);
+
+    
+
+    LastFinishedFn.assign(__FUNCTION__);
+}
+
+void WMMTest::Qt::Quick::TextAreaKeyEvent() {
     LastStartedFn.assign(__FUNCTION__);
 
     // preparation
@@ -152,7 +160,7 @@ void WATest::Qt::Quick::TextAreaKeyEvent() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::simdjson::Demo() {
+void WMMTest::simdjson::Demo() {
     using namespace ::simdjson;
     using std::endl;
     using std::string;
@@ -169,14 +177,14 @@ void WATest::simdjson::Demo() {
         qDebug() << static_cast<string>(ret).c_str();
     }
     catch (const exception& e) {
-        qDebug() << "Exception thrown at WATest::Demo():";
+        qDebug() << "Exception thrown at WMMTest::Demo():";
         qDebug() << e.what();
     }
 
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::RapidJSON::Demo() {
+void WMMTest::RapidJSON::Demo() {
     using std::exception;
     using std::runtime_error;
     using std::move;
@@ -249,7 +257,7 @@ void WATest::RapidJSON::Demo() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::mongocxx::Tutorial() {
+void WMMTest::mongocxx::Tutorial() {
     using bsoncxx::builder::stream::close_array;
     using bsoncxx::builder::stream::close_document;
     using bsoncxx::builder::stream::document;
@@ -293,7 +301,7 @@ void WATest::mongocxx::Tutorial() {
     bsoncxx::document::view view = doc_value.view();
     bsoncxx::document::element element = view["name"];
     if (element.type() != bsoncxx::type::k_utf8) {
-        throw std::runtime_error("Exception at WATest::Tutorial(): The type of this element of the object is unexpected.");
+        throw std::runtime_error("Exception at WMMTest::Tutorial(): The type of this element of the object is unexpected.");
     }
     std::string_view name = element.get_utf8().value;
     qDebug() << R"("name":")" << name.data() << '\"';
@@ -308,7 +316,7 @@ void WATest::mongocxx::Tutorial() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::mongocxx::CustomDataDemo() {
+void WMMTest::mongocxx::CustomDataDemo() {
     using std::exception;
     using std::move;
     using std::runtime_error;
@@ -377,7 +385,7 @@ void WATest::mongocxx::CustomDataDemo() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
-void WATest::DuckX::QuickStart() {
+void WMMTest::DuckX::QuickStart() {
     LastStartedFn.assign(__FUNCTION__);
 
     duckx::Document doc("test/test-data/刘畅 - 同一首歌.docx");
@@ -389,3 +397,4 @@ void WATest::DuckX::QuickStart() {
 
     LastFinishedFn.assign(__FUNCTION__);
 }
+

@@ -3,6 +3,7 @@
 
 #include <QFileSystemModel>
 #include <QGridLayout>
+#include <QPushButton>
 
 #include "QtGUITreeModel.h"
 
@@ -10,7 +11,7 @@ using namespace WritingMaterialsManager;
 
 /// DataSourceManager
 
-DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), UI(new Ui::DataSourceManager) {
+DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(new Ui::DataSourceManager) {
     UI->setupUi(this);
 
     // preparation
@@ -42,6 +43,7 @@ DataSourceManager::~DataSourceManager() {
 DataSourceManager::Page::Page(QWidget* const Parent): QWidget(Parent), TreeView(new QTreeView(this)) {
     setLayout(new QGridLayout);
     layout()->addWidget(TreeView.get());
-    TreeView->show();
     this->show();
 }
+
+DataSourceManager::Page::~Page() {}

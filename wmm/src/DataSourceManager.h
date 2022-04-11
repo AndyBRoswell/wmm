@@ -24,6 +24,7 @@ namespace WritingMaterialsManager {
         class Page: public QWidget {
         public:
             Page(QWidget* const Parent);
+            ~Page();
 
             std::shared_ptr<QTreeView> TreeView;
         };

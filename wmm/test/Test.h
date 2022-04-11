@@ -19,7 +19,7 @@ namespace WritingMaterialsManager {
 
             class Widgets {
             public:
-                static void MixWithWidgetsTest();
+                static void Demo();
             };
 
             class Quick {
