@@ -17,12 +17,12 @@ DataSourceManager::DataSourceManager(QWidget* parent) : QMainWindow(parent), UI(
     centralWidget()->setLayout(new QGridLayout);
     centralWidget()->layout()->addWidget(UI->DataSourceTab);
 
-    Page* const MongoDBPage = new Page;
+    Page* const MongoDBPage = new Page(centralWidget());
     QtGUITreeModel MongoDBInfoTree(MongoDBPage);
     MongoDBInfoTree.FromJSON(MongoDBAccessor.GetDBsAndCollsInfo());
     MongoDBPage->TreeView->setModel(&MongoDBInfoTree);
 
-    Page* const FileSystemPage = new Page;
+    Page* const FileSystemPage = new Page(centralWidget());
     QFileSystemModel FileSystemTree(FileSystemPage);
     FileSystemTree.setRootPath(QDir::currentPath());
     FileSystemPage->TreeView->setModel(&FileSystemTree);
@@ -39,7 +39,9 @@ DataSourceManager::~DataSourceManager() {
 
 /// DataSourceManager::Pages
 
-DataSourceManager::Page::Page(): TreeView(new QTreeView(this)) {
+DataSourceManager::Page::Page(QWidget* const Parent): QWidget(Parent), TreeView(new QTreeView(this)) {
     setLayout(new QGridLayout);
     layout()->addWidget(TreeView.get());
+    TreeView->show();
+    this->show();
 }
