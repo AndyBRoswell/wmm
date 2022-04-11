@@ -149,7 +149,6 @@ void QtGUITreeModel::FromJSON(const QByteArray& JSONString) {
     stack<Node*, vector<Node*>> t;
     s.emplace(&JSONDocument);
     RootNode->MData.emplace_back("");
-
     t.emplace(RootNode);
     while (s.empty() == false) { // non-recursive DFS
         const Value* const ns = s.top();

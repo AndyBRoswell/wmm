@@ -39,6 +39,8 @@ set(SOURCES
 
         src/QtGUITreeModel.cpp
         src/QtGUITreeModel.h
+        src/QtTreeModel.cpp
+        src/QtTreeModel.h
 
         src/MongoDBAccessor.cpp
         src/MongoDBAccessor.h
