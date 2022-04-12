@@ -146,27 +146,21 @@ bool QtTreeModel::Node::RemoveColumns(lsize_t Position, lsize_t Count) {
 
 /// QtTreeModel
 
-QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootNode = new Node(); }
+QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent), RootNode(new Node({ tr("Name/Index"), tr("Value") })) {}
 
 // This will cause all items to be recursively deleted.
 QtTreeModel::~QtTreeModel() { delete RootNode; }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
-    // default header
-    switch (Section) {
-    case 0:return "Name/Index";
-    case 1:return "Value";
-    default:return "";
-    }
+    if (Orientation == Qt::Horizontal && Role == Qt::DisplayRole) return RootNode->Data(Section);
+    return {};
 }
 
 bool QtTreeModel::setHeaderData(int Section, Qt::Orientation Orientation, const QVariant& Value, int Role) {
-//    if (Role!=Qt::EditRole&&Orientation!=Qt::Horizontal) return false;
-//    if (Value != headerData(Section, Orientation, Role)) {
-//        emit headerDataChanged(Orientation, Section, Section);
-//        return true;
-//    }
-    return false;
+    if (Role != Qt::EditRole && Orientation != Qt::Horizontal) return false;
+    const bool Succeeded = RootNode->SetData(Section, Value);
+    if (Succeeded) { emit headerDataChanged(Orientation, Section, Section); }
+    return Succeeded;
 }
 
 /**
@@ -305,8 +299,9 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
     using namespace std;
     using namespace rapidjson;
 
-    if (Tree != nullptr) { delete Tree; } // delete the existing tree
-    Tree = new Node();
+    RootNode->RemoveChildren(0, RootNode->ChildCount());
+    Node* const JSONRoot = new Node();
+    RootNode->PushBackChild(JSONRoot);
 
     Document JSONDocument;
     JSONDocument.Parse(JSONString.constData());
@@ -315,8 +310,8 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
     stack<const Value*, vector<const Value*>> s;
     stack<Node*, vector<Node*>> t;
     s.emplace(&JSONDocument);
-    RootNode->PushBackData("");
-    t.emplace(RootNode);
+    JSONRoot->PushBackData("");
+    t.emplace(JSONRoot);
     while (s.empty() == false) { // non-recursive DFS
         const Value* const ns = s.top();
         s.pop();

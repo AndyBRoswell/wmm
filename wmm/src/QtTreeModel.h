@@ -82,7 +82,6 @@ namespace WritingMaterialsManager {
     private:
         Node* GetItem(const QModelIndex& Index) const;
         Node* RootNode = nullptr;
-        Node*& Tree = RootNode;
     };
 }
 
