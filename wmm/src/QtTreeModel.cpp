@@ -17,7 +17,7 @@ using lsize_t = QtTreeModel::lsize_t;
  * @param Data
  * @param Parent
  */
-QtTreeModel::Node::Node(const QList<QVariant>& Data, QtTreeModel::Node* Parent) : NodalData(Data), ParentNode(Parent) {}
+QtTreeModel::Node::Node(const QList <QVariant>& Data, QtTreeModel::Node* Parent) : NodalData(Data), ParentNode(Parent) {}
 
 // The destructor ensures that each child added to the item is deleted when the item itself is deleted.
 QtTreeModel::Node::~Node() { qDeleteAll(SubNode); }
@@ -55,7 +55,7 @@ lsize_t QtTreeModel::Node::ColumnCount() const { return NodalData.count(); }
  * @return
  */
 QVariant QtTreeModel::Node::Data(int Column) const {
-//    if (Column < 0 || Column >= NodalData.size()) return {};
+    if (Column < 0 || Column >= NodalData.size()) return {};
     return NodalData[Column];
 }
 
@@ -313,9 +313,9 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
     JSONDocument.Parse(JSONString.constData());
 
     beginResetModel();
-    qDebug() << JSONString;
+//    qDebug() << JSONString;
     stack<const Value*, vector<const Value*>> s;
-    stack<Node*, vector<Node*>> t;
+    std::stack<Node*, std::vector<Node*>> t;
     s.emplace(Pointer("").Get(JSONDocument));
     JSONRoot->PushBackData("");
     t.emplace(JSONRoot);
@@ -324,18 +324,27 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
         s.pop();
         Node* const nt = t.top();
         t.pop();
-        qDebug() << ns->GetType();
+//        qDebug() << ns->GetType();
         switch (ns->GetType()) {
         case kNullType:nt->PushBackData("");
+            qDebug() << "";
             break;
         case kFalseType:
         case kTrueType:nt->PushBackData(ns->GetBool());
+            qDebug() << ns->GetBool();
             break;
         case kStringType:nt->PushBackData(ns->GetString());
+            qDebug() << ns->GetString();
             break;
         case kNumberType:
-            if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
-            else { nt->PushBackData(ns->GetInt64()); }
+            if (ns->IsUint64()) {
+                nt->PushBackData(ns->GetUint64());
+                qDebug() << ns->GetUint64();
+            }
+            else {
+                nt->PushBackData(ns->GetInt64());
+                qDebug() << ns->GetInt64();
+            }
             break;
         case kArrayType:
             for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
@@ -346,8 +355,11 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
             }
             break;
         case kObjectType:
+            qDebug() << ns->MemberEnd() - ns->MemberBegin();
+            if (ns->MemberEnd() == ns->MemberBegin()) break;
             for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) {
                 s.emplace(&i->value);
+                qDebug() << i->name.GetString();
                 Node* const c = new Node({ i->name.GetString() }, nt);
                 nt->PushBackChild(c);
                 t.emplace(c);
