@@ -16,7 +16,13 @@ namespace WritingMaterialsManager {
         ~Editor();
 
     private:
-        Ui::Editor* ui;
+        class Page: public QWidget {
+        public:
+            Page(QWidget* const Parent = nullptr);
+            ~Page();
+        };
+
+        Ui::Editor* UI;
     };
 }
 

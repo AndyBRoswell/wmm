@@ -25,7 +25,7 @@ message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 find_package(Qt6 6.3 COMPONENTS Core Gui Quick QuickControls2 Widgets REQUIRED)
 
-set(SOURCES
+set(CODE_FILES
         # src
         src/main.cpp
         src/predefined.h
@@ -58,7 +58,7 @@ set(TS_FILES
         )
 
 qt_add_executable(appwmm
-        ${SOURCES}
+        ${CODE_FILES}
         )
 
 qt_add_qml_module(appwmm
