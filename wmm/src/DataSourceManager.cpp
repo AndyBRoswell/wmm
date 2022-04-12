@@ -5,7 +5,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 
-#include "QtGUITreeModel.h"
+#include "QtTreeModel.h"
 
 using namespace WritingMaterialsManager;
 
@@ -18,16 +18,8 @@ DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(
     centralWidget()->setLayout(new QGridLayout);
     centralWidget()->layout()->addWidget(UI->DataSourceTab);
 
-    {
-//        auto* dirModel = new QFileSystemModel(this);
-//        dirModel->setRootPath("C:/");
-//        auto* treeView = new QTreeView(this);
-//        treeView->setModel(dirModel);
-//        centralWidget()->layout()->addWidget(treeView);
-    }
-
     Page* const MongoDBPage = new Page(centralWidget());
-    QtGUITreeModel* MongoDBInfoTree = new QtGUITreeModel(MongoDBPage);
+    QtTreeModel* MongoDBInfoTree = new QtTreeModel(MongoDBPage);
     MongoDBInfoTree->FromJSON(MongoDBAccessor.GetDBsAndCollsInfo());
     MongoDBPage->TreeView->setModel(MongoDBInfoTree);
 

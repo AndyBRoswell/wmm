@@ -1,55 +1,61 @@
 #include "QtTreeModel.h"
 
+#include <stack>
+#include <vector>
+
+#include "rapidjson/document.h"
+
 using namespace WritingMaterialsManager;
+
 using lsize_t = QtTreeModel::lsize_t;
 
-/// QtTreeModel::TreeItem
+/// QtTreeModel::Node
 
 /**
  * Initially, each node has no children. They're added using the InsertChildren() function.
  * @param Data
  * @param Parent
  */
-QtTreeModel::TreeItem::TreeItem(const QList<QVariant>& Data, QtTreeModel::TreeItem* Parent) : ItemData(Data), ParentItem(Parent) {}
+QtTreeModel::Node::Node(const QList<QVariant>& Data, QtTreeModel::Node* Parent) : NodalData(Data), ParentNode(Parent) {}
 
 // The destructor ensures that each child added to the item is deleted when the item itself is deleted.
-QtTreeModel::TreeItem::~TreeItem() { qDeleteAll(ChildItem); }
+QtTreeModel::Node::~Node() { qDeleteAll(SubNode); }
 
-QtTreeModel::TreeItem* QtTreeModel::TreeItem::Parent() { return ParentItem; }
+QtTreeModel::Node* QtTreeModel::Node::Parent() { return ParentNode; }
 
 /**
  * Returns a specific child from the internal list of children.
  * @param Number The number of the required child of this node.
  * @return
  */
-QtTreeModel::TreeItem* QtTreeModel::TreeItem::Child(int Number) {
-//    if (Number < 0 || Number >= ChildItem.size()) return nullptr;
-    return ChildItem[Number];
+QtTreeModel::Node* QtTreeModel::Node::Child(int Number) {
+//    if (Number < 0 || Number >= SubNode.size()) return nullptr;
+    return SubNode[Number];
 }
 
-lsize_t QtTreeModel::TreeItem::ChildCount() const { return ChildItem.count(); }
+lsize_t QtTreeModel::Node::ChildCount() const { return SubNode.count(); }
 
 /**
  * The ChildNumber() function is used to determine the index of the child in its parent's list of children.
  * The root item has no parent item; for this item, we return 0 to be consistent with the other items.
  * @return
  */
-lsize_t QtTreeModel::TreeItem::ChildNumber() const { return ParentItem != nullptr ? ParentItem->ChildItem.indexOf(this) : 0; }
+lsize_t QtTreeModel::Node::ChildNumber() const { return ParentNode != nullptr ? ParentNode->SubNode.indexOf(this) : 0; }
 
 /**
  * Returns the number of elements stored at this tree node.
  * @return
  */
-lsize_t QtTreeModel::TreeItem::ColumnCount() const { return ItemData.count(); }
+lsize_t QtTreeModel::Node::ColumnCount() const { return NodalData.count(); }
 
 /**
  * Data is retrieved using the Data() function, which accesses the appropriate element in this tree node.
  * @param Column
  * @return
  */
-QVariant QtTreeModel::TreeItem::Data(int Column) const {
-//    if (Column < 0 || Column >= ItemData.size()) return {};
-    return ItemData[Column];
+QVariant QtTreeModel::Node::Data(int Column) const {
+//    if (Column < 0 || Column >= NodalData.size()) return {};
+    return NodalData[Column];
 }
 
 /**
@@ -58,9 +64,23 @@ QVariant QtTreeModel::TreeItem::Data(int Column) const {
  * @param Value
  * @return Whether the operation was succeeded.
  */
-bool QtTreeModel::TreeItem::SetData(lsize_t Column, const QVariant& Value) {
-    if (Column < 0 || Column >= ItemData.size()) return false;
-    ItemData[Column] = Value;
+bool QtTreeModel::Node::SetData(lsize_t Column, const QVariant& Value) {
+    if (Column < 0 || Column >= NodalData.size()) return false;
+    NodalData[Column] = Value;
+    return true;
+}
+
+QVariant& QtTreeModel::Node::PushBackData(const QVariant& Value) {
+    return NodalData.emplace_back(Value);
+}
+
+void QtTreeModel::Node::PushBackChild(Node* const Child) {
+    SubNode.emplace_back(Child);
+}
+
+bool QtTreeModel::Node::InsertChild(lsize_t Position, Node* const Child) {
+    if (Position < 0 || Position > SubNode.size()) return false;
+    SubNode.insert(Position, Child);
     return true;
 }
 
@@ -71,14 +91,14 @@ bool QtTreeModel::TreeItem::SetData(lsize_t Column, const QVariant& Value) {
  * @param ColumnCount The number of elements of each subnode.
  * @return Whether the operation was succeeded.
  */
-bool QtTreeModel::TreeItem::InsertChildren(const lsize_t Position, const lsize_t RowCount, const lsize_t ColumnCount) {
-    if (Position < 0 || Position > ChildItem.size()) return false;
-    const qsizetype OldSize = ChildItem.size();
+bool QtTreeModel::Node::InsertChildren(const lsize_t Position, const lsize_t RowCount, const lsize_t ColumnCount) {
+    if (Position < 0 || Position > SubNode.size()) return false;
+    const qsizetype OldSize = SubNode.size();
     for (qsizetype i = 0; i < RowCount; ++i) {
-        TreeItem* const Blank = new TreeItem(QList<QVariant>(ColumnCount), this);
-        ChildItem.emplace_back(Blank);
+        Node* const Blank = new Node(QList<QVariant>(ColumnCount), this);
+        SubNode.emplace_back(Blank);
     }
-    for (qsizetype i = OldSize - 1; i >= Position; --i) std::swap(ChildItem[i], ChildItem[i + RowCount]);
+    for (qsizetype i = OldSize - 1; i >= Position; --i) std::swap(SubNode[i], SubNode[i + RowCount]);
     return true;
 }
 
@@ -88,10 +108,10 @@ bool QtTreeModel::TreeItem::InsertChildren(const lsize_t Position, const lsize_t
  * @param Count
  * @return Whether the operation was succeeded.
  */
-bool QtTreeModel::TreeItem::RemoveChildren(const lsize_t Position, const lsize_t Count) {
-    if (Position < 0 || Position + Count > ChildItem.size()) return false;
-    for (qsizetype i = Position; i < Position + Count; ++i) delete ChildItem[i];
-    ChildItem.remove(Position, Count);
+bool QtTreeModel::Node::RemoveChildren(const lsize_t Position, const lsize_t Count) {
+    if (Position < 0 || Position + Count > SubNode.size()) return false;
+    for (qsizetype i = Position; i < Position + Count; ++i) delete SubNode[i];
+    SubNode.remove(Position, Count);
     return true;
 }
 
@@ -104,10 +124,10 @@ bool QtTreeModel::TreeItem::RemoveChildren(const lsize_t Position, const lsize_t
  * @param ColumnCount The number of empty columns.
  * @return Whether the operation was succeeded.
  */
-bool QtTreeModel::TreeItem::InsertColumns(const lsize_t Position, const lsize_t ColumnCount) {
-    if (Position < 0 || Position > ItemData.size()) return false;
-    ItemData.insert(Position, ColumnCount, QVariant());
-    for (TreeItem* CurrentChild: qAsConst(ChildItem)) CurrentChild->InsertColumns(Position, ColumnCount);
+bool QtTreeModel::Node::InsertColumns(const lsize_t Position, const lsize_t ColumnCount) {
+    if (Position < 0 || Position > NodalData.size()) return false;
+    NodalData.insert(Position, ColumnCount, QVariant());
+    for (Node* CurrentChild: qAsConst(SubNode)) CurrentChild->InsertColumns(Position, ColumnCount);
     return true;
 }
 
@@ -117,19 +137,19 @@ bool QtTreeModel::TreeItem::InsertColumns(const lsize_t Position, const lsize_t 
  * @param Count The number of columns to be deleted.
  * @return Whether the operation was succeeded.
  */
-bool QtTreeModel::TreeItem::RemoveColumns(lsize_t Position, lsize_t Count) {
-    if (Position < 0 || Position + Count > ItemData.size()) return false;
-    ItemData.remove(Position, Count);
-    for (TreeItem* CurrentChild: qAsConst(ChildItem)) CurrentChild->RemoveColumns(Position, Count);
+bool QtTreeModel::Node::RemoveColumns(lsize_t Position, lsize_t Count) {
+    if (Position < 0 || Position + Count > NodalData.size()) return false;
+    NodalData.remove(Position, Count);
+    for (Node* CurrentChild: qAsConst(SubNode)) CurrentChild->RemoveColumns(Position, Count);
     return true;
 }
 
 /// QtTreeModel
 
-QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootItem = new TreeItem(); }
+QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootNode = new Node(); }
 
 // This will cause all items to be recursively deleted.
-QtTreeModel::~QtTreeModel() { delete RootItem; }
+QtTreeModel::~QtTreeModel() { delete RootNode; }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
     // default header
@@ -160,9 +180,9 @@ bool QtTreeModel::setHeaderData(int Section, Qt::Orientation Orientation, const 
  */
 QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
     if (Parent.isValid() && Parent.column() != 0) return {};
-    TreeItem* ParentItem = GetItem(Parent);
+    Node* ParentItem = GetItem(Parent);
     if (ParentItem == nullptr) return {};
-    TreeItem* ChildItem = ParentItem->Child(Row);
+    Node* ChildItem = ParentItem->Child(Row);
     if (ChildItem != nullptr) return createIndex(Row, Column, ChildItem);
     return {};
 }
@@ -180,9 +200,9 @@ QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& P
  */
 QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
     if (Index.isValid() == false) return {};
-    TreeItem* CurrentItem = GetItem(Index);
-    TreeItem* ParentItem = CurrentItem != nullptr ? CurrentItem->Parent() : nullptr;
-    if (ParentItem == RootItem || ParentItem == nullptr) return {};
+    Node* CurrentItem = GetItem(Index);
+    Node* ParentItem = CurrentItem != nullptr ? CurrentItem->Parent() : nullptr;
+    if (ParentItem == RootNode || ParentItem == nullptr) return {};
     return createIndex(ParentItem->ChildNumber(), 0, ParentItem);
 }
 
@@ -193,7 +213,7 @@ QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
 lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
     if (!Parent.isValid() && Parent.column() > 0) return 0;
 //    if (!Parent.isValid()) return 0;
-    const TreeItem* const ParentItem = GetItem(Parent);
+    const Node* const ParentItem = GetItem(Parent);
     return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
 }
 
@@ -205,7 +225,7 @@ lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
 //    return Parent.isValid() ? GetItem(Parent)->ColumnCount() : 0;
     // for the situation where column count is fixed:
     Q_UNUSED(Parent);
-    return RootItem->ChildCount();
+    return RootNode->ChildCount();
 }
 
 //bool QtTreeModel::hasChildren(const QModelIndex& Parent) const {
@@ -223,13 +243,13 @@ lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
 
 QVariant QtTreeModel::data(const QModelIndex& Index, int Role) const {
     if ((Index.isValid() == false) || (Role != Qt::DisplayRole && Role != Qt::EditRole)) return {};
-    TreeItem* Item = GetItem(Index);
+    Node* Item = GetItem(Index);
     return Item->Data(Index.column());
 }
 
 bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int Role) {
     if (Role != Qt::EditRole) return false;
-    TreeItem* Item = GetItem(Index);
+    Node* Item = GetItem(Index);
     const bool Succeeded = Item->SetData(Index.column(), Value);
     if (Succeeded) { emit dataChanged(Index, Index, { Qt::DisplayRole, Qt::EditRole }); }
     return Succeeded;
@@ -241,24 +261,24 @@ Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
 }
 
 bool QtTreeModel::insertRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent) {
-    TreeItem* TargetItem = GetItem(Parent);
+    Node* TargetItem = GetItem(Parent);
     if (TargetItem == nullptr) return false;
     beginInsertRows(Parent, Position, Position + ChildCount - 1);
 //    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, TargetItem->ColumnCount());
-    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, RootItem->ColumnCount());
+    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, RootNode->ColumnCount());
     endInsertRows();
     return Succeeded;
 }
 
 bool QtTreeModel::insertColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
     beginInsertColumns(Parent, Position, Position + ColumnCount - 1);
-    const bool Succeeded = RootItem->InsertColumns(Position, ColumnCount);
+    const bool Succeeded = RootNode->InsertColumns(Position, ColumnCount);
     endInsertColumns();
     return Succeeded;
 }
 
 bool QtTreeModel::removeRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent) {
-    TreeItem* TargetItem = GetItem(Parent);
+    Node* TargetItem = GetItem(Parent);
     if (TargetItem == nullptr) return false;
     beginRemoveRows(Parent, Position, Position + ChildCount - 1);
     const bool Succeeded = TargetItem->RemoveChildren(Position, ChildCount);
@@ -268,15 +288,69 @@ bool QtTreeModel::removeRows(lsize_t Position, lsize_t ChildCount, const QModelI
 
 bool QtTreeModel::removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
     beginRemoveColumns(Parent, Position, Position + ColumnCount - 1);
-    const bool Succeeded = RootItem->RemoveColumns(Position, ColumnCount);
-    if (RootItem->ChildCount() == 0) removeRows(0, rowCount());
+    const bool Succeeded = RootNode->RemoveColumns(Position, ColumnCount);
+    if (RootNode->ChildCount() == 0) removeRows(0, rowCount());
     endRemoveColumns();
     return Succeeded;
 }
 
-QtTreeModel::TreeItem* QtTreeModel::GetItem(const QModelIndex& Index) const {
+QtTreeModel::Node* QtTreeModel::GetItem(const QModelIndex& Index) const {
     if (Index.isValid()) {
-        if (Index.internalPointer() != nullptr) return static_cast<TreeItem*>(Index.internalPointer());
+        if (Index.internalPointer() != nullptr) return static_cast<Node*>(Index.internalPointer());
     }
-    return RootItem; // for a certain kind of consistency?
+    return RootNode; // for a certain kind of consistency?
+}
+
+void QtTreeModel::FromJSON(const QByteArray& JSONString) {
+    using namespace std;
+    using namespace rapidjson;
+
+    if (Tree != nullptr) { delete Tree; } // delete the existing tree
+    Tree = new Node();
+
+    Document JSONDocument;
+    JSONDocument.Parse(JSONString.constData());
+
+    beginResetModel();
+    stack<const Value*, vector<const Value*>> s;
+    stack<Node*, vector<Node*>> t;
+    s.emplace(&JSONDocument);
+    RootNode->PushBackData("");
+    t.emplace(RootNode);
+    while (s.empty() == false) { // non-recursive DFS
+        const Value* const ns = s.top();
+        s.pop();
+        Node* const nt = t.top();
+        t.pop();
+        switch (ns->GetType()) {
+        case kNullType:nt->PushBackData("");
+            break;
+        case kFalseType:
+        case kTrueType:nt->PushBackData(ns->GetBool());
+            break;
+        case kStringType:nt->PushBackData(ns->GetString());
+            break;
+        case kNumberType:
+            if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
+            else { nt->PushBackData(ns->GetInt64()); }
+            break;
+        case kArrayType:
+            for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
+                s.emplace(&*i);
+                Node* const c = new Node({ i - ns->Begin() }, nt);
+                nt->PushBackChild(c);
+                t.emplace(c);
+            }
+            break;
+        case kObjectType:
+            for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) {
+                s.emplace(&i->value);
+                Node* const c = new Node({ i->name.GetString() }, nt);
+                nt->PushBackChild(c);
+                t.emplace(c);
+            }
+            break;
+        }
+    }
+    endResetModel();
 }

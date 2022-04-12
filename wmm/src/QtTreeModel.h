@@ -10,27 +10,30 @@ namespace WritingMaterialsManager {
     public:
         using lsize_t = int; // l -> local
 
-        class TreeItem {
+        class Node {
         public:
-            explicit TreeItem(const QList<QVariant>& Data = {}, TreeItem* Parent = nullptr);
-            ~TreeItem();
+            explicit Node(const QList<QVariant>& Data = {}, Node* Parent = nullptr);
+            ~Node();
 
-            TreeItem* Child(lsize_t Number);
+            Node* Child(lsize_t Number);
             lsize_t ChildCount() const;
             lsize_t ColumnCount() const;
             QVariant Data(lsize_t Column) const;
+            void PushBackChild(Node* const Child);
+            bool InsertChild(lsize_t Position, Node* const Child);
             bool InsertChildren(lsize_t Position, lsize_t RowCount, lsize_t ColumnCount);
             bool InsertColumns(lsize_t Position, lsize_t ColumnCount);
-            TreeItem* Parent();
+            Node* Parent();
             bool RemoveChildren(lsize_t Position, lsize_t Count);
             bool RemoveColumns(lsize_t Position, lsize_t Count);
             lsize_t ChildNumber() const;
             bool SetData(lsize_t Column, const QVariant& Value);
+            QVariant& PushBackData(const QVariant& Value);
 
         private:
-            QList<TreeItem*> ChildItem;
-            QList<QVariant> ItemData;
-            TreeItem* ParentItem;
+            QList<Node*> SubNode;
+            QList<QVariant> NodalData;
+            Node* ParentNode;
         };
 
         explicit QtTreeModel(QObject* Parent = nullptr);
@@ -73,9 +76,13 @@ namespace WritingMaterialsManager {
 
         bool removeRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent = QModelIndex()) override;
         bool removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent = QModelIndex()) override;
+
+        // custom functions
+        void FromJSON(const QByteArray& JSONString);
     private:
-        TreeItem* GetItem(const QModelIndex& Index) const;
-        TreeItem* RootItem;
+        Node* GetItem(const QModelIndex& Index) const;
+        Node* RootNode = nullptr;
+        Node*& Tree = RootNode;
     };
 }
 

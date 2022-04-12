@@ -37,8 +37,6 @@ set(SOURCES
         src/DataSourceManager.h
         src/DataSourceManager.ui
 
-        src/QtGUITreeModel.cpp
-        src/QtGUITreeModel.h
         src/QtTreeModel.cpp
         src/QtTreeModel.h
 
