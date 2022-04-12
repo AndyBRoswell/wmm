@@ -17,7 +17,7 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
-        explicit DataSourceManager(QWidget* parent = nullptr);
+        explicit DataSourceManager(QWidget* Parent = nullptr);
         ~DataSourceManager();
 
     private:

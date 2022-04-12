@@ -5,6 +5,8 @@
 
 using namespace WritingMaterialsManager;
 
+/// EditorWindow
+
 EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),UI(new Ui::EditorWindow) {
     UI->setupUi(this);
 
@@ -18,3 +20,14 @@ EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),UI(new Ui::Edi
 EditorWindow::~EditorWindow() {
     delete UI;
 }
+
+/// EditorWindow::Page
+
+EditorWindow::Page::Page(QWidget* const Parent) {
+    setLayout(new QGridLayout);
+    show();
+}
+
+EditorWindow::Page::~Page() {}
+
+void EditorWindow::Page::AddSubWindow(QWidget* const Wnd) { layout()->addWidget(Wnd); }

@@ -12,18 +12,16 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
-        explicit EditorWindow(QWidget* parent = nullptr);
+        explicit EditorWindow(QWidget* Parent = nullptr);
         ~EditorWindow();
 
     private:
-        class Page: public QWidget {
+        class Page : public QWidget {
         public:
             Page(QWidget* const Parent = nullptr);
             ~Page();
-        };
 
-        class MongoDBConsole: public QWidget {
-
+            void AddSubWindow(QWidget* const Wnd);
         };
 
         Ui::EditorWindow* UI;

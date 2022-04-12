@@ -25,32 +25,23 @@ message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
 find_package(Qt6 6.3 COMPONENTS Core Gui Quick QuickControls2 Widgets REQUIRED)
 
+file(GLOB_RECURSE SOURCES
+        ${PROJECT_SOURCE_DIR}/src/*.c*
+        ${PROJECT_SOURCE_DIR}/test/*.c*
+        )
+file(GLOB_RECURSE HEADERS
+        ${PROJECT_SOURCE_DIR}/src/*.h*
+        ${PROJECT_SOURCE_DIR}/test/*.h*
+        )
+file(GLOB_RECURSE QT_WIDGETS_UIS
+        ${PROJECT_SOURCE_DIR}/src/*.ui
+        ${PROJECT_SOURCE_DIR}/test/*.ui
+        )
+
 set(CODE_FILES
-        # src
-        src/main.cpp
-        src/predefined.h
-        src/global.cpp
-        src/global.h
-
-        src/thm/dark/style.qrc
-        src/DataSourceManager.cpp
-        src/DataSourceManager.h
-        src/DataSourceManager.ui
-        src/EditorWindow.cpp
-        src/EditorWindow.h
-        src/EditorWindow.ui
-
-        src/QtTreeModel.cpp
-        src/QtTreeModel.h
-
-        src/MongoDBAccessor.cpp
-        src/MongoDBAccessor.h
-
-        # test
-        test/Test.cpp
-        test/QFileSystemModelDialog.cpp
-        test/QFileSystemModelDialog.h
-        test/QFileSystemModelDialog.ui
+        ${SOURCES}
+        ${HEADERS}
+        ${QT_WIDGETS_UIS}
         )
 
 set(TS_FILES
