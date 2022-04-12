@@ -111,6 +111,19 @@ bool QtTreeModel::TreeItem::InsertColumns(const lsize_t Position, const lsize_t 
     return true;
 }
 
+/**
+ * You MUSTN'T call this function at non-root nodes.
+ * @param Position
+ * @param Count The number of columns to be deleted.
+ * @return Whether the operation was succeeded.
+ */
+bool QtTreeModel::TreeItem::RemoveColumns(lsize_t Position, lsize_t Count) {
+    if (Position < 0 || Position + Count > ItemData.size()) return false;
+    ItemData.remove(Position, Count);
+    for (TreeItem* CurrentChild: qAsConst(ChildItem)) CurrentChild->RemoveColumns(Position, Count);
+    return true;
+}
+
 /// QtTreeModel
 
 QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootItem = new TreeItem(); }
@@ -128,11 +141,11 @@ QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int R
 }
 
 bool QtTreeModel::setHeaderData(int Section, Qt::Orientation Orientation, const QVariant& Value, int Role) {
-    if (Value != headerData(Section, Orientation, Role)) {
-        // FIXME: Implement me!
-        emit headerDataChanged(Orientation, Section, Section);
-        return true;
-    }
+//    if (Role!=Qt::EditRole&&Orientation!=Qt::Horizontal) return false;
+//    if (Value != headerData(Section, Orientation, Role)) {
+//        emit headerDataChanged(Orientation, Section, Section);
+//        return true;
+//    }
     return false;
 }
 
@@ -195,46 +208,46 @@ lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
     return RootItem->ChildCount();
 }
 
-bool QtTreeModel::hasChildren(const QModelIndex& Parent) const {
-    // FIXME: Implement me!
-}
-
-bool QtTreeModel::canFetchMore(const QModelIndex& Parent) const {
-    // FIXME: Implement me!
-    return false;
-}
-
-void QtTreeModel::fetchMore(const QModelIndex& Parent) {
-    // FIXME: Implement me!
-}
+//bool QtTreeModel::hasChildren(const QModelIndex& Parent) const {
+//    // FIXME: Implement me!
+//}
+//
+//bool QtTreeModel::canFetchMore(const QModelIndex& Parent) const {
+//    // FIXME: Implement me!
+//    return false;
+//}
+//
+//void QtTreeModel::fetchMore(const QModelIndex& Parent) {
+//    // FIXME: Implement me!
+//}
 
 QVariant QtTreeModel::data(const QModelIndex& Index, int Role) const {
-    if (!Index.isValid()) return QVariant();
-
-    // FIXME: Implement me!
-    return QVariant();
+    if ((Index.isValid() == false) || (Role != Qt::DisplayRole && Role != Qt::EditRole)) return {};
+    TreeItem* Item = GetItem(Index);
+    return Item->Data(Index.column());
 }
 
 bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int Role) {
-    if (data(Index, Role) != Value) {
-        // FIXME: Implement me!
-        emit dataChanged(Index, Index, { Role });
-        return true;
-    }
-    return false;
+    if (Role != Qt::EditRole) return false;
+    TreeItem* Item = GetItem(Index);
+    const bool Succeeded = Item->SetData(Index.column(), Value);
+    if (Succeeded) { emit dataChanged(Index, Index, { Qt::DisplayRole, Qt::EditRole }); }
+    return Succeeded;
 }
 
 Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
     if (!Index.isValid()) return Qt::NoItemFlags;
-
-    return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable; // FIXME: Implement me!
+    return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable;
 }
 
-bool QtTreeModel::insertRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent) {
-    beginInsertRows(Parent, Row, Row + Count - 1);
-    // FIXME: Implement me!
+bool QtTreeModel::insertRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent) {
+    TreeItem* TargetItem = GetItem(Parent);
+    if (TargetItem == nullptr) return false;
+    beginInsertRows(Parent, Position, Position + ChildCount - 1);
+//    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, TargetItem->ColumnCount());
+    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, RootItem->ColumnCount());
     endInsertRows();
-    return true;
+    return Succeeded;
 }
 
 bool QtTreeModel::insertColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
@@ -244,18 +257,21 @@ bool QtTreeModel::insertColumns(lsize_t Position, lsize_t ColumnCount, const QMo
     return Succeeded;
 }
 
-bool QtTreeModel::removeRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent) {
-    beginRemoveRows(Parent, Row, Row + Count - 1);
-    // FIXME: Implement me!
+bool QtTreeModel::removeRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent) {
+    TreeItem* TargetItem = GetItem(Parent);
+    if (TargetItem == nullptr) return false;
+    beginRemoveRows(Parent, Position, Position + ChildCount - 1);
+    const bool Succeeded = TargetItem->RemoveChildren(Position, ChildCount);
     endRemoveRows();
-    return true;
+    return Succeeded;
 }
 
-bool QtTreeModel::removeColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent) {
-    beginRemoveColumns(Parent, Column, Column + Count - 1);
-    // FIXME: Implement me!
+bool QtTreeModel::removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
+    beginRemoveColumns(Parent, Position, Position + ColumnCount - 1);
+    const bool Succeeded = RootItem->RemoveColumns(Position, ColumnCount);
+    if (RootItem->ChildCount() == 0) removeRows(0, rowCount());
     endRemoveColumns();
-    return true;
+    return Succeeded;
 }
 
 QtTreeModel::TreeItem* QtTreeModel::GetItem(const QModelIndex& Index) const {

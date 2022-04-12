@@ -23,7 +23,7 @@ namespace WritingMaterialsManager {
             bool InsertColumns(lsize_t Position, lsize_t ColumnCount);
             TreeItem* Parent();
             bool RemoveChildren(lsize_t Position, lsize_t Count);
-            bool RemoveColumns(lsize_t Position, lsize_t Columns);
+            bool RemoveColumns(lsize_t Position, lsize_t Count);
             lsize_t ChildNumber() const;
             bool SetData(lsize_t Column, const QVariant& Value);
 
@@ -51,10 +51,10 @@ namespace WritingMaterialsManager {
 
         // Fetch data dynamically:
 
-        bool hasChildren(const QModelIndex& Parent = QModelIndex()) const override;
-
-        bool canFetchMore(const QModelIndex& Parent) const override;
-        void fetchMore(const QModelIndex& Parent) override;
+//        bool hasChildren(const QModelIndex& Parent = QModelIndex()) const override;
+//
+//        bool canFetchMore(const QModelIndex& Parent) const override;
+//        void fetchMore(const QModelIndex& Parent) override;
 
         QVariant data(const QModelIndex& Index, int Role = Qt::DisplayRole) const override;
 
@@ -66,13 +66,13 @@ namespace WritingMaterialsManager {
 
         // Add data:
 
-        bool insertRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
+        bool insertRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent = QModelIndex()) override;
         bool insertColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent = QModelIndex()) override;
 
         // Remove data:
 
-        bool removeRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
-        bool removeColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
+        bool removeRows(lsize_t Position, lsize_t ChildCount, const QModelIndex& Parent = QModelIndex()) override;
+        bool removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent = QModelIndex()) override;
     private:
         TreeItem* GetItem(const QModelIndex& Index) const;
         TreeItem* RootItem;
