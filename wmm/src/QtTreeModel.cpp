@@ -136,7 +136,7 @@ QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int R
     switch (Section) {
     case 0:return "Name/Index";
     case 1:return "Value";
-    case 2:return "";
+    default:return "";
     }
 }
 
