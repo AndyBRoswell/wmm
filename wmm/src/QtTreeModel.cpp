@@ -3,6 +3,8 @@
 #include <stack>
 #include <vector>
 
+#include <QFlags>
+
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
 
@@ -247,9 +249,10 @@ QVariant QtTreeModel::data(const QModelIndex& Index, int Role) const {
 bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int Role) {
     if (Role != Qt::EditRole) return false;
     Node* Item = GetItem(Index);
-    const bool Succeeded = Item->SetData(Index.column(), Value);
-    if (Succeeded) { emit dataChanged(Index, Index, { Qt::DisplayRole, Qt::EditRole }); }
-    return Succeeded;
+//    const bool Succeeded = Item->SetData(Index.column(), Value);
+//    if (Succeeded) { emit dataChanged(Index, Index, { Qt::DisplayRole, Qt::EditRole }); }
+//    return Succeeded;
+    return false;
 }
 
 /**
@@ -260,6 +263,9 @@ bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int R
 Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
     if (!Index.isValid()) return Qt::NoItemFlags;
 //    return QAbstractItemModel::flags(Index);
+//    return static_cast<QFlags<Qt::ItemFlag>>(QAbstractItemModel::flags(Index) | Qt::TextSelectableByMouse);
+//    return static_cast<QFlags<Qt::ItemFlag>>(QAbstractItemModel::flags(Index) | Qt::TextSelectableByKeyboard);
+//    return static_cast<QFlags<Qt::ItemFlag>>(QAbstractItemModel::flags(Index) | Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable;
 }
 
