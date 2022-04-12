@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1920</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,18 +18,18 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>201</width>
-     <height>301</height>
+     <width>960</width>
+     <height>800</height>
     </rect>
    </property>
   </widget>
   <widget class="QListView" name="listView">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>960</x>
      <y>0</y>
-     <width>201</width>
-     <height>301</height>
+     <width>960</width>
+     <height>800</height>
     </rect>
    </property>
   </widget>
