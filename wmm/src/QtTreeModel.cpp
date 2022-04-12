@@ -36,7 +36,7 @@ QtTreeModel::Node* QtTreeModel::Node::Child(int Number) {
 lsize_t QtTreeModel::Node::ChildCount() const { return SubNode.count(); }
 
 /**
- * The ChildNumber() function is used to determine the index of the child in its parent's list of children.
+ * This function is used to determine the index of the child in its parent's children. (Element -> Array Index)
  * The root item has no parent item; for this item, we return 0 to be consistent with the other items.
  * @return
  */
