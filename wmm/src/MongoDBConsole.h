@@ -4,19 +4,14 @@
 #include <QWidget>
 
 namespace WritingMaterialsManager {
-    namespace Ui {
-        class MongoDBConsole;
-    }
-
     class MongoDBConsole : public QWidget {
     Q_OBJECT
 
     public:
-        explicit MongoDBConsole(QWidget* parent = nullptr);
+        explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
     private:
-        Ui::MongoDBConsole* ui;
     };
 }
 
