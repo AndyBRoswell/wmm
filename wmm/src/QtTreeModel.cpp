@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "rapidjson/document.h"
+#include "rapidjson/pointer.h"
 
 using namespace WritingMaterialsManager;
 
@@ -312,9 +313,10 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
     JSONDocument.Parse(JSONString.constData());
 
     beginResetModel();
+    qDebug() << JSONString;
     stack<const Value*, vector<const Value*>> s;
     stack<Node*, vector<Node*>> t;
-    s.emplace(&JSONDocument);
+    s.emplace(Pointer("").Get(JSONDocument));
     JSONRoot->PushBackData("");
     t.emplace(JSONRoot);
     while (s.empty() == false) { // non-recursive DFS
@@ -322,6 +324,7 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
         s.pop();
         Node* const nt = t.top();
         t.pop();
+        qDebug() << ns->GetType();
         switch (ns->GetType()) {
         case kNullType:nt->PushBackData("");
             break;
@@ -353,4 +356,5 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
         }
     }
     endResetModel();
+    qDebug() << RootNode->Child(0);
 }
