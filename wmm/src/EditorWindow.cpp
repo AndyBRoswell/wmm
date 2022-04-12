@@ -7,7 +7,7 @@ using namespace WritingMaterialsManager;
 
 /// EditorWindow
 
-EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),UI(new Ui::EditorWindow) {
+EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent), UI(new Ui::EditorWindow) {
     UI->setupUi(this);
 
     // preparation

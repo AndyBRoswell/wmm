@@ -3,20 +3,21 @@
 
 #include <QWidget>
 
-namespace Ui {
-class MongoDBConsole;
-}
+namespace WritingMaterialsManager {
+    namespace Ui {
+        class MongoDBConsole;
+    }
 
-class MongoDBConsole : public QWidget
-{
+    class MongoDBConsole : public QWidget {
     Q_OBJECT
 
-public:
-    explicit MongoDBConsole(QWidget *parent = nullptr);
-    ~MongoDBConsole();
+    public:
+        explicit MongoDBConsole(QWidget* parent = nullptr);
+        ~MongoDBConsole();
 
-private:
-    Ui::MongoDBConsole *ui;
-};
+    private:
+        Ui::MongoDBConsole* ui;
+    };
+}
 
 #endif // MONGODBCONSOLE_H
