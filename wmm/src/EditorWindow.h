@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include <QMainWindow>
+#include <QSplitter>
 
 namespace WritingMaterialsManager {
     namespace Ui {
@@ -18,6 +19,8 @@ namespace WritingMaterialsManager {
     private:
         class Page : public QWidget {
         public:
+            std::shared_ptr<QSplitter> SplitView;
+
             Page(QWidget* const Parent = nullptr);
             ~Page();
 

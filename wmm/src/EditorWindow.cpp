@@ -23,11 +23,14 @@ EditorWindow::~EditorWindow() {
 
 /// EditorWindow::Page
 
-EditorWindow::Page::Page(QWidget* const Parent) {
+EditorWindow::Page::Page(QWidget* const Parent): SplitView(new QSplitter(this)) {
+    SplitView->setOrientation(Qt::Vertical);
+
     setLayout(new QGridLayout);
+    layout()->addWidget(SplitView.get());
     show();
 }
 
 EditorWindow::Page::~Page() {}
 
-void EditorWindow::Page::AddSubWindow(QWidget* const Wnd) { layout()->addWidget(Wnd); }
+void EditorWindow::Page::AddSubWindow(QWidget* const Wnd) { SplitView->addWidget(Wnd); }
