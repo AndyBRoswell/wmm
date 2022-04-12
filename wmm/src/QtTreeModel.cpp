@@ -152,7 +152,7 @@ QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent), RootNode
 QtTreeModel::~QtTreeModel() { delete RootNode; }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
-    if (Orientation == Qt::Horizontal && Role == Qt::DisplayRole) return RootNode->Data(Section);
+    if (Orientation == Qt::Horizontal && Role == Qt::DisplayRole) { return RootNode->Data(Section); }
     return {};
 }
 
@@ -219,7 +219,7 @@ lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
 //    return Parent.isValid() ? GetItem(Parent)->ColumnCount() : 0;
     // for the situation where column count is fixed:
     Q_UNUSED(Parent);
-    return RootNode->ChildCount();
+    return RootNode->ColumnCount();
 }
 
 //bool QtTreeModel::hasChildren(const QModelIndex& Parent) const {
