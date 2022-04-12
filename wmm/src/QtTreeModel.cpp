@@ -205,8 +205,8 @@ QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
  * @return The number of children it contains.
  */
 lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
-    if (!Parent.isValid() && Parent.column() > 0) return 0;
-//    if (!Parent.isValid()) return 0;
+    if (Parent.isValid() && Parent.column() > 0) return 0;
+//    if (Parent.isValid()) return 0;
     const Node* const ParentItem = GetItem(Parent);
     return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
 }
@@ -249,6 +249,11 @@ bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int R
     return Succeeded;
 }
 
+/**
+ * Get the properties (i.e., editable) of an item.
+ * @param Index
+ * @return Properties of the item.
+ */
 Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
     if (!Index.isValid()) return Qt::NoItemFlags;
     return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable;
