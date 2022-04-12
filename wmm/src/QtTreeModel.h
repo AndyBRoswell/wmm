@@ -34,6 +34,7 @@ namespace WritingMaterialsManager {
         };
 
         explicit QtTreeModel(QObject* Parent = nullptr);
+        ~QtTreeModel();
 
         // Header:
 
@@ -73,6 +74,8 @@ namespace WritingMaterialsManager {
         bool removeRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
         bool removeColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
     private:
+        TreeItem* GetItem(const QModelIndex& Index) const;
+        TreeItem* RootItem;
     };
 }
 

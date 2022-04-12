@@ -113,8 +113,10 @@ bool QtTreeModel::TreeItem::InsertColumns(const lsize_t Position, const lsize_t 
 
 /// QtTreeModel
 
-QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) {
-}
+QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootItem = new TreeItem(); }
+
+// This will cause all items to be recursively deleted.
+QtTreeModel::~QtTreeModel() { delete RootItem; }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
     // FIXME: Implement me!
@@ -129,24 +131,48 @@ bool QtTreeModel::setHeaderData(int Section, Qt::Orientation Orientation, const 
     return false;
 }
 
+/**
+ * Obtain the index of a specific subnode of a node.
+ * In this model, we only return model indexes for child items
+ * if the parent index is invalid (corresponding to the root item) or if it has a 0 column number.
+ * @param Row
+ * @param Column
+ * @param Parent
+ * @return
+ */
 QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
-    // FIXME: Implement me!
+    if (Parent.isValid() && Parent.column() != 0) return {};
+    TreeItem* ParentItem = GetItem(Parent);
+    if (ParentItem == nullptr) return {};
+    TreeItem* ChildItem = ParentItem->Child(Row);
+    if (ChildItem != nullptr) return createIndex(Row, Column, ChildItem);
+    return {};
 }
 
 QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
     // FIXME: Implement me!
 }
 
+/**
+ * @param Parent The tree node whose children count is wanted.
+ * @return The number of children it contains.
+ */
 lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
-    if (!Parent.isValid()) return 0;
-
-    // FIXME: Implement me!
+    if (!Parent.isValid() && Parent.column() > 0) return 0;
+//    if (!Parent.isValid()) return 0;
+    const TreeItem* const ParentItem = GetItem(Parent);
+    return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
 }
 
+/**
+ * @param Parent The tree node whose number of elements (terms of data) is wanted.
+ * @return The number of elements this tree node contains.
+ */
 lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
-    if (!Parent.isValid()) return 0;
-
-    // FIXME: Implement me!
+//    return Parent.isValid() ? GetItem(Parent)->ColumnCount() : 0;
+    // for the situation where column count is fixed:
+    Q_UNUSED(Parent);
+    return RootItem->ChildCount();
 }
 
 bool QtTreeModel::hasChildren(const QModelIndex& Parent) const {
@@ -210,4 +236,11 @@ bool QtTreeModel::removeColumns(lsize_t Column, lsize_t Count, const QModelIndex
     // FIXME: Implement me!
     endRemoveColumns();
     return true;
+}
+
+QtTreeModel::TreeItem* QtTreeModel::GetItem(const QModelIndex& Index) const {
+    if (Index.isValid()) {
+        if (Index.internalPointer() != nullptr) return static_cast<TreeItem*>(Index.internalPointer());
+    }
+    return RootItem; // for a certain kind of consistency?
 }
