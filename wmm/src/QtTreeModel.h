@@ -67,7 +67,7 @@ namespace WritingMaterialsManager {
         // Add data:
 
         bool insertRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
-        bool insertColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent = QModelIndex()) override;
+        bool insertColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent = QModelIndex()) override;
 
         // Remove data:
 

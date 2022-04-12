@@ -99,7 +99,7 @@ bool QtTreeModel::TreeItem::RemoveChildren(const lsize_t Position, const lsize_t
  * The functions for inserting and removing columns are used differently to those for inserting and removing child items,
  * because they are expected to be called on every item in the tree.
  * This is done by recursively calling this function on each child of the item.
- * You mustn't call this function at non-root nodes.
+ * You MUSTN'T call this function at non-root nodes.
  * @param Position
  * @param ColumnCount The number of empty columns.
  * @return Whether the operation was succeeded.
@@ -119,7 +119,12 @@ QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent) { RootIte
 QtTreeModel::~QtTreeModel() { delete RootItem; }
 
 QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
-    // FIXME: Implement me!
+    // default header
+    switch (Section) {
+    case 0:return "Name/Index";
+    case 1:return "Value";
+    case 2:return "";
+    }
 }
 
 bool QtTreeModel::setHeaderData(int Section, Qt::Orientation Orientation, const QVariant& Value, int Role) {
@@ -149,8 +154,23 @@ QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& P
     return {};
 }
 
+/**
+ * Since each item contains information for an entire row of data,
+ * we create a model index to uniquely identify it by calling createIndex() with the row and column numbers and a pointer to the item.
+ * In the data() function, we will use the item pointer and column number to access the data associated with the model index;
+ * in this model, the row number is not needed to identify data.
+ * Items without parents, including the root item, are handled by returning a null model index.
+ * Otherwise, a model index is created and returned as in the index() function, with a suitable row number,
+ * but with a 0 column number to be consistent with the scheme used in the index() implementation.
+ * @param Index
+ * @return
+ */
 QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
-    // FIXME: Implement me!
+    if (Index.isValid() == false) return {};
+    TreeItem* CurrentItem = GetItem(Index);
+    TreeItem* ParentItem = CurrentItem != nullptr ? CurrentItem->Parent() : nullptr;
+    if (ParentItem == RootItem || ParentItem == nullptr) return {};
+    return createIndex(ParentItem->ChildNumber(), 0, ParentItem);
 }
 
 /**
@@ -217,11 +237,11 @@ bool QtTreeModel::insertRows(lsize_t Row, lsize_t Count, const QModelIndex& Pare
     return true;
 }
 
-bool QtTreeModel::insertColumns(lsize_t Column, lsize_t Count, const QModelIndex& Parent) {
-    beginInsertColumns(Parent, Column, Column + Count - 1);
-    // FIXME: Implement me!
+bool QtTreeModel::insertColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
+    beginInsertColumns(Parent, Position, Position + ColumnCount - 1);
+    const bool Succeeded = RootItem->InsertColumns(Position, ColumnCount);
     endInsertColumns();
-    return true;
+    return Succeeded;
 }
 
 bool QtTreeModel::removeRows(lsize_t Row, lsize_t Count, const QModelIndex& Parent) {
