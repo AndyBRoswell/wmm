@@ -145,6 +145,8 @@ bool QtTreeModel::Node::RemoveColumns(lsize_t Position, lsize_t Count) {
     return true;
 }
 
+void QtTreeModel::Node::ReverseChild() { std::reverse(SubNode.begin(), SubNode.end()); }
+
 /// QtTreeModel
 
 QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent), RootNode(new Node({ tr("Name/Index"), tr("Value") })) {}
@@ -338,7 +340,7 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
         case kArrayType:
             for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
                 s.emplace(&*i);
-                Node* const c = new Node({ i - ns->Begin() }, nt);
+                Node* const c = new Node({ ns->Size() - (i - ns->Begin()) - 1 }, nt);
                 nt->PushBackChild(c);
                 t.emplace(c);
             }

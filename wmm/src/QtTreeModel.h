@@ -26,6 +26,7 @@ namespace WritingMaterialsManager {
             Node* Parent();
             bool RemoveChildren(lsize_t Position, lsize_t Count);
             bool RemoveColumns(lsize_t Position, lsize_t Count);
+            void ReverseChild();
             lsize_t ChildNumber() const;
             bool SetData(lsize_t Column, const QVariant& Value);
             QVariant& PushBackData(const QVariant& Value);
