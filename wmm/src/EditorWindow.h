@@ -5,15 +5,15 @@
 
 namespace WritingMaterialsManager {
     namespace Ui {
-        class Editor;
+        class EditorWindow;
     }
 
-    class Editor : public QMainWindow {
+    class EditorWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        explicit Editor(QWidget* parent = nullptr);
-        ~Editor();
+        explicit EditorWindow(QWidget* parent = nullptr);
+        ~EditorWindow();
 
     private:
         class Page: public QWidget {
@@ -22,7 +22,11 @@ namespace WritingMaterialsManager {
             ~Page();
         };
 
-        Ui::Editor* UI;
+        class MongoDBConsole: public QWidget {
+
+        };
+
+        Ui::EditorWindow* UI;
     };
 }
 

@@ -1,11 +1,11 @@
-#include "Editor.h"
-#include "ui_Editor.h"
+#include "EditorWindow.h"
+#include "ui_EditorWindow.h"
 
 #include <QGridLayout>
 
 using namespace WritingMaterialsManager;
 
-Editor::Editor(QWidget* parent) : QMainWindow(parent), UI(new Ui::Editor) {
+EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),UI(new Ui::EditorWindow) {
     UI->setupUi(this);
 
     // preparation
@@ -15,6 +15,6 @@ Editor::Editor(QWidget* parent) : QMainWindow(parent), UI(new Ui::Editor) {
     centralWidget()->layout()->addWidget(UI->EditorTab);
 }
 
-Editor::~Editor() {
+EditorWindow::~EditorWindow() {
     delete UI;
 }

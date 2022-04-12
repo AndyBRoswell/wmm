@@ -36,9 +36,9 @@ set(CODE_FILES
         src/DataSourceManager.cpp
         src/DataSourceManager.h
         src/DataSourceManager.ui
-        src/Editor.cpp
-        src/Editor.h
-        src/Editor.ui
+        src/EditorWindow.cpp
+        src/EditorWindow.h
+        src/EditorWindow.ui
 
         src/QtTreeModel.cpp
         src/QtTreeModel.h

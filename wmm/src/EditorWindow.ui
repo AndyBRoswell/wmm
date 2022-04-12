@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WritingMaterialsManager::Editor</class>
- <widget class="QMainWindow" name="WritingMaterialsManager::Editor">
+ <class>WritingMaterialsManager::EditorWindow</class>
+ <widget class="QMainWindow" name="WritingMaterialsManager::EditorWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
