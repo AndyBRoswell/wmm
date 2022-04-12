@@ -15,6 +15,8 @@ DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(
     UI->setupUi(this);
 
     // preparation
+    setWindowTitle(tr("数据来源管理器"));
+
     centralWidget()->setLayout(new QGridLayout);
     centralWidget()->layout()->addWidget(UI->DataSourceTab);
 

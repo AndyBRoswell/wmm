@@ -359,5 +359,4 @@ void QtTreeModel::FromJSON(const QByteArray& JSONString) {
         }
     }
     endResetModel();
-    qDebug() << RootNode->Child(0);
 }
