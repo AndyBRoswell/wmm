@@ -259,6 +259,7 @@ bool QtTreeModel::setData(const QModelIndex& Index, const QVariant& Value, int R
  */
 Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
     if (!Index.isValid()) return Qt::NoItemFlags;
+//    return QAbstractItemModel::flags(Index);
     return QAbstractItemModel::flags(Index) | Qt::ItemIsEditable;
 }
 
