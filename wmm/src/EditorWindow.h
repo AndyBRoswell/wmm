@@ -1,5 +1,5 @@
-#ifndef EDITOR_H
-#define EDITOR_H
+#ifndef WRITING_MATERIALS_MANAGER_EDITOR_H
+#define WRITING_MATERIALS_MANAGER_EDITOR_H
 
 #include <QMainWindow>
 #include <QSplitter>
@@ -41,4 +41,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif // EDITOR_H
+#endif // WRITING_MATERIALS_MANAGER_EDITOR_H

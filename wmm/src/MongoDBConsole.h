@@ -1,5 +1,5 @@
-#ifndef MONGODBCONSOLE_H
-#define MONGODBCONSOLE_H
+#ifndef WRITING_MATERIALS_MANAGER_MONGODBCONSOLE_H
+#define WRITING_MATERIALS_MANAGER_MONGODBCONSOLE_H
 
 #include <QComboBox>
 #include <QListView>
@@ -39,4 +39,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif // MONGODBCONSOLE_H
+#endif // WRITING_MATERIALS_MANAGER_MONGODBCONSOLE_H
