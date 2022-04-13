@@ -37,6 +37,9 @@ namespace WritingMaterialsManager {
         ExecutionAreaLayout->setStretch(0, 1);
         ExecutionAreaLayout->setStretch(1, 0);
         FunctionArea->addWidget(ControlArea);
+        FunctionArea->setStretchFactor(0, 1);
+        FunctionArea->setStretchFactor(1, 1);
+        FunctionArea->setStretchFactor(2, 2);
 
         RootView->setOrientation(Qt::Vertical);
         RootView->addWidget(FunctionArea);

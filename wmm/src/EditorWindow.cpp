@@ -15,6 +15,8 @@ namespace WritingMaterialsManager {
         auto* const MDBCPage = new MongoDBConsoleAndEditorPage;
         MDBCPage->RootView->addWidget(new MongoDBConsole);
         MDBCPage->RootView->addWidget(new Editor);
+        MDBCPage->RootView->setStretchFactor(0, 1);
+        MDBCPage->RootView->setStretchFactor(1, 4);
         auto* const EditorPage = new EditorOnlyPage;
         EditorPage->RootView->addWidget(new Editor);
         TabView->addTab(MDBCPage, "MongoDB Console");
