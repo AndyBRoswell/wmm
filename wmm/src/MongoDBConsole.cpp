@@ -16,19 +16,28 @@ namespace WritingMaterialsManager {
                                                             DatabaseListModel(new QStringListModel),
                                                             CollectionListModel(new QStringListModel),
                                                             ParamListModel(new QStringListModel) {
-        FunctionArea->addWidget(DatabaseListView);
-        FunctionArea->addWidget(CollectionListView);
         DatabaseListView->setModel(DatabaseListModel);
         CollectionListView->setModel(CollectionListModel);
+        ParamEditor->setModel(ParamListModel);
+
+        FunctionArea->addWidget(DatabaseListView);
+        FunctionArea->addWidget(CollectionListView);
         QWidget* const ControlArea = new QWidget;
-        FunctionArea->addWidget(ControlArea);
         ControlArea->setLayout(new QGridLayout);
         ControlArea->layout()->addWidget(URLForm);
         QWidget* const ExecutionArea = new QWidget;
-        ControlArea->layout()->addWidget(ExecutionArea);
-        ExecutionArea->setLayout(new QHBoxLayout);
+        QHBoxLayout* const ExecutionAreaLayout = new QHBoxLayout;
+        ExecutionArea->setLayout(ExecutionAreaLayout);
         ExecutionArea->layout()->addWidget(FunctionComboBox);
         ExecutionArea->layout()->addWidget(ExecuteButton);
+        ControlArea->layout()->addWidget(ExecutionArea);
+        ExecutionAreaLayout->setStretch(0, 1);
+        ExecutionAreaLayout->setStretch(1, 0);
+        FunctionArea->addWidget(ControlArea);
+
+        RootView->setOrientation(Qt::Vertical);
+        RootView->addWidget(FunctionArea);
+        RootView->addWidget(ParamEditor);
 
         setLayout(new QGridLayout);
         layout()->addWidget(RootView);
