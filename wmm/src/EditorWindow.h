@@ -13,18 +13,28 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
+        QSplitter* RootView;
+
         explicit EditorWindow(QWidget* Parent = nullptr);
         ~EditorWindow();
 
     private:
         class Page : public QWidget {
         public:
-            std::shared_ptr<QSplitter> SplitView;
+            QSplitter* RootView;
 
             Page(QWidget* const Parent = nullptr);
             ~Page();
+        };
 
-            void AddSubWindow(QWidget* const Wnd);
+        class MongoDBConsoleAndEditorPage : public Page {
+        public:
+            MongoDBConsoleAndEditorPage(QWidget* const Parent = nullptr);
+        };
+
+        class EditorOnlyPage : public Page {
+        public:
+            EditorOnlyPage(QWidget* const Parent = nullptr);
         };
 
         Ui::EditorWindow* UI;

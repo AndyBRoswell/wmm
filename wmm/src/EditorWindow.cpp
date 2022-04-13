@@ -7,14 +7,19 @@ using namespace WritingMaterialsManager;
 
 /// EditorWindow
 
-EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent), UI(new Ui::EditorWindow) {
+EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent), UI(new Ui::EditorWindow), RootView(new QSplitter(this)) {
     UI->setupUi(this);
 
     // preparation
-    setWindowTitle(tr("编辑器"));
+    QTabWidget* TabView = new QTabWidget;
+    TabView->addTab(new MongoDBConsoleAndEditorPage, "MongoDB Console");
+    TabView->addTab(new EditorOnlyPage, "Editor Only");
+    RootView->addWidget(TabView);
 
+    setWindowTitle(tr("编辑器"));
     centralWidget()->setLayout(new QGridLayout);
-    centralWidget()->layout()->addWidget(UI->EditorTab);
+    centralWidget()->layout()->addWidget(RootView);
+    show();
 }
 
 EditorWindow::~EditorWindow() {
@@ -23,14 +28,21 @@ EditorWindow::~EditorWindow() {
 
 /// EditorWindow::Page
 
-EditorWindow::Page::Page(QWidget* const Parent): SplitView(new QSplitter(this)) {
-    SplitView->setOrientation(Qt::Vertical);
+EditorWindow::Page::Page(QWidget* const Parent): RootView(new QSplitter(this)) {
+    RootView->setOrientation(Qt::Vertical);
 
     setLayout(new QGridLayout);
-    layout()->addWidget(SplitView.get());
-    show();
+    layout()->addWidget(RootView);
 }
 
 EditorWindow::Page::~Page() {}
 
-void EditorWindow::Page::AddSubWindow(QWidget* const Wnd) { SplitView->addWidget(Wnd); }
+/// EditorWindow::DefaultPage
+
+EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {
+
+}
+
+EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {
+
+}

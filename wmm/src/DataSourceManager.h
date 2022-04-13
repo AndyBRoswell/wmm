@@ -26,7 +26,7 @@ namespace WritingMaterialsManager {
             Page(QWidget* const Parent);
             ~Page();
 
-            std::shared_ptr<QTreeView> TreeView;
+            QTreeView* TreeView;
         };
 
         Ui::DataSourceManager* UI;

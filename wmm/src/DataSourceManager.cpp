@@ -45,7 +45,7 @@ DataSourceManager::~DataSourceManager() {
 
 DataSourceManager::Page::Page(QWidget* const Parent): QWidget(Parent), TreeView(new QTreeView(this)) {
     setLayout(new QGridLayout);
-    layout()->addWidget(TreeView.get());
+    layout()->addWidget(TreeView);
     show();
 }
 
