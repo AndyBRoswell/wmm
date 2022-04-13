@@ -3,16 +3,22 @@
 
 #include <QGridLayout>
 
-namespace WritingMaterialsManager {
-/// EditorWindow
+#include "Editor.h"
+#include "MongoDBConsole.h"
 
+namespace WritingMaterialsManager {
     EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent), UI(new Ui::EditorWindow), RootView(new QSplitter(this)) {
         UI->setupUi(this);
 
         // preparation
-        QTabWidget* TabView = new QTabWidget;
-        TabView->addTab(new MongoDBConsoleAndEditorPage, "MongoDB Console");
-        TabView->addTab(new EditorOnlyPage, "Editor Only");
+        QTabWidget* const TabView = new QTabWidget;
+        auto* const MDBCPage = new MongoDBConsoleAndEditorPage;
+        MDBCPage->RootView->addWidget(new MongoDBConsole);
+        MDBCPage->RootView->addWidget(new Editor);
+        auto* const EditorPage = new EditorOnlyPage;
+        EditorPage->RootView->addWidget(new Editor);
+        TabView->addTab(MDBCPage, "MongoDB Console");
+        TabView->addTab(EditorPage, "Editor Only");
         RootView->addWidget(TabView);
 
         setWindowTitle(tr("编辑器"));
@@ -25,7 +31,7 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
-/// EditorWindow::Page
+/// ----------------------------------------------------------------
 
     EditorWindow::Page::Page(QWidget* const Parent) : RootView(new QSplitter(this)) {
         RootView->setOrientation(Qt::Vertical);
@@ -36,13 +42,9 @@ namespace WritingMaterialsManager {
 
     EditorWindow::Page::~Page() {}
 
-/// EditorWindow::DefaultPage
+/// ----------------------------------------------------------------
 
-    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {
+    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {}
 
-    }
-
-    EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {
-
-    }
+    EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {}
 }

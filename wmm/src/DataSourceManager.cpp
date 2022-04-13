@@ -8,8 +8,6 @@
 #include "QtTreeModel.h"
 
 namespace WritingMaterialsManager {
-/// DataSourceManager
-
     DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(new Ui::DataSourceManager) {
         UI->setupUi(this);
 
@@ -40,7 +38,7 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
-/// DataSourceManager::Pages
+/// ----------------------------------------------------------------
 
     DataSourceManager::Page::Page(QWidget* const Parent) : QWidget(Parent), TreeView(new QTreeView(this)) {
         setLayout(new QGridLayout);

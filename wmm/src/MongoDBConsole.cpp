@@ -3,8 +3,6 @@
 #include <QGridLayout>
 
 namespace WritingMaterialsManager {
-/// class MongoDBConsole
-
     MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
                                                             MongoDBAccessor(new class MongoDBAccessor),
                                                             URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
@@ -14,7 +12,10 @@ namespace WritingMaterialsManager {
                                                             ExecuteButton(new QPushButton("▶")),
                                                             ParamEditor(new QListView),
                                                             RootView(new QSplitter),
-                                                            FunctionArea(new QSplitter) {
+                                                            FunctionArea(new QSplitter),
+                                                            DatabaseListModel(new QStringListModel),
+                                                            CollectionListModel(new QStringListModel),
+                                                            ParamListModel(new QStringListModel) {
         FunctionArea->addWidget(DatabaseListView);
         FunctionArea->addWidget(CollectionListView);
         DatabaseListView->setModel(DatabaseListModel);

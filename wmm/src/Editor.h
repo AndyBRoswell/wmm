@@ -1,16 +1,27 @@
 #ifndef WRITING_MATERIALS_MANAGER_EDITOR_H
 #define WRITING_MATERIALS_MANAGER_EDITOR_H
 
+#include <QPlainTextEdit>
+#include <QTabWidget>
+#include <QTreeView>
 #include <QWidget>
+
+#include "QtTreeModel.h"
 
 namespace WritingMaterialsManager {
     class Editor : public QWidget {
     Q_OBJECT
+
     public:
-        explicit Editor(QWidget* parent = nullptr);
+        QTabWidget* const TabView;
+        QTreeView* const IntuitiveView;
+        QPlainTextEdit* const RawView;
 
-    signals:
+        explicit Editor(QWidget* const parent = nullptr, const std::shared_ptr<QtTreeModel>& TreeModel = nullptr);
+        ~Editor();
 
+    private:
+        std::shared_ptr<QtTreeModel> TreeModel;
     };
 } // namespace WritingMaterialsManager
 
