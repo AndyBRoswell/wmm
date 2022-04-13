@@ -15,6 +15,7 @@ MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
 
     ParamEditor->setModel(ParamEditorModel);
 
+    RootView->setOrientation(Qt::Vertical);
     RootView->addWidget(FunctionArea);
     RootView->addWidget(ParamEditor);
 
@@ -29,13 +30,20 @@ MongoDBConsole::FunctionArea::FunctionArea(QWidget* const Parent) : QSplitter(Pa
                                                                     URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                                     DatabaseListView(new QListView),
                                                                     CollectionListView(new QListView),
-                                                                    FunctionComboBox(new QComboBox),
-                                                                    ExecuteButton(new QPushButton("▶")),
+
                                                                     DatabaseListArea(new QSplitter(this)),
-                                                                    ControlArea(new QSplitter(this)),
+                                                                    ControlArea(new class ControlArea),
                                                                     DatabaseListModel(new QStringListModel),
                                                                     CollectionListModel(new QStringListModel) {
     DatabaseListArea->addWidget(DatabaseListView);
     DatabaseListArea->addWidget(CollectionListView);
+
+}
+
+/// class MongoDBConsole::FunctionArea::ControlArea
+
+MongoDBConsole::FunctionArea::ControlArea::ControlArea(QWidget* const Parent) : QWidget(Parent),
+                                                                                FunctionComboBox(new QComboBox),
+                                                                                ExecuteButton(new QPushButton("▶")) {
     
 }

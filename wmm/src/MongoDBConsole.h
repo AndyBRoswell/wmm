@@ -18,14 +18,21 @@ namespace WritingMaterialsManager {
     public:
         class FunctionArea : public QSplitter {
         public:
+            class ControlArea: public QWidget {
+            public:
+                QComboBox* FunctionComboBox;
+                QPushButton* ExecuteButton;
+
+                ControlArea(QWidget* const Parent = nullptr);
+            };
+
             QPlainTextEdit* URLForm;
             QListView* DatabaseListView;
             QListView* CollectionListView;
-            QComboBox* FunctionComboBox;
-            QPushButton* ExecuteButton;
+
 
             QSplitter* DatabaseListArea;
-            QSplitter* ControlArea;
+            ControlArea* ControlArea;
 
             explicit FunctionArea(QWidget* const Parent = nullptr);
         private:
