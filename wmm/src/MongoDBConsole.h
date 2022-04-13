@@ -13,7 +13,7 @@ namespace WritingMaterialsManager {
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
-        std::shared_ptr<QSplitter> FunctionArea;
+        QSplitter* FunctionArea;
 
 
     private:
