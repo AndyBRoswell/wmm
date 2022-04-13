@@ -6,7 +6,11 @@ using namespace WritingMaterialsManager;
 
 /// class MongoDBConsole
 
-MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent), RootView(new QSplitter(this)), FunctionArea(new class FunctionArea), ParamEditor(), ParamEditorModel(new QStringListModel()) {
+MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
+                                                        RootView(new QSplitter(this)),
+                                                        FunctionArea(new class FunctionArea),
+                                                        ParamEditor(new QListView()),
+                                                        ParamEditorModel(new QStringListModel()) {
     // preparation
     setLayout(new QGridLayout);
 
@@ -21,6 +25,13 @@ MongoDBConsole::~MongoDBConsole() {}
 
 /// class MongoDBConsole::FunctionArea
 
-MongoDBConsole::FunctionArea::FunctionArea(QWidget* const Parent) : QSplitter(Parent) {
-
+MongoDBConsole::FunctionArea::FunctionArea(QWidget* const Parent) : QSplitter(Parent),
+                                                                    URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
+                                                                    DatabaseListView(new QListView),
+                                                                    CollectionListView(new QListView),
+                                                                    FunctionComboBox(new QComboBox),
+                                                                    ExecuteButton(new QPushButton("▶")),
+                                                                    DatabaseListArea(new QSplitter(this)),
+                                                                    ControlArea(new QSplitter(this)) {
+    
 }

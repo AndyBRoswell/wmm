@@ -12,7 +12,9 @@
 namespace WritingMaterialsManager {
     class MongoDBAccessor {
     public:
-        MongoDBAccessor(const char* const MongoDBURI = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000");
+        static constexpr char LocalMongoDBURI[] = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000";
+
+        MongoDBAccessor(const char* const MongoDBURI = LocalMongoDBURI);
         // return string 'cause different document DBs use different internal data structures.
         QByteArray GetDatabasesInformation();
         QByteArray GetCollectionsInformation(mongocxx::database& Database);

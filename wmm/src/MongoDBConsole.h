@@ -24,6 +24,9 @@ namespace WritingMaterialsManager {
             QComboBox* FunctionComboBox;
             QPushButton* ExecuteButton;
 
+            QSplitter* DatabaseListArea;
+            QSplitter* ControlArea;
+
             explicit FunctionArea(QWidget* const Parent = nullptr);
         };
 
@@ -35,6 +38,8 @@ namespace WritingMaterialsManager {
         QListView* ParamEditor;
 
     private:
+        QStringListModel* DatabaseListModel;
+        QStringListModel* CollectionModel;
         QStringListModel* ParamEditorModel;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
     };
