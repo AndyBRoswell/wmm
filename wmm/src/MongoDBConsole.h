@@ -27,7 +27,7 @@ namespace WritingMaterialsManager {
         QListView* const ParamEditor;
 
         QSplitter* const RootView;
-        
+
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
