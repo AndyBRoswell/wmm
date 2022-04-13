@@ -30,7 +30,7 @@ namespace WritingMaterialsManager {
             explicit FunctionArea(QWidget* const Parent = nullptr);
         private:
             QStringListModel* DatabaseListModel;
-            QStringListModel* CollectionModel;
+            QStringListModel* CollectionListModel;
         };
 
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
