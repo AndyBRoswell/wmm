@@ -1,5 +1,5 @@
-#ifndef WRITING_ASSISTANT_GLOBAL_H
-#define WRITING_ASSISTANT_GLOBAL_H
+#ifndef WRITING_MATERIALS_MANAGER_GLOBAL_H
+#define WRITING_MATERIALS_MANAGER_GLOBAL_H
 
 #include <QObject>
 #include <QQmlContext>
@@ -9,4 +9,4 @@ namespace WritingMaterialsManager {
     extern QQmlContext* MainWindowQMLContext;
 }
 
-#endif // WRITING_ASSISTANT_GLOBAL_H
+#endif // WRITING_MATERIALS_MANAGER_GLOBAL_H

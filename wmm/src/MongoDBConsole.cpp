@@ -7,6 +7,7 @@ using namespace WritingMaterialsManager;
 /// class MongoDBConsole
 
 MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
+                                                        MongoDBAccessor(new class MongoDBAccessor),
                                                         URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                         DatabaseListView(new QListView),
                                                         CollectionListView(new QListView),
