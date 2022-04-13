@@ -19,7 +19,7 @@ namespace WritingMaterialsManager {
         EditorPage->RootView->addWidget(new Editor);
         TabView->addTab(MDBCPage, "MongoDB Console");
         TabView->addTab(EditorPage, "Editor Only");
-        RootView->addWidget(TabView);
+        RootView->addWidget(new QWidget);
 
         setWindowTitle(tr("编辑器"));
         centralWidget()->setLayout(new QGridLayout);

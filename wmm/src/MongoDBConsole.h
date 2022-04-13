@@ -9,7 +9,7 @@
 #include <QStringListModel>
 #include <QWidget>
 
-#include <MongoDBAccessor.h>
+#include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
     class MongoDBConsole : public QWidget {
