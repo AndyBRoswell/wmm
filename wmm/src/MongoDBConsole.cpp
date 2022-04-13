@@ -7,43 +7,30 @@ using namespace WritingMaterialsManager;
 /// class MongoDBConsole
 
 MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
-                                                        RootView(new QSplitter(this)),
-                                                        FunctionArea(new class FunctionArea),
-                                                        ParamEditor(new QListView()),
-                                                        ParamEditorModel(new QStringListModel) {
+                                                        URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
+                                                        DatabaseListView(new QListView),
+                                                        CollectionListView(new QListView),
+                                                        FunctionComboBox(new QComboBox),
+                                                        ExecuteButton(new QPushButton("▶")),
+                                                        ParamEditor(new QListView),
+                                                        RootView(new QSplitter),
+                                                        FunctionArea(new QSplitter) {
+    FunctionArea->addWidget(DatabaseListView);
+    FunctionArea->addWidget(CollectionListView);
+    DatabaseListView->setModel(DatabaseListModel);
+    CollectionListView->setModel(CollectionListModel);
+    QWidget* const ControlArea = new QWidget;
+    FunctionArea->addWidget(ControlArea);
+    ControlArea->setLayout(new QGridLayout);
+    ControlArea->layout()->addWidget(URLForm);
+    QWidget* const ExecutionArea = new QWidget;
+    ControlArea->layout()->addWidget(ExecutionArea);
+    ExecutionArea->setLayout(new QHBoxLayout);
+    ExecutionArea->layout()->addWidget(FunctionComboBox);
+    ExecutionArea->layout()->addWidget(ExecuteButton);
+
     setLayout(new QGridLayout);
-
-    ParamEditor->setModel(ParamEditorModel);
-
-    RootView->setOrientation(Qt::Vertical);
-    RootView->addWidget(FunctionArea);
-    RootView->addWidget(ParamEditor);
-
     layout()->addWidget(RootView);
 }
 
 MongoDBConsole::~MongoDBConsole() {}
-
-/// class MongoDBConsole::FunctionArea
-
-MongoDBConsole::FunctionArea::FunctionArea(QWidget* const Parent) : QSplitter(Parent),
-                                                                    URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
-                                                                    DatabaseListView(new QListView),
-                                                                    CollectionListView(new QListView),
-
-                                                                    DatabaseListArea(new QSplitter(this)),
-                                                                    ControlArea(new class ControlArea),
-                                                                    DatabaseListModel(new QStringListModel),
-                                                                    CollectionListModel(new QStringListModel) {
-    DatabaseListArea->addWidget(DatabaseListView);
-    DatabaseListArea->addWidget(CollectionListView);
-
-}
-
-/// class MongoDBConsole::FunctionArea::ControlArea
-
-MongoDBConsole::FunctionArea::ControlArea::ControlArea(QWidget* const Parent) : QWidget(Parent),
-                                                                                FunctionComboBox(new QComboBox),
-                                                                                ExecuteButton(new QPushButton("▶")) {
-    
-}

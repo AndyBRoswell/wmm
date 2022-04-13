@@ -16,39 +16,25 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
-        class FunctionArea : public QSplitter {
-        public:
-            class ControlArea: public QWidget {
-            public:
-                QComboBox* FunctionComboBox;
-                QPushButton* ExecuteButton;
-
-                ControlArea(QWidget* const Parent = nullptr);
-            };
-
-            QPlainTextEdit* URLForm;
-            QListView* DatabaseListView;
-            QListView* CollectionListView;
-
-
-            QSplitter* DatabaseListArea;
-            ControlArea* ControlArea;
-
-            explicit FunctionArea(QWidget* const Parent = nullptr);
-        private:
-            QStringListModel* DatabaseListModel;
-            QStringListModel* CollectionListModel;
-        };
-
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
-        QSplitter* RootView;
-        FunctionArea* FunctionArea;
+        QSplitter* FunctionArea;
+
+        QPlainTextEdit* URLForm;
+        QListView* DatabaseListView;
+        QListView* CollectionListView;
+        QComboBox* FunctionComboBox;
+        QPushButton* ExecuteButton;
+
         QListView* ParamEditor;
 
+        QSplitter* RootView;
+
     private:
-        QStringListModel* ParamEditorModel;
+        QStringListModel* DatabaseListModel;
+        QStringListModel* CollectionListModel;
+        QStringListModel* ParamListModel;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
     };
 }
