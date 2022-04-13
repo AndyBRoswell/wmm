@@ -14,6 +14,7 @@ MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
     // preparation
     setLayout(new QGridLayout);
 
+    ParamEditor->setModel(ParamEditorModel);
 
     RootView->addWidget(FunctionArea);
     RootView->addWidget(ParamEditor);
@@ -33,5 +34,5 @@ MongoDBConsole::FunctionArea::FunctionArea(QWidget* const Parent) : QSplitter(Pa
                                                                     ExecuteButton(new QPushButton("▶")),
                                                                     DatabaseListArea(new QSplitter(this)),
                                                                     ControlArea(new QSplitter(this)) {
-    
+
 }

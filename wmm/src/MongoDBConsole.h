@@ -28,6 +28,9 @@ namespace WritingMaterialsManager {
             QSplitter* ControlArea;
 
             explicit FunctionArea(QWidget* const Parent = nullptr);
+        private:
+            QStringListModel* DatabaseListModel;
+            QStringListModel* CollectionModel;
         };
 
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
@@ -38,8 +41,6 @@ namespace WritingMaterialsManager {
         QListView* ParamEditor;
 
     private:
-        QStringListModel* DatabaseListModel;
-        QStringListModel* CollectionModel;
         QStringListModel* ParamEditorModel;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
     };
