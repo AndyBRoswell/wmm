@@ -44,6 +44,8 @@ namespace WritingMaterialsManager {
         RootView->setOrientation(Qt::Vertical);
         RootView->addWidget(FunctionArea);
         RootView->addWidget(ParamEditor);
+        RootView->setStretchFactor(0, 1);
+        RootView->setStretchFactor(1, 2);
 
         setLayout(new QGridLayout);
         layout()->addWidget(RootView);
