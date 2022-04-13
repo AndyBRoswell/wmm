@@ -1,5 +1,5 @@
-#ifndef WRITING_ASSISTANT_TEST_H
-#define WRITING_ASSISTANT_TEST_H
+#ifndef WRITING_MATERIALS_MANAGER_TEST_H
+#define WRITING_MATERIALS_MANAGER_TEST_H
 
 #include <string>
 
@@ -57,4 +57,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif // WRITING_ASSISTANT_TEST_H
+#endif // WRITING_MATERIALS_MANAGER_TEST_H

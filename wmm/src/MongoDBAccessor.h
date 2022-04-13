@@ -1,5 +1,5 @@
-#ifndef WRITING_ASSISTANT_MONGODBACCESSOR_H
-#define WRITING_ASSISTANT_MONGODBACCESSOR_H
+#ifndef WRITING_MATERIALS_MANAGER_MONGODBACCESSOR_H
+#define WRITING_MATERIALS_MANAGER_MONGODBACCESSOR_H
 
 // mongocxx
 #include <mongocxx/client.hpp>
@@ -12,7 +12,9 @@
 namespace WritingMaterialsManager {
     class MongoDBAccessor {
     public:
-        MongoDBAccessor(const char* const MongoDBURI = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000");
+        static constexpr char LocalMongoDBURI[] = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000";
+
+        MongoDBAccessor(const char* const MongoDBURI = LocalMongoDBURI);
         // return string 'cause different document DBs use different internal data structures.
         QByteArray GetDatabasesInformation();
         QByteArray GetCollectionsInformation(mongocxx::database& Database);
@@ -25,4 +27,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif //WRITING_ASSISTANT_MONGODBACCESSOR_H
+#endif //WRITING_MATERIALS_MANAGER_MONGODBACCESSOR_H

@@ -11,6 +11,7 @@
 
 // headers of wmm
 #include "DataSourceManager.h"
+#include "EditorWindow.h"
 
 // tests
 #include "test/Test.h"
@@ -79,6 +80,8 @@ int main(int argc, char* argv[]) {
 
     auto DataSourceManager = new class DataSourceManager();
     DataSourceManager->showMaximized();
+    auto Editor = new class EditorWindow();
+    Editor->showMaximized();
 
     return App.exec();
 }

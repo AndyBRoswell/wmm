@@ -1,5 +1,5 @@
-#ifndef QTTREEMODEL_H
-#define QTTREEMODEL_H
+#ifndef WRITING_MATERIALS_MANAGER_QTTREEMODEL_H
+#define WRITING_MATERIALS_MANAGER_QTTREEMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -86,4 +86,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif // QTTREEMODEL_H
+#endif // WRITING_MATERIALS_MANAGER_QTTREEMODEL_H

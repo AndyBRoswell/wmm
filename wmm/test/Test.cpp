@@ -47,7 +47,6 @@
 
 #include "QFileSystemModelDialog.h"
 
-//#include "TextEditor.h"
 #include "MongoDBAccessor.h"
 
 using WMMTest = WritingMaterialsManager::Test;

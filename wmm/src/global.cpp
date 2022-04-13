@@ -1,6 +1,6 @@
 #include "global.h"
 
-namespace WA = WritingMaterialsManager;
-
-QObject* WA::MainWindow;
-QQmlContext* WA::MainWindowQMLContext;
+namespace WritingMaterialsManager {
+    QObject* MainWindow;
+    QQmlContext* MainWindowQMLContext;
+}

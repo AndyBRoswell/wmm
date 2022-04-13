@@ -1,5 +1,5 @@
-#ifndef DATASOURCEMANAGER_H
-#define DATASOURCEMANAGER_H
+#ifndef WRITING_MATERIALS_MANAGER_DATASOURCEMANAGER_H
+#define WRITING_MATERIALS_MANAGER_DATASOURCEMANAGER_H
 
 #include <memory>
 
@@ -17,7 +17,7 @@ namespace WritingMaterialsManager {
     Q_OBJECT
 
     public:
-        explicit DataSourceManager(QWidget* parent = nullptr);
+        explicit DataSourceManager(QWidget* Parent = nullptr);
         ~DataSourceManager();
 
     private:
@@ -26,7 +26,7 @@ namespace WritingMaterialsManager {
             Page(QWidget* const Parent);
             ~Page();
 
-            std::shared_ptr<QTreeView> TreeView;
+            QTreeView* TreeView;
         };
 
         Ui::DataSourceManager* UI;
@@ -35,4 +35,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif // DATASOURCEMANAGER_H
+#endif // WRITING_MATERIALS_MANAGER_DATASOURCEMANAGER_H
