@@ -120,7 +120,7 @@ void WMMTest::Qt::EncodingOfFileRW() {
 }
 
 void WMMTest::Qt::InterProcessCommunication() {
-    qDebug()<<"Current operating system:"
+    qDebug() << "Current operating system:";
 #ifdef _WIN64
     qDebug() << "Windows 64-bit";
 #elif __unix || __unix__
