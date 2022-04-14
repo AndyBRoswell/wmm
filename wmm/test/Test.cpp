@@ -120,6 +120,8 @@ void WMMTest::Qt::EncodingOfFileRW() {
 }
 
 void WMMTest::Qt::InterProcessCommunication() {
+    LastStartedFn.assign(__FUNCTION__);
+
     qDebug() << "Current operating system:";
 #ifdef _WIN64
     qDebug() << "Windows 64-bit";
@@ -158,6 +160,8 @@ void WMMTest::Qt::InterProcessCommunication() {
         qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
         qDebug() << (Process->waitForFinished(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
     }
+
+    LastFinishedFn.assign(__FUNCTION__);
 }
 
 void WMMTest::Qt::Widgets::Demo() {
