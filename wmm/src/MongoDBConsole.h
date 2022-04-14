@@ -3,7 +3,9 @@
 
 #include <QComboBox>
 #include <QListView>
+#include <QLineEdit>
 #include <QPlainTextEdit>
+#include <QProcess>
 #include <QPushButton>
 #include <QSplitter>
 #include <QStringListModel>
@@ -14,6 +16,19 @@
 
 namespace WritingMaterialsManager {
     class MongoDBConsole : public DatabaseConsole {
+    public:
+        QLineEdit* const URLForm;
+        QLineEdit* const mongoshCommandForm;
+        QPushButton* const ExecuteButton;
+
+        explicit MongoDBConsole(QWidget* const Parent = nullptr);
+        ~MongoDBConsole();
+    private:
+        std::shared_ptr<QProcess> mongoshProcess;
+        std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
+    };
+
+    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {
     public:
         QSplitter* const FunctionArea;
 
@@ -27,9 +42,8 @@ namespace WritingMaterialsManager {
 
         QSplitter* const RootView;
 
-        explicit MongoDBConsole(QWidget* const Parent = nullptr);
-        ~MongoDBConsole();
-
+        explicit MongoDBLegacyConsole(QWidget* const Parent = nullptr);
+        ~MongoDBLegacyConsole();
     private:
         QStringListModel* const DatabaseListModel;
         QStringListModel* const CollectionListModel;

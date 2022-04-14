@@ -144,7 +144,7 @@ void WMMTest::Qt::InterProcessCommunication() {
 //                                                  {}};
     const QList<QStringList> TestProcessArguments{{},
                                                   {}};
-    const QList<int> QProcessWaitingTimeout{ 60 * 1000, 1 * 1000 };
+    const QList<int> QProcessWaitingTimeout{ 5 * 1000, 1 * 1000 };
     const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
     for (qsizetype i = 0; i < TestProcessName.size(); ++i) {

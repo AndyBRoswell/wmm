@@ -6,7 +6,6 @@
 namespace WritingMaterialsManager {
     class QtTreeModel : public QAbstractItemModel {
     Q_OBJECT
-
     public:
         using lsize_t = int; // l -> local
 
@@ -30,7 +29,6 @@ namespace WritingMaterialsManager {
             lsize_t ChildNumber() const;
             bool SetData(lsize_t Column, const QVariant& Value);
             QVariant& PushBackData(const QVariant& Value);
-
         private:
             QList<Node*> SubNode;
             QList<QVariant> NodalData;

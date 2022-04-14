@@ -51,7 +51,6 @@ namespace WritingMaterialsManager {
         public:
             static void QuickStart();
         };
-
     private:
         static std::string LastStartedFn;
         static std::string LastFinishedFn;

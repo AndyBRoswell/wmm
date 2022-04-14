@@ -11,7 +11,6 @@
 namespace WritingMaterialsManager {
     class Editor : public QWidget {
     Q_OBJECT
-
     public:
         QTabWidget* const TabView;
         QTreeView* const IntuitiveView;
@@ -21,7 +20,6 @@ namespace WritingMaterialsManager {
         ~Editor();
 
         void SetText(const QString& Text = {});
-
     private:
         std::shared_ptr<QtTreeModel> TreeModel;
     };

@@ -3,19 +3,29 @@
 #include <QGridLayout>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(QWidget* const parent) : DatabaseConsole(parent),
-                                                            MongoDBAccessor(new class MongoDBAccessor),
-                                                            URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
-                                                            DatabaseListView(new QListView),
-                                                            CollectionListView(new QListView),
-                                                            FunctionComboBox(new QComboBox),
-                                                            ExecuteButton(new QPushButton("▶")),
-                                                            ParamEditor(new QListView),
-                                                            RootView(new QSplitter),
-                                                            FunctionArea(new QSplitter),
-                                                            DatabaseListModel(new QStringListModel),
-                                                            CollectionListModel(new QStringListModel),
-                                                            ParamListModel(new QStringListModel) {
+    MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
+                                                            MongoDBAccessor(new class MongoDBAccessor) {
+
+    }
+
+    MongoDBConsole::~MongoDBConsole() {}
+
+/// ----------------------------------------------------------------
+
+    [[deprecated("Using MongoDBConsole instead.")]]
+    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : DatabaseConsole(parent),
+                                                                        MongoDBAccessor(new class MongoDBAccessor),
+                                                                        URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
+                                                                        DatabaseListView(new QListView),
+                                                                        CollectionListView(new QListView),
+                                                                        FunctionComboBox(new QComboBox),
+                                                                        ExecuteButton(new QPushButton("▶")),
+                                                                        ParamEditor(new QListView),
+                                                                        RootView(new QSplitter),
+                                                                        FunctionArea(new QSplitter),
+                                                                        DatabaseListModel(new QStringListModel),
+                                                                        CollectionListModel(new QStringListModel),
+                                                                        ParamListModel(new QStringListModel) {
         DatabaseListView->setModel(DatabaseListModel);
         CollectionListView->setModel(CollectionListModel);
         ParamEditor->setModel(ParamListModel);
@@ -51,5 +61,5 @@ namespace WritingMaterialsManager {
         layout()->addWidget(RootView);
     }
 
-    MongoDBConsole::~MongoDBConsole() {}
+    [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole::~MongoDBLegacyConsole() {}
 }

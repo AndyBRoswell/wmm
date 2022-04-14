@@ -11,13 +11,11 @@ namespace WritingMaterialsManager {
 
     class EditorWindow : public QMainWindow {
     Q_OBJECT
-
     public:
         QSplitter* RootView;
 
         explicit EditorWindow(QWidget* Parent = nullptr);
         ~EditorWindow();
-
     private:
         class Page : public QWidget {
         public:
