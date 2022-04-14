@@ -120,6 +120,7 @@ void WMMTest::Qt::EncodingOfFileRW() {
 }
 
 void WMMTest::Qt::InterProcessCommunication() {
+    qDebug()<<"Current operating system:"
 #ifdef _WIN64
     qDebug() << "Windows 64-bit";
 #elif __unix || __unix__
@@ -129,7 +130,7 @@ void WMMTest::Qt::InterProcessCommunication() {
 #elif __APPLE__ || __MACH__
     qDebug() << "Mac OS X";
 #else
-    qDebug() << "Unknown Operating System.";
+    qDebug() << "Unknown operating system.";
 #endif
 
     using namespace std;
@@ -140,7 +141,7 @@ void WMMTest::Qt::InterProcessCommunication() {
     const QList<QStringList> TestProcessArguments{{},
                                                   {}};
     const QList<int> QProcessWaitingTimeout{ 60 * 1000, 5 * 1000 };
-    const QList<decltype(1s)> OutputWaitingDuration{ 60s, 5s };
+    const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
     for (qsizetype i = 0; i < TestProcessName.size(); ++i) {
         const shared_ptr<QProcess> Process(new QProcess);
