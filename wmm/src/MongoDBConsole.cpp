@@ -5,12 +5,21 @@
 
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
-                                                            MongoDBAccessor(new class MongoDBAccessor),
                                                             ControlArea(new QWidget()),
                                                             URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                             mongoshCommandForm(new QLineEdit("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
                                                             CommandForm(new QPlainTextEdit) {
+        MongoDBShellAccessor* const mongoshAccessor = new class MongoDBShellAccessor(mongoshCommandForm->text(), URLForm->text());
+        mongoshAccessor->moveToThread(&mongoshAccessThread);
+        connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
+        connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
+        connect(this, &MongoDBConsole::StartToReturnShellResult, mongoshAccessor, &MongoDBShellAccessor::ReturnResult);
+        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
+        connect(mongoshAccessor, &MongoDBShellAccessor::ShellResultReady, this, &MongoDBConsole::SetTextForAssociatedEditors);
+        mongoshAccessThread.start();
+        emit StartToReturnShellResult();
+
         ControlArea->setLayout(new QHBoxLayout);
         ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
         QWidget* const CtrlParamArea = new QWidget;
@@ -33,10 +42,31 @@ namespace WritingMaterialsManager {
         MainLayout->setStretch(1, 1);
     }
 
-    MongoDBConsole::~MongoDBConsole() {}
+    MongoDBConsole::~MongoDBConsole() {
+        mongoshAccessThread.quit();
+        mongoshAccessThread.wait();
+    }
 
     void MongoDBConsole::ExecuteShellCommand() {
+        emit SendShellCommand(CommandForm->toPlainText());
+    }
+/// ----------------------------------------------------------------
 
+    MongoDBShellAccessor::MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
+        mongoshProcess->start(mongoshCommand, { MongoDBURL });
+        mongoshProcess->waitForStarted(-1);
+    }
+
+    MongoDBShellAccessor::~MongoDBShellAccessor() {}
+
+    void MongoDBShellAccessor::Execute(const QString& Command) {
+        mongoshProcess->write(Command.toUtf8());
+    }
+
+    void MongoDBShellAccessor::ReturnResult() {
+        while (true) {
+
+        }
     }
 
 /// ----------------------------------------------------------------

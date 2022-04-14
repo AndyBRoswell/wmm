@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QSplitter>
 #include <QStringListModel>
+#include <QThread>
 #include <QWidget>
 
 #include "DatabaseConsole.h"
@@ -16,6 +17,7 @@
 
 namespace WritingMaterialsManager {
     class MongoDBConsole : public DatabaseConsole {
+    Q_OBJECT
     public:
         QWidget* ControlArea;
         QLineEdit* const URLForm;
@@ -28,9 +30,25 @@ namespace WritingMaterialsManager {
         ~MongoDBConsole();
 
         void ExecuteShellCommand();
+    signals:
+        void StartToReturnShellResult();
+        void SendShellCommand(const QString& Command);
+    private:
+        QThread mongoshAccessThread;
+    };
+
+    class MongoDBShellAccessor : public QObject {
+    Q_OBJECT
+    public:
+        explicit MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
+        ~MongoDBShellAccessor();
+
+        void Execute(const QString& Command);
+        void ReturnResult();
+    signals:
+        void ShellResultReady(const QString& Result);
     private:
         std::shared_ptr<QProcess> mongoshProcess;
-        std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
     };
 
     class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {
