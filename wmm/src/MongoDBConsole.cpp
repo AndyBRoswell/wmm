@@ -51,7 +51,6 @@ namespace WritingMaterialsManager {
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
-        qDebug() << "Attempting to send mongosh command ...";
         emit SendShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
     }
@@ -60,7 +59,7 @@ namespace WritingMaterialsManager {
     MongoDBShellAccessor::MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
         mongoshProcess->start(mongoshCommand, { MongoDBURL });
         qDebug() << "Waiting for the start of mongoshProcess ...";
-        mongoshProcess->waitForStarted(-1);
+        qDebug() << mongoshProcess->waitForStarted(-1);
     }
 
     MongoDBShellAccessor::~MongoDBShellAccessor() {}
