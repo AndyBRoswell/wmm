@@ -16,10 +16,11 @@
 
 // Qt libs
 #include <QDebug>
+#include <QFile>
 #include <QGuiApplication>
 #include <QJsonDocument>
 #include <QKeyEvent>
-#include <QFile>
+#include <QProcess>
 #include <QQmlProperty>
 #include <QString>
 #include <QStringView> // QStringRef removed in Qt 6.
@@ -69,6 +70,7 @@ int WMMTest::Start() {
         mongocxx::CustomDataDemo,
 //        DuckX::QuickStart,
 //        Qt::Widgets::Demo,
+        Qt::InterProcessCommunication,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
@@ -118,7 +120,30 @@ void WMMTest::Qt::EncodingOfFileRW() {
 }
 
 void WMMTest::Qt::InterProcessCommunication() {
-    
+#ifdef _WIN64
+    qDebug() << "Windows 64-bit";
+#elif __unix || __unix__
+    qDebug() << "Unix";
+#elif __linux__
+    qDebug() << "Linux";
+#elif __APPLE__ || __MACH__
+    qDebug() << "Mac OS X";
+#else
+    qDebug() << "Unknown Operating System.";
+#endif
+
+    const int timeout_ms = 2000;
+
+    std::shared_ptr<QProcess> TestProcess(new QProcess);
+    qDebug() << "Starting test process ...";
+    TestProcess->start("python");
+    qDebug() << "Waiting for Started ...";
+    qDebug() << TestProcess->waitForStarted(timeout_ms);
+    qDebug() << "Waiting for ReadyRead ...";
+    qDebug() << TestProcess->waitForReadyRead(timeout_ms);
+    qDebug() << TestProcess->readAllStandardOutput();
+    qDebug() << "Waiting for Finished ...";
+    qDebug() << TestProcess->waitForFinished(timeout_ms);
 }
 
 void WMMTest::Qt::Widgets::Demo() {
