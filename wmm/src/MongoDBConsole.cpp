@@ -51,7 +51,9 @@ namespace WritingMaterialsManager {
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
+        qDebug() << "Attempting to send mongosh command ...";
         emit SendShellCommand(CommandForm->toPlainText());
+        qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
     }
 /// ----------------------------------------------------------------
 
@@ -64,6 +66,7 @@ namespace WritingMaterialsManager {
     MongoDBShellAccessor::~MongoDBShellAccessor() {}
 
     void MongoDBShellAccessor::Execute(const QString& Command) {
+        qDebug() << "MongoDBShellAccessor received mongosh command";
         mongoshProcess->write(Command.toUtf8());
         qDebug() << "mongosh command sent.";
     }
@@ -71,7 +74,7 @@ namespace WritingMaterialsManager {
     void MongoDBShellAccessor::ReturnResult() {
         using namespace std::chrono_literals;
 
-        qDebug() << "Started to send mongosh result.";
+        qDebug() << "Started to return mongosh result.";
         while (true) {
             const QString& Result = mongoshProcess->readAllStandardOutput();
             emit ShellResultReady(Result);
