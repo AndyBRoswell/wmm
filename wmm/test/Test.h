@@ -16,6 +16,7 @@ namespace WritingMaterialsManager {
         class Qt {
         public:
             static void EncodingOfFileRW();
+            static void InterProcessCommunication();
 
             class Widgets {
             public:

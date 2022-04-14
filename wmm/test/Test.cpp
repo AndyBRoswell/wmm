@@ -117,6 +117,10 @@ void WMMTest::Qt::EncodingOfFileRW() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
+void WMMTest::Qt::InterProcessCommunication() {
+    
+}
+
 void WMMTest::Qt::Widgets::Demo() {
     LastStartedFn.assign(__FUNCTION__);
 
