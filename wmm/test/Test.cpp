@@ -132,20 +132,32 @@ void WMMTest::Qt::InterProcessCommunication() {
     qDebug() << "Unknown Operating System.";
 #endif
 
-    const int timeout_ms = 60 * 1000;
+    using namespace std;
+    using namespace std::chrono;
+    using namespace std::chrono_literals;
 
-    std::shared_ptr<QProcess> TestProcess(new QProcess);
-    qDebug() << "Starting test process ...";
-    TestProcess->start("python");
-//    TestProcess->start("mongosh");
-    qDebug() << "Waiting for Started ...";
-    qDebug() << TestProcess->waitForStarted(timeout_ms);
-    qDebug() << "Waiting for ReadyRead ...";
-    qDebug() << TestProcess->waitForReadyRead(timeout_ms);
-    qDebug() << TestProcess->readAllStandardOutput();
-    qDebug() << "Waiting for Finished ...";
-    qDebug() << TestProcess->waitForFinished(timeout_ms);
-    qDebug() << TestProcess->readAllStandardOutput();
+    const QStringList TestProcessNames{ "python", "mongosh" };
+    const QList<QStringList> TestProcessArguments{{},
+                                                  {}};
+
+    const int timeout_ms = 60 * 1000;
+    const auto TotalWaitingDuration = 60s;
+
+    for (const auto& ProcessName: TestProcessNames) {
+        const shared_ptr<QProcess> Process(new QProcess);
+        Process->start(ProcessName);
+        qDebug() << "Starting test process" << Process->program() << ", timeout:" << timeout_ms << "ms ...";
+        qDebug() << (Process->waitForStarted(timeout_ms) ? "Succeeded." : "Failed.");
+        const time_point<high_resolution_clock> StartTimePoint = high_resolution_clock::now();
+        qDebug() << "Demonstrating output ...";
+        while (high_resolution_clock::now() - StartTimePoint <= TotalWaitingDuration) {
+            Process->waitForReadyRead(timeout_ms);
+            qDebug() << Process->readAllStandardOutput();
+        }
+        qDebug() << "Outout demonstration completed.";
+        qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << timeout_ms << "ms ...";
+        qDebug() << (Process->waitForFinished(timeout_ms) ? "Succeeded." : "Failed.");
+    }
 }
 
 void WMMTest::Qt::Widgets::Demo() {
