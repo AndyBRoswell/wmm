@@ -148,12 +148,8 @@ void WMMTest::Qt::Quick::TextAreaKeyEvent() {
 
     // simulate key press
     // Qt doesn't support "KeyDown" event since it is platform-dependent.
-    const auto KeySeq = {
-        ::Qt::Key_Down, ::Qt::Key_Down, ::Qt::Key_Enter, ::Qt::Key_Up, ::Qt::Key_End,
-    };
-    for (auto Key: KeySeq) {
-        QGuiApplication::postEvent(ResultEditor, new QKeyEvent(QEvent::KeyPress, Key, ::Qt::NoModifier));
-    }
+    const auto KeySeq = { ::Qt::Key_Down, ::Qt::Key_Down, ::Qt::Key_Enter, ::Qt::Key_Up, ::Qt::Key_End, };
+    for (auto Key: KeySeq) { QGuiApplication::postEvent(ResultEditor, new QKeyEvent(QEvent::KeyPress, Key, ::Qt::NoModifier)); }
     // If key is 0, the event is not a result of a known key; for example, it may be the result of a compose sequence or keyboard macro.
     QString ExtraString = R"(,"text2":"Hello Qt Quick",  "text3":"rtsp","text3":"寄了","text4":"炸穿地心","flag":true,"count":1412)";
     QGuiApplication::postEvent(ResultEditor, new QKeyEvent(QEvent::KeyPress, 0, ::Qt::NoModifier, ExtraString));
@@ -235,17 +231,13 @@ void WMMTest::RapidJSON::Demo() {
             }
             for (rapidjson::Value::ConstMemberIterator j = Message.MemberBegin() + 1; j != Message.MemberEnd(); ++j) {
                 switch (j->value.GetType()) {
-                case rapidjson::kStringType:
-                    qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
+                case rapidjson::kStringType:qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
                     break;
-                case rapidjson::kObjectType:
-                    qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
+                case rapidjson::kObjectType:qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
                     break;
-                case rapidjson::kArrayType:
-                    qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
+                case rapidjson::kArrayType:qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
                     break;
-                default:
-                    qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
+                default:qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
                     break;
                 }
             }
@@ -352,7 +344,10 @@ void WMMTest::mongocxx::CustomDataDemo() {
 //            qDebug() << "Inserting JSON document:" << QString::fromUtf8(TestString);
             coll.insert_one(bsoncxx::from_json(TestString.data())); // insert a doc (must comply the format of {} i.e. a JSON object)
         }
-//        coll.find_one(bsoncxx::from_json("{}"));
+        ::mongocxx::cursor ResultCursor = coll.find(bsoncxx::from_json("{}"));
+        for (const bsoncxx::document::view& Result: ResultCursor) {
+//            qDebug() << bsoncxx::to_json(Result).c_str();
+        }
     }
     catch (const exception& e) {
         qDebug() << e.what();
@@ -360,29 +355,28 @@ void WMMTest::mongocxx::CustomDataDemo() {
 
 //    coll.update_one(bsoncxx::from_json(""), bsoncxx::from_json(""));
 
-    // drop db
-//    test.drop();
+//    ::mongocxx::cursor DatabaseInfoCursor = Local.list_databases();
+//    ::mongocxx::options::find find_options{};
+//    find_options.projection(make_document(kvp("_id", 1)));
+//    for (const bsoncxx::v_noabi::document::view& DatabaseInfoDoc: DatabaseInfoCursor) {
+//        qDebug() << "Database:";
+//        qDebug() << bsoncxx::to_json(DatabaseInfoDoc).c_str();
+//        ::mongocxx::database Database = Local[DatabaseInfoDoc["name"].get_utf8().value];
+//        ::mongocxx::cursor CollectionInfoCursor = Database.list_collections();
+//        qDebug() << "Collections:";
+//        for (const bsoncxx::document::view& CollectionInfoDoc: CollectionInfoCursor) {
+//            qDebug() << bsoncxx::to_json(CollectionInfoDoc).c_str();
+//            ::mongocxx::collection Collection = Database[CollectionInfoDoc["name"].get_utf8().value];
+//            ::mongocxx::cursor DocumentCursor = Collection.find(bsoncxx::from_json("{}"), find_options);
+//            qDebug() << "Documents:";
+//            for (const bsoncxx::document::view& Doc: DocumentCursor) {
+//                qDebug() << bsoncxx::to_json(Doc).c_str();
+//            }
+//        }
+//    }
 
-    ::mongocxx::cursor DatabaseInfoCursor = Local.list_databases();
-    ::mongocxx::options::find find_options{};
-    find_options.projection(make_document(kvp("_id", 1)));
-    for (const bsoncxx::v_noabi::document::view& DatabaseInfoDoc: DatabaseInfoCursor) {
-        qDebug() << "Database:";
-        qDebug() << bsoncxx::to_json(DatabaseInfoDoc).c_str();
-        ::mongocxx::database Database = Local[DatabaseInfoDoc["name"].get_utf8().value];
-        ::mongocxx::cursor CollectionInfoCursor = Database.list_collections();
-        qDebug() << "Collections:";
-        for (const bsoncxx::document::view& CollectionInfoDoc: CollectionInfoCursor) {
-            qDebug() << bsoncxx::to_json(CollectionInfoDoc).c_str();
-            ::mongocxx::collection Collection = Database[CollectionInfoDoc["name"].get_utf8().value];
-            ::mongocxx::cursor DocumentCursor = Collection.find(bsoncxx::from_json("{}"), find_options);
-            qDebug() << "Documents:";
-            for (const bsoncxx::document::view& Doc: DocumentCursor) {
-                qDebug() << bsoncxx::to_json(Doc).c_str();
-            }
-        }
-    }
-    qDebug();
+    // drop db
+    test.drop();
 
     LastFinishedFn.assign(__FUNCTION__);
 }
