@@ -11,6 +11,11 @@ namespace WritingMaterialsManager {
         AssociatedEditors.erase(TargetIterator);
     }
 
+    void DatabaseConsole::ClearAssociatedEditor() {
+        for (auto* Editor: AssociatedEditors) { delete Editor; }
+        AssociatedEditors.clear();
+    }
+
     void DatabaseConsole::SetTextForAssociatedEditors(const QString& Text) {
         for (auto& Editor: AssociatedEditors) { Editor->SetText(Text); }
     }
