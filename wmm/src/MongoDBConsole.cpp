@@ -3,7 +3,7 @@
 #include <QGridLayout>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(QWidget* const parent) : QWidget(parent),
+    MongoDBConsole::MongoDBConsole(QWidget* const parent) : DatabaseConsole(parent),
                                                             MongoDBAccessor(new class MongoDBAccessor),
                                                             URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                             DatabaseListView(new QListView),

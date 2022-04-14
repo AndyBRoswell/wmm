@@ -9,12 +9,11 @@
 #include <QStringListModel>
 #include <QWidget>
 
+#include "DatabaseConsole.h"
 #include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
-    class MongoDBConsole : public QWidget {
-    Q_OBJECT
-
+    class MongoDBConsole : public DatabaseConsole {
     public:
         QSplitter* const FunctionArea;
 

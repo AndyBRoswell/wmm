@@ -17,4 +17,6 @@ namespace WritingMaterialsManager {
     }
 
     Editor::~Editor() {}
+
+    void Editor::SetText(const QString& Text) { RawView->setPlainText(Text); }
 } // namespace WritingMaterialsManager

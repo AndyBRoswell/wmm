@@ -20,6 +20,8 @@ namespace WritingMaterialsManager {
         explicit Editor(QWidget* const parent = nullptr, const std::shared_ptr<QtTreeModel>& TreeModel = nullptr);
         ~Editor();
 
+        void SetText(const QString& Text = {});
+
     private:
         std::shared_ptr<QtTreeModel> TreeModel;
     };
