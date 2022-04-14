@@ -140,14 +140,14 @@ void WMMTest::Qt::InterProcessCommunication() {
     using namespace std::chrono_literals;
 
     const QStringList TestProcessName{ "python", "mongosh" };
-    const QList<QStringList> TestProcessArguments{{},
+    const QList<QStringList> TestProcessArguments{{ "-c", "print('hello, world')" },
                                                   {}};
-    const QList<int> QProcessWaitingTimeout{ 60 * 1000, 5 * 1000 };
+    const QList<int> QProcessWaitingTimeout{ 30 * 1000, 1 * 1000 };
     const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
     for (qsizetype i = 0; i < TestProcessName.size(); ++i) {
         const shared_ptr<QProcess> Process(new QProcess);
-        Process->start(TestProcessName[i]);
+        Process->start(TestProcessName[i], TestProcessArguments[i]);
         qDebug() << "Starting test process" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
         qDebug() << (Process->waitForStarted(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
         const time_point<high_resolution_clock> StartTimePoint = high_resolution_clock::now();
