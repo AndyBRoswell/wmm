@@ -136,27 +136,26 @@ void WMMTest::Qt::InterProcessCommunication() {
     using namespace std::chrono;
     using namespace std::chrono_literals;
 
-    const QStringList TestProcessNames{ "python", "mongosh" };
+    const QStringList TestProcessName{ "python", "mongosh" };
     const QList<QStringList> TestProcessArguments{{},
                                                   {}};
+    const QList<int> QProcessWaitingTimeout{ 60 * 1000, 5 * 1000 };
+    const QList<decltype(1s)> OutputWaitingDuration{ 60s, 5s };
 
-    const int timeout_ms = 60 * 1000;
-    const auto TotalWaitingDuration = 60s;
-
-    for (const auto& ProcessName: TestProcessNames) {
+    for (qsizetype i = 0; i < TestProcessName.size(); ++i) {
         const shared_ptr<QProcess> Process(new QProcess);
-        Process->start(ProcessName);
-        qDebug() << "Starting test process" << Process->program() << ", timeout:" << timeout_ms << "ms ...";
-        qDebug() << (Process->waitForStarted(timeout_ms) ? "Succeeded." : "Failed.");
+        Process->start(TestProcessName[i]);
+        qDebug() << "Starting test process" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
+        qDebug() << (Process->waitForStarted(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
         const time_point<high_resolution_clock> StartTimePoint = high_resolution_clock::now();
         qDebug() << "Demonstrating output ...";
-        while (high_resolution_clock::now() - StartTimePoint <= TotalWaitingDuration) {
-            Process->waitForReadyRead(timeout_ms);
+        while (high_resolution_clock::now() - StartTimePoint <= OutputWaitingDuration[i]) {
+            Process->waitForReadyRead(QProcessWaitingTimeout[i]);
             qDebug() << Process->readAllStandardOutput();
         }
         qDebug() << "Outout demonstration completed.";
-        qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << timeout_ms << "ms ...";
-        qDebug() << (Process->waitForFinished(timeout_ms) ? "Succeeded." : "Failed.");
+        qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
+        qDebug() << (Process->waitForFinished(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
     }
 }
 
