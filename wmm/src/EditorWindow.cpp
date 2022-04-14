@@ -35,6 +35,7 @@ namespace WritingMaterialsManager {
         RootView->setOrientation(Qt::Vertical);
 
         setLayout(new QGridLayout);
+        layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(RootView);
     }
 

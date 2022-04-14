@@ -13,6 +13,7 @@ namespace WritingMaterialsManager {
         TabView->addTab(RawView, tr("原始"));
 
         setLayout(new QGridLayout);
+        layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(TabView);
     }
 
