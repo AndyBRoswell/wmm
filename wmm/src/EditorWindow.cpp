@@ -20,6 +20,7 @@ namespace WritingMaterialsManager {
 
         setWindowTitle(tr("编辑器"));
         centralWidget()->setLayout(new QGridLayout);
+        centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
         centralWidget()->layout()->addWidget(RootView);
         show();
     }

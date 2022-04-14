@@ -20,6 +20,7 @@ namespace WritingMaterialsManager {
         ControlArea->layout()->addWidget(ExecuteButton);
 
         QVBoxLayout* const MainLayout = new QVBoxLayout;
+        MainLayout->setContentsMargins(0, 0, 0, 0);
         setLayout(MainLayout);
         layout()->addWidget(ControlArea);
         layout()->addWidget(CommandForm);
