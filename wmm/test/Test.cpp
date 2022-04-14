@@ -132,11 +132,12 @@ void WMMTest::Qt::InterProcessCommunication() {
     qDebug() << "Unknown Operating System.";
 #endif
 
-    const int timeout_ms = 2000;
+    const int timeout_ms = 60 * 1000;
 
     std::shared_ptr<QProcess> TestProcess(new QProcess);
     qDebug() << "Starting test process ...";
     TestProcess->start("python");
+//    TestProcess->start("mongosh");
     qDebug() << "Waiting for Started ...";
     qDebug() << TestProcess->waitForStarted(timeout_ms);
     qDebug() << "Waiting for ReadyRead ...";
@@ -144,6 +145,7 @@ void WMMTest::Qt::InterProcessCommunication() {
     qDebug() << TestProcess->readAllStandardOutput();
     qDebug() << "Waiting for Finished ...";
     qDebug() << TestProcess->waitForFinished(timeout_ms);
+    qDebug() << TestProcess->readAllStandardOutput();
 }
 
 void WMMTest::Qt::Widgets::Demo() {
