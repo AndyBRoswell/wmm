@@ -1,14 +1,37 @@
 #include "MongoDBConsole.h"
 
-#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
-                                                            MongoDBAccessor(new class MongoDBAccessor) {
+                                                            MongoDBAccessor(new class MongoDBAccessor),
+                                                            ControlArea(new QWidget()),
+                                                            URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
+                                                            mongoshCommandForm(new QLineEdit("mongosh")),
+                                                            ExecuteButton(new QPushButton("▶")),
+                                                            CommandForm(new QPlainTextEdit) {
+        ControlArea->setLayout(new QHBoxLayout);
+        QWidget* const ControlParamArea = new QWidget;
+        ControlParamArea->setLayout(new QVBoxLayout);
+        ControlParamArea->layout()->addWidget(URLForm);
+        ControlParamArea->layout()->addWidget(mongoshCommandForm);
+        ControlArea->layout()->addWidget(ControlParamArea);
+        ControlArea->layout()->addWidget(ExecuteButton);
 
+        QVBoxLayout* const MainLayout = new QVBoxLayout;
+        setLayout(MainLayout);
+        layout()->addWidget(ControlArea);
+        layout()->addWidget(CommandForm);
+        MainLayout->setStretch(0, 0);
+        MainLayout->setStretch(1, 1);
     }
 
     MongoDBConsole::~MongoDBConsole() {}
+
+    void MongoDBConsole::ExecuteShellCommand() {
+
+    }
 
 /// ----------------------------------------------------------------
 

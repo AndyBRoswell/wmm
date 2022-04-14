@@ -17,12 +17,17 @@
 namespace WritingMaterialsManager {
     class MongoDBConsole : public DatabaseConsole {
     public:
+        QWidget* ControlArea;
         QLineEdit* const URLForm;
         QLineEdit* const mongoshCommandForm;
         QPushButton* const ExecuteButton;
 
+        QPlainTextEdit* const CommandForm;
+
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();
+
+        void ExecuteShellCommand();
     private:
         std::shared_ptr<QProcess> mongoshProcess;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
