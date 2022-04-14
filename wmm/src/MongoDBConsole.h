@@ -42,7 +42,7 @@ namespace WritingMaterialsManager {
     public:
         explicit MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
         ~MongoDBShellAccessor();
-
+    public slots:
         void Execute(const QString& Command);
         void ReturnResult();
     signals:

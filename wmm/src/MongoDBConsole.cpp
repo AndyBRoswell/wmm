@@ -1,5 +1,8 @@
 #include "MongoDBConsole.h"
 
+#include <chrono>
+#include <thread>
+
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
@@ -54,6 +57,7 @@ namespace WritingMaterialsManager {
 
     MongoDBShellAccessor::MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
         mongoshProcess->start(mongoshCommand, { MongoDBURL });
+        qDebug() << "Waiting for the start of mongoshProcess ...";
         mongoshProcess->waitForStarted(-1);
     }
 
@@ -61,11 +65,17 @@ namespace WritingMaterialsManager {
 
     void MongoDBShellAccessor::Execute(const QString& Command) {
         mongoshProcess->write(Command.toUtf8());
+        qDebug() << "mongosh command sent.";
     }
 
     void MongoDBShellAccessor::ReturnResult() {
-        while (true) {
+        using namespace std::chrono_literals;
 
+        qDebug() << "Started to send mongosh result.";
+        while (true) {
+            const QString& Result = mongoshProcess->readAllStandardOutput();
+            emit ShellResultReady(Result);
+            std::this_thread::sleep_for(100ms);
         }
     }
 
