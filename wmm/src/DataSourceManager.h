@@ -15,11 +15,9 @@ namespace WritingMaterialsManager {
 
     class DataSourceManager : public QMainWindow {
     Q_OBJECT
-
     public:
         explicit DataSourceManager(QWidget* Parent = nullptr);
         ~DataSourceManager();
-
     private:
         class Page: public QWidget {
         public:

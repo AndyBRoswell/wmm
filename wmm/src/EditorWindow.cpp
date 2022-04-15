@@ -13,18 +13,14 @@ namespace WritingMaterialsManager {
         // preparation
         QTabWidget* const TabView = new QTabWidget;
         auto* const MDBCPage = new MongoDBConsoleAndEditorPage;
-        MDBCPage->RootView->addWidget(new MongoDBConsole);
-        MDBCPage->RootView->addWidget(new Editor);
-        MDBCPage->RootView->setStretchFactor(0, 1);
-        MDBCPage->RootView->setStretchFactor(1, 4);
         auto* const EditorPage = new EditorOnlyPage;
-        EditorPage->RootView->addWidget(new Editor);
         TabView->addTab(MDBCPage, "MongoDB Console");
         TabView->addTab(EditorPage, "Editor Only");
         RootView->addWidget(TabView);
 
         setWindowTitle(tr("编辑器"));
         centralWidget()->setLayout(new QGridLayout);
+        centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
         centralWidget()->layout()->addWidget(RootView);
         show();
     }
@@ -39,6 +35,7 @@ namespace WritingMaterialsManager {
         RootView->setOrientation(Qt::Vertical);
 
         setLayout(new QGridLayout);
+        layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(RootView);
     }
 
@@ -46,7 +43,17 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {}
+    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {
+        MongoDBConsole* const Console = new MongoDBConsole;
+        Editor* const Editor = new class Editor;
+        Console->AddAssociatedEditor(Editor);
+        RootView->addWidget(Console);
+        RootView->addWidget(Editor);
+        RootView->setStretchFactor(0, 1);
+        RootView->setStretchFactor(1, 4);
+    }
 
-    EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {}
+    EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {
+        RootView->addWidget(new Editor);
+    }
 }

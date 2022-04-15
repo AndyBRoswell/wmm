@@ -4,8 +4,6 @@
 #include <bsoncxx/json.hpp>
 
 namespace WritingMaterialsManager {
-    const mongocxx::instance MongoDBAccessor::mongocxxDriver{};
-
     MongoDBAccessor::MongoDBAccessor(const char* const MongoDBURI) :
         DBURI(mongocxx::uri(MongoDBURI)),
         Client(DBURI) {}

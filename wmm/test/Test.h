@@ -16,6 +16,7 @@ namespace WritingMaterialsManager {
         class Qt {
         public:
             static void EncodingOfFileRW();
+            static void InterProcessCommunication();
 
             class Widgets {
             public:
@@ -50,7 +51,6 @@ namespace WritingMaterialsManager {
         public:
             static void QuickStart();
         };
-
     private:
         static std::string LastStartedFn;
         static std::string LastFinishedFn;
