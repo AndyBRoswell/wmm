@@ -12,7 +12,7 @@ namespace WritingMaterialsManager {
                                                             URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                             mongoshCommandForm(new QLineEdit("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
-                                                            CommandForm(new QPlainTextEdit("show dbs")) {
+                                                            CommandForm(new QPlainTextEdit("show dbs\n")) {
         MongoShAccessor* const mongoshAccessor = new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text());
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);

@@ -45,10 +45,16 @@ namespace WritingMaterialsManager {
     }
 
     void Editor::ArrangeContentView() {
-        Highlighter->setDocument(nullptr);
         auto PlainText = RawView->toPlainText();
-        Formatter->Format(PlainText);
-        RawView->setPlainText(PlainText);
+        auto PlainTextCopy = PlainText;
+        Highlighter->setDocument(nullptr);
+        try {
+            Formatter->Format(PlainText);
+            RawView->setPlainText(PlainText);
+        }
+        catch (...) {
+            RawView->setPlainText(PlainTextCopy); // restore the original text
+        }
         Highlighter->setDocument(RawView->document());
     }
 } // namespace WritingMaterialsManager
