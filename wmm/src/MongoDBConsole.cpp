@@ -12,16 +12,14 @@ namespace WritingMaterialsManager {
                                                             URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                             mongoshCommandForm(new QLineEdit("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
-                                                            CommandForm(new QPlainTextEdit) {
+                                                            CommandForm(new QPlainTextEdit("show dbs")) {
         MongoDBShellAccessor* const mongoshAccessor = new class MongoDBShellAccessor(mongoshCommandForm->text(), URLForm->text());
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         qDebug() << connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         qDebug() << connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        qDebug() << connect(this, &MongoDBConsole::StartToReturnShellResult, mongoshAccessor, &MongoDBShellAccessor::ContinuouslyReturnResult);
         qDebug() << connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
         qDebug() << connect(mongoshAccessor, &MongoDBShellAccessor::ShellResultReady, this, &MongoDBConsole::SetTextForAssociatedEditors);
         mongoshAccessThread.start();
-//        emit StartToReturnShellResult();
 
         ControlArea->setLayout(new QHBoxLayout);
         ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
@@ -66,20 +64,15 @@ namespace WritingMaterialsManager {
     MongoDBShellAccessor::~MongoDBShellAccessor() {}
 
     void MongoDBShellAccessor::Execute(const QString& Command) {
+        using namespace std::chrono_literals;
+
         qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
         mongoshProcess->write(Command.toUtf8());
         qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
-    }
-
-    void MongoDBShellAccessor::ContinuouslyReturnResult() {
-        using namespace std::chrono_literals;
-
-        qDebug() << "Started to return mongosh result.";
-        while (true) {
-            const QString& Result = mongoshProcess->readAllStandardOutput();
-            emit ShellResultReady(Result);
-            std::this_thread::sleep_for(100ms);
-        }
+        std::this_thread::sleep_for(500ms);
+        const QByteArray Result = mongoshProcess->readAllStandardOutput();
+        if (Result != "") { emit ShellResultReady(Result); }
+        else { qDebug() << "The mongosh returns no result."; }
     }
 
 /// ----------------------------------------------------------------

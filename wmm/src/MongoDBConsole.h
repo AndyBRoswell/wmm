@@ -31,7 +31,6 @@ namespace WritingMaterialsManager {
 
         void ExecuteShellCommand();
     signals:
-        void StartToReturnShellResult();
         void SendShellCommand(const QString& Command);
     private:
         QThread mongoshAccessThread;
@@ -44,7 +43,6 @@ namespace WritingMaterialsManager {
         ~MongoDBShellAccessor();
     public slots:
         void Execute(const QString& Command);
-        void ContinuouslyReturnResult();
     signals:
         void ShellResultReady(const QString& Result);
     private:
