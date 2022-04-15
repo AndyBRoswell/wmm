@@ -4,10 +4,11 @@
 #include <vector>
 
 #include <QRegularExpression>
-#include <QSyntaxHighlighter>
+
+#include "TextHighlighter.h"
 
 namespace WritingMaterialsManager {
-    class JSONHighlighter : public QSyntaxHighlighter {
+    class JSONHighlighter : public TextHighlighter {
     public:
         struct ColorTheme {
             QBrush Default;
@@ -30,6 +31,8 @@ namespace WritingMaterialsManager {
         };
 
         explicit JSONHighlighter(QTextDocument* const TargetDoc = nullptr);
+
+        void Highlight(const QString& Text = "") override;
     protected:
         void highlightBlock(const QString& Text) override;
 

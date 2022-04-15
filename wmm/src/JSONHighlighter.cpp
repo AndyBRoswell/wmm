@@ -27,12 +27,16 @@ namespace WritingMaterialsManager {
 
     JSONHiliter::JSONHighlighter(QTextDocument
     * const TargetDoc) :
-    QSyntaxHighlighter(TargetDoc) {
+    TextHighlighter(TargetDoc) {
         static std::once_flag StaticInitFlag;
         std::call_once(StaticInitFlag, OneOffInit);
     }
 
     void JSONHiliter::highlightBlock(const QString& Text) {
+        Highlight(Text);
+    }
+
+    void JSONHiliter::Highlight(const QString& Text) {
         using namespace std;
 
         // Match strings and escapes in strings. All intervals conform to the form [a, b).
