@@ -1,10 +1,11 @@
 #include "MongoDBConsole.h"
 
 #include <chrono>
-#include <thread>
 
 #include <QHBoxLayout>
-#include <QVBoxLayout>
+
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/exception/exception.hpp>
 
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
@@ -64,6 +65,19 @@ namespace WritingMaterialsManager {
             Editor->RawView->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor); // drag to the end
             Editor->RawView->textCursor().removeSelectedText();
             Editor->RawView->update(); // immediately apply the modification before text (e.g., JSON) parser reads the text from the QPlainTextEdit RawView.
+            try {
+                const auto Doc = bsoncxx::from_json(Editor->RawView->toPlainText().toUtf8().constData());
+                Editor->RawView->setPlainText(QString::fromUtf8(bsoncxx::to_json(Doc, bsoncxx::ExtendedJsonMode::k_relaxed)));
+                Editor->RawView->update();
+            }
+            catch (const bsoncxx::exception& e) {
+                qDebug() << "Exception at " << __FUNCTION__ << ": Parsing ERROR when converting to JSON in strict syntax.";
+                qDebug() << e.what();
+            }
+            catch (const std::exception& e) {
+                qDebug() << "Exception at " << __FUNCTION__ << ": Parsing ERROR when converting to JSON in strict syntax.";
+                qDebug() << e.what();
+            }
         }
         DatabaseConsole::ArrangeContentViewForAssociatedEditors();
     }
