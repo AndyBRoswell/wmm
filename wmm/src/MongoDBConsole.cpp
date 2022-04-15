@@ -59,9 +59,11 @@ namespace WritingMaterialsManager {
     void MongoDBConsole::ArrangeContentViewForAssociatedEditors() {
         for (auto* Editor: AssociatedEditors) {
             Editor->RawView->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor); // move to the end
+            Editor->RawView->textCursor().deletePreviousChar(); // delete the blank last line
             Editor->RawView->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor); // move to the start of the last line
             Editor->RawView->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor); // drag to the end
             Editor->RawView->textCursor().removeSelectedText();
+            Editor->RawView->update(); // immediately apply the modification before text (e.g., JSON) parser reads the text from the QPlainTextEdit RawView.
         }
         DatabaseConsole::ArrangeContentViewForAssociatedEditors();
     }
