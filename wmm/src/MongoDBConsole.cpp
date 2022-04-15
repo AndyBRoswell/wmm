@@ -18,7 +18,7 @@ namespace WritingMaterialsManager {
         connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
         connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
-        connect(mongoshAccessor, &MongoDBShellAccessor::MoreMongoDBShellResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
+        connect(mongoshAccessor, &MongoDBShellAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -74,11 +74,11 @@ namespace WritingMaterialsManager {
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
-            if (Result != "") { emit MoreMongoDBShellResult(Result); }
+            if (Result != "") { emit MoreMongoShResult(Result); }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
-        emit MoreMongoDBShellResult(Result);
+        emit MoreMongoShResult(Result);
         qDebug() << "No more mongosh result.";
     }
 

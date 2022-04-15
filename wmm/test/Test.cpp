@@ -376,6 +376,9 @@ void WMMTest::mongocxx::CustomDataDemo() {
     ::mongocxx::database test = Local["test"];
     ::mongocxx::collection coll = test["coll"];
 
+    // drop db
+    test.drop();
+
     // prepare JSON strings for test
     vector<QFile*> TestFiles{
         new QFile("test/test-data/utf8test.json"),
@@ -425,7 +428,7 @@ void WMMTest::mongocxx::CustomDataDemo() {
 //    }
 
     // drop db
-    test.drop();
+//    test.drop();
 
     LastFinishedFn.assign(__FUNCTION__);
 }

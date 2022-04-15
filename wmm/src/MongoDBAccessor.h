@@ -20,7 +20,7 @@ namespace WritingMaterialsManager {
         QByteArray GetCollectionsInformation(mongocxx::database& Database);
         QByteArray GetDBsAndCollsInfo();
     private:
-        static const mongocxx::instance mongocxxDriver; // This represents the mongocxx driver instance hence should be done only once.
+        inline static const mongocxx::instance mongocxxDriver{}; // This represents the mongocxx driver instance hence should be done only once.
         mongocxx::uri DBURI;
         mongocxx::client Client;
     };

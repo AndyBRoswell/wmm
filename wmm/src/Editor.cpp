@@ -8,6 +8,8 @@ namespace WritingMaterialsManager {
                                                                                            IntuitiveView(new QTreeView),
                                                                                            RawView(new QPlainTextEdit),
                                                                                            TreeModel(TreeModel) {
+        RawView->setFont(DefaultFont);
+
         IntuitiveView->setModel(TreeModel.get());
         TabView->addTab(IntuitiveView, tr("直观"));
         TabView->addTab(RawView, tr("原始"));

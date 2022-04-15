@@ -1,6 +1,7 @@
 #ifndef WRITING_MATERIALS_MANAGER_EDITOR_H
 #define WRITING_MATERIALS_MANAGER_EDITOR_H
 
+#include <QFont>
 #include <QPlainTextEdit>
 #include <QTabWidget>
 #include <QTreeView>
@@ -12,6 +13,8 @@ namespace WritingMaterialsManager {
     class Editor : public QWidget {
     Q_OBJECT
     public:
+        inline static const QFont DefaultFont{"Consolas", 10};
+
         QTabWidget* const TabView;
         QTreeView* const IntuitiveView;
         QPlainTextEdit* const RawView;
