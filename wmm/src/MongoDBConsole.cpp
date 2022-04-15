@@ -17,11 +17,11 @@ namespace WritingMaterialsManager {
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         qDebug() << connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         qDebug() << connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        qDebug() << connect(this, &MongoDBConsole::StartToReturnShellResult, mongoshAccessor, &MongoDBShellAccessor::ReturnResult);
+        qDebug() << connect(this, &MongoDBConsole::StartToReturnShellResult, mongoshAccessor, &MongoDBShellAccessor::ContinuouslyReturnResult);
         qDebug() << connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
         qDebug() << connect(mongoshAccessor, &MongoDBShellAccessor::ShellResultReady, this, &MongoDBConsole::SetTextForAssociatedEditors);
         mongoshAccessThread.start();
-        emit StartToReturnShellResult();
+//        emit StartToReturnShellResult();
 
         ControlArea->setLayout(new QHBoxLayout);
         ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
@@ -68,10 +68,10 @@ namespace WritingMaterialsManager {
     void MongoDBShellAccessor::Execute(const QString& Command) {
         qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
         mongoshProcess->write(Command.toUtf8());
-        qDebug() << "mongosh command sent.";
+        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
     }
 
-    void MongoDBShellAccessor::ReturnResult() {
+    void MongoDBShellAccessor::ContinuouslyReturnResult() {
         using namespace std::chrono_literals;
 
         qDebug() << "Started to return mongosh result.";

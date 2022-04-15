@@ -44,7 +44,7 @@ namespace WritingMaterialsManager {
         ~MongoDBShellAccessor();
     public slots:
         void Execute(const QString& Command);
-        void ReturnResult();
+        void ContinuouslyReturnResult();
     signals:
         void ShellResultReady(const QString& Result);
     private:
