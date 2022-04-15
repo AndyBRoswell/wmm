@@ -34,6 +34,8 @@ namespace WritingMaterialsManager {
         void AppendText(const QString& Text = {});
 
         void ModifyFileType(const QString& FileType);
+    public slots:
+        void ArrangeContentView();
     private:
         inline static const std::unordered_map<QString, SupportedFileType> SupportedFileInternalID = {
             { "JSON", SupportedFileType::JSON },
