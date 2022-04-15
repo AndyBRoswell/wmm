@@ -19,7 +19,7 @@ namespace WritingMaterialsManager {
     class MongoDBConsole : public DatabaseConsole {
     Q_OBJECT
     public:
-        QWidget* ControlArea;
+        QWidget* const ControlArea;
         QLineEdit* const URLForm;
         QLineEdit* const mongoshCommandForm;
         QPushButton* const ExecuteButton;
