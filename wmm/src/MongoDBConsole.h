@@ -30,6 +30,7 @@ namespace WritingMaterialsManager {
         ~MongoDBConsole();
 
         void ExecuteShellCommand();
+        void ArrangeContentViewForAssociatedEditors() override;
     signals:
         void SendShellCommand(const QString& Command);
     private:

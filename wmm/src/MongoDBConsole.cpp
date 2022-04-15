@@ -19,7 +19,7 @@ namespace WritingMaterialsManager {
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
         connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoShAccessor::Execute);
         connect(mongoshAccessor, &MongoShAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
-        connect(mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &DatabaseConsole::ArrangeContentViewForAssociatedEditors);
+        connect(mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -55,6 +55,17 @@ namespace WritingMaterialsManager {
         emit SendShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
     }
+
+    void MongoDBConsole::ArrangeContentViewForAssociatedEditors() {
+        for (auto* Editor: AssociatedEditors) {
+            Editor->RawView->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor); // move to the end
+            Editor->RawView->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor); // move to the start of the last line
+            Editor->RawView->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor); // drag to the end
+            Editor->RawView->textCursor().removeSelectedText();
+        }
+        DatabaseConsole::ArrangeContentViewForAssociatedEditors();
+    }
+
 /// ----------------------------------------------------------------
 
     MongoShAccessor::MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
