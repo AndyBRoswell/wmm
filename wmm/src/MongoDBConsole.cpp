@@ -13,12 +13,13 @@ namespace WritingMaterialsManager {
                                                             mongoshCommandForm(new QLineEdit("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
                                                             CommandForm(new QPlainTextEdit("show dbs")) {
-        MongoDBShellAccessor* const mongoshAccessor = new class MongoDBShellAccessor(mongoshCommandForm->text(), URLForm->text());
+        MongoShAccessor* const mongoshAccessor = new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text());
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
-        connect(mongoshAccessor, &MongoDBShellAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
+        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoShAccessor::Execute);
+        connect(mongoshAccessor, &MongoShAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
+        connect(mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &DatabaseConsole::ArrangeContentViewForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -56,15 +57,15 @@ namespace WritingMaterialsManager {
     }
 /// ----------------------------------------------------------------
 
-    MongoDBShellAccessor::MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
+    MongoShAccessor::MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
         mongoshProcess->start(mongoshCommand, { MongoDBURL });
         qDebug() << "Waiting for the start of mongoshProcess ...";
         qDebug() << (mongoshProcess->waitForStarted(-1) ? "Started." : "Start failed.");
     }
 
-    MongoDBShellAccessor::~MongoDBShellAccessor() {}
+    MongoShAccessor::~MongoShAccessor() {}
 
-    void MongoDBShellAccessor::Execute(const QString& Command) {
+    void MongoShAccessor::Execute(const QString& Command) {
         using namespace std::chrono;
         using namespace std::chrono_literals;
 
@@ -80,6 +81,7 @@ namespace WritingMaterialsManager {
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
         emit MoreMongoShResult(Result);
         qDebug() << "No more mongosh result.";
+        emit NoMoreResult();
     }
 
 /// ----------------------------------------------------------------

@@ -23,4 +23,8 @@ namespace WritingMaterialsManager {
     void DatabaseConsole::AppendTextForAssociatedEditors(const QString& Text) {
         for (auto& Editor: AssociatedEditors) { Editor->AppendText(Text); }
     }
+
+    void DatabaseConsole::ArrangeContentViewForAssociatedEditors() {
+        for (auto& Editor: AssociatedEditors) { Editor->ArrangeContentView(); }
+    }
 }

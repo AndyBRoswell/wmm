@@ -47,14 +47,14 @@ namespace WritingMaterialsManager {
  */
         inline static const QString NumberPattern{ R"(\b[+-]*\d*\.?\d*([Ee]?[+-]*\d+)?\b)" };
 
-        static QTextCharFormat KeywordFormat;
-        static QTextCharFormat NumberFormat;
-        static QTextCharFormat KeyStringFormat;
-        static QTextCharFormat NonKeyStringFormat;
-        static QTextCharFormat EscapedStringFormat;
-        static QTextCharFormat ErrorFormat;
+        inline static QTextCharFormat KeywordFormat;
+        inline static QTextCharFormat NumberFormat;
+        inline static QTextCharFormat KeyStringFormat;
+        inline static QTextCharFormat NonKeyStringFormat;
+        inline static QTextCharFormat EscapedStringFormat;
+        inline static QTextCharFormat ErrorFormat;
 
-        static std::vector<HighlightRule> HighlightRules;
+        inline static std::vector<HighlightRule> HighlightRules;
 
         static void OneOffInit();
     };

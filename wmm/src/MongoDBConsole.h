@@ -36,15 +36,16 @@ namespace WritingMaterialsManager {
         QThread mongoshAccessThread;
     };
 
-    class MongoDBShellAccessor : public QObject {
+    class MongoShAccessor : public QObject {
     Q_OBJECT
     public:
-        explicit MongoDBShellAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
-        ~MongoDBShellAccessor();
+        explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
+        ~MongoShAccessor();
     public slots:
         void Execute(const QString& Command);
     signals:
         void MoreMongoShResult(const QString& Result);
+        void NoMoreResult();
     private:
         std::shared_ptr<QProcess> mongoshProcess;
     };
