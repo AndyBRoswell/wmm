@@ -15,10 +15,10 @@ namespace WritingMaterialsManager {
                                                             CommandForm(new QPlainTextEdit("show dbs")) {
         MongoDBShellAccessor* const mongoshAccessor = new class MongoDBShellAccessor(mongoshCommandForm->text(), URLForm->text());
         mongoshAccessor->moveToThread(&mongoshAccessThread);
-        qDebug() << connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
-        qDebug() << connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        qDebug() << connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
-        qDebug() << connect(mongoshAccessor, &MongoDBShellAccessor::ShellResultReady, this, &MongoDBConsole::SetTextForAssociatedEditors);
+        connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
+        connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
+        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoDBShellAccessor::Execute);
+        connect(mongoshAccessor, &MongoDBShellAccessor::MoreMongoDBShellResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -49,6 +49,7 @@ namespace WritingMaterialsManager {
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
+        SetTextForAssociatedEditors("");
         qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
         emit SendShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
@@ -64,15 +65,21 @@ namespace WritingMaterialsManager {
     MongoDBShellAccessor::~MongoDBShellAccessor() {}
 
     void MongoDBShellAccessor::Execute(const QString& Command) {
+        using namespace std::chrono;
         using namespace std::chrono_literals;
 
         qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
         mongoshProcess->write(Command.toUtf8());
         qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
-        std::this_thread::sleep_for(500ms);
+        time_point<high_resolution_clock> return_ends_time_point{};
+        while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
+            const QByteArray Result = mongoshProcess->readAllStandardOutput();
+            if (Result != "") { emit MoreMongoDBShellResult(Result); }
+            else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
+        }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
-        if (Result != "") { emit ShellResultReady(Result); }
-        else { qDebug() << "The mongosh returns no result."; }
+        emit MoreMongoDBShellResult(Result);
+        qDebug() << "No more mongosh result.";
     }
 
 /// ----------------------------------------------------------------

@@ -44,7 +44,7 @@ namespace WritingMaterialsManager {
     public slots:
         void Execute(const QString& Command);
     signals:
-        void ShellResultReady(const QString& Result);
+        void MoreMongoDBShellResult(const QString& Result);
     private:
         std::shared_ptr<QProcess> mongoshProcess;
     };

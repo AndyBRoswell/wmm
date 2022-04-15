@@ -18,6 +18,7 @@ namespace WritingMaterialsManager {
         void ClearAssociatedEditor();
     public slots:
         void SetTextForAssociatedEditors(const QString& Text);
+        void AppendTextForAssociatedEditors(const QString& Text);
     private:
         std::set<Editor*> AssociatedEditors{};
     };

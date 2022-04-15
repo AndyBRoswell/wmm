@@ -20,6 +20,7 @@ namespace WritingMaterialsManager {
         ~Editor();
 
         void SetText(const QString& Text = {});
+        void AppendText(const QString& Text = {});
     private:
         std::shared_ptr<QtTreeModel> TreeModel;
     };

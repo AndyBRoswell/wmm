@@ -20,4 +20,5 @@ namespace WritingMaterialsManager {
     Editor::~Editor() {}
 
     void Editor::SetText(const QString& Text) { RawView->setPlainText(Text); }
+    void Editor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 } // namespace WritingMaterialsManager
