@@ -16,6 +16,20 @@
 #include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
+    class MongoShAccessor : public QObject {
+    Q_OBJECT
+    public:
+        explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
+        ~MongoShAccessor();
+    public slots:
+        void Execute(const QString& Command);
+    signals:
+        void MoreMongoShResult(const QString& Result);
+        void NoMoreResult();
+    private:
+        std::shared_ptr<QProcess> mongoshProcess;
+    };
+
     class MongoDBConsole : public DatabaseConsole {
     Q_OBJECT
     public:
@@ -34,21 +48,8 @@ namespace WritingMaterialsManager {
     signals:
         void SendShellCommand(const QString& Command);
     private:
+        MongoShAccessor* mongoshAccessor;
         QThread mongoshAccessThread;
-    };
-
-    class MongoShAccessor : public QObject {
-    Q_OBJECT
-    public:
-        explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
-        ~MongoShAccessor();
-    public slots:
-        void Execute(const QString& Command);
-    signals:
-        void MoreMongoShResult(const QString& Result);
-        void NoMoreResult();
-    private:
-        std::shared_ptr<QProcess> mongoshProcess;
     };
 
     class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {

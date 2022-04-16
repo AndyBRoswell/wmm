@@ -9,12 +9,12 @@
 
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
+                                                            mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
                                                             ControlArea(new QWidget()),
                                                             URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                             mongoshCommandForm(new QLineEdit("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
                                                             CommandForm(new QPlainTextEdit("show dbs\n")) {
-        MongoShAccessor* const mongoshAccessor = new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text());
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
@@ -48,6 +48,7 @@ namespace WritingMaterialsManager {
     MongoDBConsole::~MongoDBConsole() {
         mongoshAccessThread.quit();
         mongoshAccessThread.wait();
+        delete mongoshAccessor;
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
