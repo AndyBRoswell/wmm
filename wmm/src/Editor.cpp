@@ -56,5 +56,7 @@ namespace WritingMaterialsManager {
             RawView->setPlainText(PlainTextCopy); // restore the original text
         }
         Highlighter->setDocument(RawView->document());
+//        Highlighter->Highlight(Highlighter->document()->toPlainText());
+//        RawView->update();
     }
 } // namespace WritingMaterialsManager

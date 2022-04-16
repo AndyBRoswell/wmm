@@ -12,6 +12,7 @@
 
 #include "QtTreeModel.h"
 #include "TextFormatter.h"
+#include "TextHighlighter.h"
 
 namespace WritingMaterialsManager {
     class Editor : public QWidget {
@@ -45,7 +46,7 @@ namespace WritingMaterialsManager {
 
         QString FileType;
         std::shared_ptr<TextFormatter> Formatter;
-        std::shared_ptr<QSyntaxHighlighter> Highlighter;
+        std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;
     };
 } // namespace WritingMaterialsManager
