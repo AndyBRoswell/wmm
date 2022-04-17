@@ -1,5 +1,8 @@
 #include "Editor.h"
 
+#include <stdexcept>
+#include <string>
+
 #include <QFileDialog>
 #include <QGridLayout>
 
@@ -14,10 +17,9 @@ namespace WritingMaterialsManager {
                                                                                                                     TreeModel(TreeModel) {
         ModifyFileType(FileType);
 
-        MenuAction.Open = new QAction(tr("&Open"));
         MenuAction.Open->setShortcut(QKeySequence::Open);
-        MenuAction.Open->setStatusTip(tr("Open a file"));
-        connect(MenuAction.Open, &QAction::triggered, this, &Editor::OpenFile);
+        MenuAction.Open->setStatusTip(tr("打开一个文件"));
+        connect(MenuAction.Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
 
         RawView->setFont(DefaultFont);
 
@@ -73,6 +75,19 @@ namespace WritingMaterialsManager {
     }
 
     void Editor::OpenFile() {
-        const auto FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
+        const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
+        if (FileName.isEmpty() == false) OpenFile(FileName);
+    }
+
+    void Editor::OpenFile(const QString& FileName) {
+        using namespace std;
+
+        QFile File(FileName);
+        if (File.open(QIODevice::ReadWrite) == false) {
+            throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
+        }
+        const QByteArray FileContents = File.readAll();
+        RawView->setPlainText(FileContents);
+        TreeModel->FromJSON(FileContents);
     }
 } // namespace WritingMaterialsManager

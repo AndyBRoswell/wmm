@@ -48,7 +48,7 @@ namespace WritingMaterialsManager {
         };
 
         struct {
-            QAction* Open;
+            QAction* Open{new QAction(tr("打开"))};
         } MenuAction;
 
         QString FileType;
@@ -57,6 +57,7 @@ namespace WritingMaterialsManager {
         std::shared_ptr<QtTreeModel> TreeModel;
     private slots:
         void OpenFile();
+        void OpenFile(const QString& FileName);
     };
 } // namespace WritingMaterialsManager
 
