@@ -29,7 +29,7 @@ namespace WritingMaterialsManager {
         QTreeView* const IntuitiveView;
         QPlainTextEdit* const RawView;
 
-        explicit Editor(const QString& FileType = "JSON", const std::shared_ptr<QtTreeModel>& TreeModel = nullptr, QWidget* const parent = nullptr);
+        explicit Editor(const QString& FileType = "JSON", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~Editor();
 
         void SetText(const QString& Text = {});
