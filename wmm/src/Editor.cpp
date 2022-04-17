@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include <QFileDialog>
 #include <QGridLayout>
 
 #include "JSONFormatter.h"
@@ -12,6 +13,11 @@ namespace WritingMaterialsManager {
                                                                                                                     RawView(new QPlainTextEdit),
                                                                                                                     TreeModel(TreeModel) {
         ModifyFileType(FileType);
+
+        MenuAction.Open = new QAction(tr("&Open"));
+        MenuAction.Open->setShortcut(QKeySequence::Open);
+        MenuAction.Open->setStatusTip(tr("Open a file"));
+        connect(MenuAction.Open, &QAction::triggered, this, &Editor::OpenFile);
 
         RawView->setFont(DefaultFont);
 
@@ -58,5 +64,15 @@ namespace WritingMaterialsManager {
         Highlighter->setDocument(RawView->document());
 //        Highlighter->Highlight(Highlighter->document()->toPlainText());
 //        RawView->update();
+    }
+
+    void Editor::contextMenuEvent(QContextMenuEvent* Event) {
+        QMenu ContextMenu(this);
+        ContextMenu.addAction(MenuAction.Open);
+        ContextMenu.exec(Event->globalPos());
+    }
+
+    void Editor::OpenFile() {
+        const auto FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
     }
 } // namespace WritingMaterialsManager

@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include <QFont>
+#include <QMenu>
 #include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QTabWidget>
@@ -39,15 +40,23 @@ namespace WritingMaterialsManager {
         void ArrangeContentView();
     signals:
         void NoMoreReturn();
+    protected:
+        void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
         inline static const std::unordered_map<QString, SupportedFileType> SupportedFileInternalID = {
             { "JSON", SupportedFileType::JSON },
         };
 
+        struct {
+            QAction* Open;
+        } MenuAction;
+
         QString FileType;
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;
+    private slots:
+        void OpenFile();
     };
 } // namespace WritingMaterialsManager
 
