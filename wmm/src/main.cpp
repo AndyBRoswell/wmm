@@ -1,3 +1,5 @@
+#include "predefined.h"
+
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
