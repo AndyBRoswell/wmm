@@ -87,7 +87,12 @@ namespace WritingMaterialsManager {
             throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
         }
         const QByteArray FileContents = File.readAll();
-        RawView->setPlainText(FileContents);
-        TreeModel->FromJSON(FileContents);
+        try {
+            RawView->setPlainText(FileContents);
+            TreeModel->FromJSON(FileContents);
+        }
+        catch (const exception& e) {
+
+        }
     }
 } // namespace WritingMaterialsManager

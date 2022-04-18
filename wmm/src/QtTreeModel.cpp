@@ -346,7 +346,6 @@ namespace WritingMaterialsManager {
             case kArrayType:
                 for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
                     s.emplace(&*i);
-//                Node* const c = new Node({ ns->Size() - (i - ns->Begin()) - 1 }, nt);
                     Node* const c = new Node({ i - ns->Begin() }, nt);
                     nt->PushBackChild(c);
                     t.emplace(c);
