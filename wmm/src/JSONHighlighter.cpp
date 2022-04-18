@@ -29,7 +29,13 @@ namespace WritingMaterialsManager {
     }
 
     void JSONHighlighter::highlightBlock(const QString& Text) {
-        Highlight(Text);
+        try {
+            Highlight(Text);
+        }
+        catch (const std::exception& e) {
+            qDebug() << "Exception at" << __FUNCTION__ << "when attempting to highlight JSON.";
+            qDebug() << e.what();
+        }
     }
 
     void JSONHighlighter::Highlight(const QString& Text) {

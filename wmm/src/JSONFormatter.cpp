@@ -13,15 +13,12 @@ namespace WritingMaterialsManager {
         using namespace std;
         using namespace rapidjson;
 
-//        using InputEncoding = UTF16<char16_t>;
-        using InputEncoding = UTF8<>;
+        using InputEncoding = UTF16<char16_t>;
         using ParsingOutputEncoding = UTF8<>;
-//        using OutputEncoding = UTF16<char16_t>;
-        using OutputEncoding = UTF8<>;
+        using OutputEncoding = UTF16<char16_t>;
 
         GenericReader<InputEncoding, ParsingOutputEncoding> JSONReader;
-//        GenericStringStream<InputEncoding> JSONIStream(Text.toStdU16String().c_str());
-        GenericStringStream<InputEncoding> JSONIStream(Text.toUtf8().constData());
+        GenericStringStream<InputEncoding> JSONIStream(Text.toStdU16String().c_str());
         GenericStringBuffer<OutputEncoding> JSONOStream;
         PrettyWriter<GenericStringBuffer<OutputEncoding>, ParsingOutputEncoding, OutputEncoding> JSONWriter(JSONOStream);
         try {
@@ -32,7 +29,6 @@ namespace WritingMaterialsManager {
             qDebug() << e.what();
             return;
         }
-//        Text = QString::fromStdU16String(JSONOStream.GetString());
-        Text = QString::fromUtf8(JSONOStream.GetString());
+        Text = QString::fromStdU16String(JSONOStream.GetString());
     }
 }
