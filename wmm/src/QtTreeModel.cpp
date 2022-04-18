@@ -332,12 +332,15 @@ namespace WritingMaterialsManager {
             Node* const nt = t.top();
             t.pop();
             switch (ns->GetType()) {
-            case kNullType:nt->PushBackData("");
+            case kNullType:
+                nt->PushBackData("");
                 break;
             case kFalseType:
-            case kTrueType:nt->PushBackData(ns->GetBool());
+            case kTrueType:
+                nt->PushBackData(ns->GetBool());
                 break;
-            case kStringType:nt->PushBackData(ns->GetString());
+            case kStringType:
+                nt->PushBackData(ns->GetString());
                 break;
             case kNumberType:
                 if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
@@ -352,7 +355,8 @@ namespace WritingMaterialsManager {
                 }
                 nt->ReverseChild();
                 break;
-            case kObjectType:if (ns->MemberEnd() == ns->MemberBegin()) break;
+            case kObjectType:
+                if (ns->MemberEnd() == ns->MemberBegin()) break;
                 for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) {
                     s.emplace(&i->value);
                     Node* const c = new Node({ i->name.GetString() }, nt);
