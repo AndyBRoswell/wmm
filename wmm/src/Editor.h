@@ -39,11 +39,11 @@ namespace WritingMaterialsManager {
 
         QString GetFileType() const;
         void SetFileType(const QString& FileType);
-        QString GetEncoding() const;
-        void SetEncoding(const QString& Encoding);
+        QString GetCharset() const;
+        void SetCharset(const QString& Charset);
     signals:
         void ShouldUpdateFileType();
-        void ShouldUpdateEncoding();
+        void ShouldUpdateCharset();
     public slots:
         void ArrangeContentView();
     signals:
@@ -53,6 +53,14 @@ namespace WritingMaterialsManager {
         void focusInEvent(QFocusEvent* Event) override;
     private:
         static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
+        struct Menu {
+            inline static QMenu* CharsetMenu;
+            Menu() = delete;
+            Menu(const Menu&) = delete;
+            Menu(Menu&&) = delete;
+            Menu& operator=(const Menu&) = delete;
+            Menu& operator=(Menu&&) = delete;
+        };
         struct MenuAction {
             inline static QAction* Open;
             MenuAction() = delete;
@@ -63,7 +71,7 @@ namespace WritingMaterialsManager {
         };
 
         QString FileType;
-        QString Encoding;
+        QString Charset;
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;

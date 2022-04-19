@@ -34,13 +34,13 @@ namespace WritingMaterialsManager {
         std::call_once(StaticInitCompleted, OneOffInit);
 
         connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateFileType);
-        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateEncoding);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateCharset);
         connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateFileType);
-        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateEncoding);
+        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateCharset);
 
         setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
-        SetEncoding("UTF-8");
+        SetCharset("UTF-8");
 
         RawView->setFont(DefaultCodeFont);
 
@@ -79,10 +79,10 @@ namespace WritingMaterialsManager {
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
 
-    QString Editor::GetEncoding() const { return Encoding; }
-    void Editor::SetEncoding(const QString& Encoding) {
-        this->Encoding = Encoding;
-        emit ShouldUpdateEncoding();
+    QString Editor::GetCharset() const { return Charset; }
+    void Editor::SetCharset(const QString& Charset) {
+        this->Charset = Charset;
+        emit ShouldUpdateCharset();
     }
 
     void Editor::ArrangeContentView() {
@@ -111,7 +111,7 @@ namespace WritingMaterialsManager {
 
     void Editor::focusInEvent(QFocusEvent* Event) {
         emit ShouldUpdateFileType();
-        emit ShouldUpdateEncoding();
+        emit ShouldUpdateCharset();
     }
 
     void Editor::OpenFile() {
