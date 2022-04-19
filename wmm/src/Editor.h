@@ -5,7 +5,6 @@
 
 #include <QFont>
 #include <QMenu>
-#include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QTabWidget>
 #include <QTreeView>
@@ -13,6 +12,7 @@
 
 #include <Algorithm.h>
 #include "QtTreeModel.h"
+#include "TextArea.h"
 #include "TextFormatter.h"
 #include "TextHighlighter.h"
 
@@ -28,7 +28,7 @@ namespace WritingMaterialsManager {
 
         QTabWidget* const TabView;
         QTreeView* const IntuitiveView;
-        QPlainTextEdit* const RawView;
+        TextArea* const RawView;
 
         static void OneOffInit();
         explicit Editor(const QString& FileType = "JSON", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);

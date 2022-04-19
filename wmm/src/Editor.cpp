@@ -24,7 +24,7 @@ namespace WritingMaterialsManager {
     Editor::Editor(const QString& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
                                                                                                                     TabView(new QTabWidget),
                                                                                                                     IntuitiveView(new QTreeView),
-                                                                                                                    RawView(new QPlainTextEdit),
+                                                                                                                    RawView(new TextArea),
                                                                                                                     TreeModel(TreeModel) {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
