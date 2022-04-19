@@ -60,6 +60,12 @@ namespace WritingMaterialsManager {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);
+        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
+                [=, this]() {
+                    this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
+                    this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
+                }
+        );
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
         RootView->addWidget(Console);

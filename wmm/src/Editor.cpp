@@ -9,6 +9,7 @@
 
 #include "JSONFormatter.h"
 #include "JSONHighlighter.h"
+#include "TextArea.h"
 
 namespace WritingMaterialsManager {
     const std::unordered_map<QString, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {

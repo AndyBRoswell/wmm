@@ -11,8 +11,13 @@ namespace WritingMaterialsManager {
     };
 
     class TextArea : public QPlainTextEdit {
+    Q_OBJECT
     public:
         using QPlainTextEdit::QPlainTextEdit;
+
+        void mousePressEvent(QMouseEvent* E) override;
+    signals:
+        void MouseDown();
     };
 }
 
