@@ -309,7 +309,7 @@ namespace WritingMaterialsManager {
         return RootNode; // for a certain kind of consistency?
     }
 
-    void QtTreeModel::FromJSON(const QByteArray& JSONString) {
+    void QtTreeModel::FromJSON(const QByteArray& UTF8JSONString) {
         using namespace std;
         using namespace rapidjson;
 
@@ -318,7 +318,7 @@ namespace WritingMaterialsManager {
         RootNode->PushBackChild(JSONRoot);
 
         Document JSONDocument;
-        JSONDocument.Parse(JSONString.constData());
+        JSONDocument.Parse(UTF8JSONString.constData());
 
         beginResetModel();
         stack<const Value*, vector<const Value*>> s;
