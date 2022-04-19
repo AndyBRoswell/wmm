@@ -30,6 +30,7 @@ namespace WritingMaterialsManager {
         QTreeView* const IntuitiveView;
         QPlainTextEdit* const RawView;
 
+        static void OneOffInit();
         explicit Editor(const QString& FileType = "JSON", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~Editor();
 
@@ -51,9 +52,14 @@ namespace WritingMaterialsManager {
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
         static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
-        struct {
-            QAction* Open{ new QAction(tr("打开")) };
-        } MenuAction;
+        struct MenuAction {
+            inline static QAction* Open;
+            MenuAction() = delete;
+            MenuAction(const MenuAction&) = delete;
+            MenuAction(MenuAction&&) = delete;
+            MenuAction& operator=(const MenuAction&) = delete;
+            MenuAction& operator=(MenuAction&&) = delete;
+        };
 
         QString FileType;
         QString Encoding = "UTF-8";

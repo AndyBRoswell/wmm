@@ -1,7 +1,7 @@
 #include "Editor.h"
 
+#include <mutex>
 #include <stdexcept>
-#include <string>
 
 #include <QApplication>
 #include <QFileDialog>
@@ -15,16 +15,21 @@ namespace WritingMaterialsManager {
         { "JSON", SupportedFileType::JSON },
     }; // mainly for switch-case statement so far.
 
+    void Editor::OneOffInit() {
+        MenuAction::Open = new QAction(tr("打开"));
+        MenuAction::Open->setShortcut(QKeySequence::Open);
+        MenuAction::Open->setStatusTip(tr("打开一个文件"));
+    }
+
     Editor::Editor(const QString& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
                                                                                                                     TabView(new QTabWidget),
                                                                                                                     IntuitiveView(new QTreeView),
                                                                                                                     RawView(new QPlainTextEdit),
                                                                                                                     TreeModel(TreeModel) {
-        SetFileType(FileType);
+        static std::once_flag StaticInitCompleted;
+        std::call_once(StaticInitCompleted, OneOffInit);
 
-        MenuAction.Open->setShortcut(QKeySequence::Open);
-        MenuAction.Open->setStatusTip(tr("打开一个文件"));
-        connect(MenuAction.Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
+        SetFileType(FileType);
 
         RawView->setFont(DefaultFont);
 
@@ -85,9 +90,11 @@ namespace WritingMaterialsManager {
     }
 
     void Editor::contextMenuEvent(QContextMenuEvent* Event) {
-        QMenu ContextMenu(this);
-        ContextMenu.addAction(MenuAction.Open);
-        ContextMenu.exec(Event->globalPos());
+        QMenu* const ContextMenu = new QMenu(this);
+        ContextMenu->addAction(MenuAction::Open);
+        const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
+        ContextMenu->exec(Event->globalPos());
+        disconnect(Connection);
     }
 
     void Editor::OpenFile() {
