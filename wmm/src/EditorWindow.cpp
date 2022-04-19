@@ -60,12 +60,20 @@ namespace WritingMaterialsManager {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);
+        auto ShowPlainTextFn = [=, this]() {
+            this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
+            this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
+        };
+        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
+        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
         connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
                 [=, this]() {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
                     this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
                 }
         );
+        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateFileType);
+        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateEncoding);
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
         RootView->addWidget(Console);
@@ -77,6 +85,8 @@ namespace WritingMaterialsManager {
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         Editor* const Editor = new class Editor;
         RootView->addWidget(Editor);
+        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateFileType);
+        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateEncoding);
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
     }

@@ -13,7 +13,8 @@
 
 namespace WritingMaterialsManager {
     const std::unordered_map<QString, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
-        { "JSON", SupportedFileType::JSON },
+        { "JSON",                  SupportedFileType::JSON },
+        { "MongoDB Extended JSON", SupportedFileType::MongoDBExtendedJSON },
     }; // mainly for switch-case statement so far.
 
     void Editor::OneOffInit() {
@@ -60,6 +61,7 @@ namespace WritingMaterialsManager {
             if (I == FileTypeToEnumID.cend()) return; // not supported file type
             switch (I->second) {
             case F::JSON:
+            case F::MongoDBExtendedJSON:
                 Formatter = make_shared<JSONFormatter>();
                 Highlighter = make_shared<JSONHighlighter>(RawView->document());
                 break;

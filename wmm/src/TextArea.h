@@ -6,8 +6,13 @@
 
 namespace WritingMaterialsManager {
     class TextField : public QLineEdit {
+    Q_OBJECT
     public:
         using QLineEdit::QLineEdit;
+
+        void mousePressEvent(QMouseEvent* E) override;
+    signals:
+        void MouseDown();
     };
 
     class TextArea : public QPlainTextEdit {

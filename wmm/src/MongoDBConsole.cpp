@@ -79,6 +79,8 @@ namespace WritingMaterialsManager {
                 qDebug() << "Exception at " << __FUNCTION__ << ": Parsing ERROR when converting to JSON in strict syntax.";
                 qDebug() << e.what();
             }
+            Editor->SetEncoding("UTF-8");
+            Editor->SetFileType("MongoDB Extended JSON");
         }
         DatabaseConsole::ArrangeContentViewForAssociatedEditors();
     }

@@ -22,6 +22,7 @@ namespace WritingMaterialsManager {
     public:
         enum class SupportedFileType : size_t {
             JSON = 1,
+            MongoDBExtendedJSON = 2,
         };
 
         inline static const QFont DefaultFont{ "Consolas", 10 };
