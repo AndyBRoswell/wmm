@@ -14,7 +14,7 @@ namespace WritingMaterialsManager {
         UI->setupUi(this);
 
         QTabWidget* const TabView = new QTabWidget;
-        auto* const MDBCPage = new MongoDBConsoleAndEditorPage(this);
+        auto* const MDBCPage = new MongoConAndEditorPage(this);
         auto* const EditorPage = new EditorOnlyPage(this);
         TabView->addTab(MDBCPage, "MongoDB Console");
         TabView->addTab(EditorPage, "Editor Only");
@@ -56,7 +56,7 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
+    EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);

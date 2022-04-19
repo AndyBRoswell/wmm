@@ -33,9 +33,9 @@ namespace WritingMaterialsManager {
             EditorWindow* const thisAtEditorWindow;
         };
 
-        class MongoDBConsoleAndEditorPage : public Page {
+        class MongoConAndEditorPage : public Page {
         public:
-            explicit MongoDBConsoleAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
+            explicit MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
         class EditorOnlyPage : public Page {
