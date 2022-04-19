@@ -19,7 +19,9 @@ namespace WritingMaterialsManager {
         ~EditorWindow();
     public slots:
         void UpdateFileTypeLabel();
+        void UpdateFileTypeLabel(const QString& FileType);
         void UpdateEncodingLabel();
+        void UpdateEncodingLabel(const QString& Encoding);
     private:
         class Page : public QWidget {
         public:

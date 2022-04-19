@@ -36,13 +36,10 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
-    void EditorWindow::UpdateFileTypeLabel() {
-        FileTypeLabel->setText(static_cast<Editor*>(sender())->GetFileType());
-    }
-
-    void EditorWindow::UpdateEncodingLabel() {
-        EncodingLabel->setText(static_cast<Editor*>(sender())->GetEncoding());
-    }
+    void EditorWindow::UpdateFileTypeLabel() { FileTypeLabel->setText(static_cast<Editor*>(sender())->GetFileType()); }
+    void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
+    void EditorWindow::UpdateEncodingLabel() { EncodingLabel->setText(static_cast<Editor*>(sender())->GetEncoding()); }
+    void EditorWindow::UpdateEncodingLabel(const QString& Encoding) { EncodingLabel->setText(Encoding); }
 
 /// ----------------------------------------------------------------
 
@@ -63,8 +60,8 @@ namespace WritingMaterialsManager {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);
-        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
-        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
+        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
@@ -74,7 +71,7 @@ namespace WritingMaterialsManager {
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         Editor* const Editor = new class Editor;
         RootView->addWidget(Editor);
-        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
-        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
+        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
     }
 }

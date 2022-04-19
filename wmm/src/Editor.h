@@ -31,7 +31,7 @@ namespace WritingMaterialsManager {
         TextArea* const RawView;
 
         static void OneOffInit();
-        explicit Editor(const QString& FileType = "JSON", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
+        explicit Editor(const QString& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~Editor();
 
         void SetText(const QString& Text = {});
