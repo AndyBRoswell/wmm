@@ -11,6 +11,7 @@
 #include <QTreeView>
 #include <QWidget>
 
+#include <Algorithm.h>
 #include "QtTreeModel.h"
 #include "TextFormatter.h"
 #include "TextHighlighter.h"
@@ -46,12 +47,12 @@ namespace WritingMaterialsManager {
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
-        inline static const std::unordered_map<QString, SupportedFileType> FileTypeToEnumID = {
+        inline static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID = {
             { "JSON", SupportedFileType::JSON },
         }; // mainly for switch-case statement so far.
 
         struct {
-            QAction* Open{new QAction(tr("打开"))};
+            QAction* Open{ new QAction(tr("打开")) };
         } MenuAction;
 
         QString FileType;

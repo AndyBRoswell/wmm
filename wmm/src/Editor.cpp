@@ -43,12 +43,15 @@ namespace WritingMaterialsManager {
         using F = SupportedFileType;
 
         try {
-            switch (FileTypeToEnumID.at(FileType)) {
+            const auto I = FileTypeToEnumID.find(FileType);
+            if (I == FileTypeToEnumID.cend()) return; // not supported file type
+            switch (I->second) {
             case F::JSON:
                 Formatter = make_shared<JSONFormatter>();
                 Highlighter = make_shared<JSONHighlighter>(RawView->document());
                 break;
             }
+            this->FileType = I->first;
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
