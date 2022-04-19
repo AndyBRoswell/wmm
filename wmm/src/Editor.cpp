@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 
+#include <QApplication>
 #include <QFileDialog>
 #include <QGridLayout>
 
@@ -52,12 +53,16 @@ namespace WritingMaterialsManager {
                 break;
             }
             this->FileType = I->first;
+            emit FileTypeChanged();
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
 
     QString Editor::GetEncoding() const { return Encoding; }
-    void Editor::SetEncoding(const QString& Encoding) { this->Encoding = Encoding; }
+    void Editor::SetEncoding(const QString& Encoding) {
+        this->Encoding = Encoding;
+        emit EncodingChanged();
+    }
 
     void Editor::ArrangeContentView() {
         auto PlainText = RawView->toPlainText();

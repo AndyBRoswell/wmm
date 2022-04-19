@@ -17,23 +17,28 @@ namespace WritingMaterialsManager {
 
         explicit EditorWindow(QWidget* Parent = nullptr);
         ~EditorWindow();
+    public slots:
+        void UpdateFileTypeLabel();
+        void UpdateEncodingLabel();
     private:
         class Page : public QWidget {
         public:
             QSplitter* RootView;
 
-            Page(QWidget* const Parent = nullptr);
+            explicit Page(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
             ~Page();
+        protected:
+            EditorWindow* const thisAtEditorWindow;
         };
 
         class MongoDBConsoleAndEditorPage : public Page {
         public:
-            MongoDBConsoleAndEditorPage(QWidget* const Parent = nullptr);
+            explicit MongoDBConsoleAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
         class EditorOnlyPage : public Page {
         public:
-            EditorOnlyPage(QWidget* const Parent = nullptr);
+            explicit EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
         inline static const QString DefaultQLabelStyleSheet = "QLabel { color: white; }";

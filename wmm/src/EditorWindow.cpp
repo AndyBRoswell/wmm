@@ -1,6 +1,7 @@
 #include "EditorWindow.h"
 #include "ui_EditorWindow.h"
 
+#include <QApplication>
 #include <QGridLayout>
 
 #include "Editor.h"
@@ -13,8 +14,8 @@ namespace WritingMaterialsManager {
         UI->setupUi(this);
 
         QTabWidget* const TabView = new QTabWidget;
-        auto* const MDBCPage = new MongoDBConsoleAndEditorPage;
-        auto* const EditorPage = new EditorOnlyPage;
+        auto* const MDBCPage = new MongoDBConsoleAndEditorPage(this);
+        auto* const EditorPage = new EditorOnlyPage(this);
         TabView->addTab(MDBCPage, "MongoDB Console");
         TabView->addTab(EditorPage, "Editor Only");
         RootView->addWidget(TabView);
@@ -35,9 +36,18 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
+    void EditorWindow::UpdateFileTypeLabel() {
+        FileTypeLabel->setText(static_cast<Editor*>(sender())->GetFileType());
+    }
+
+    void EditorWindow::UpdateEncodingLabel() {
+        EncodingLabel->setText(static_cast<Editor*>(sender())->GetEncoding());
+    }
+
 /// ----------------------------------------------------------------
 
-    EditorWindow::Page::Page(QWidget* const Parent) : RootView(new QSplitter(this)) {
+    EditorWindow::Page::Page(EditorWindow* const OuterInstance, QWidget* const Parent) : thisAtEditorWindow(OuterInstance),
+                                                                                         RootView(new QSplitter(this)) {
         RootView->setOrientation(Qt::Vertical);
 
         setLayout(new QGridLayout);
@@ -49,7 +59,7 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(QWidget* const Parent) : Page(Parent) {
+    EditorWindow::MongoDBConsoleAndEditorPage::MongoDBConsoleAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);
@@ -59,7 +69,10 @@ namespace WritingMaterialsManager {
         RootView->setStretchFactor(1, 4);
     }
 
-    EditorWindow::EditorOnlyPage::EditorOnlyPage(QWidget* const Parent) : Page(Parent) {
-        RootView->addWidget(new Editor);
+    EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
+        Editor* const Editor = new class Editor;
+        RootView->addWidget(Editor);
+        connect(Editor, &Editor::FileTypeChanged, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
+        connect(Editor, &Editor::EncodingChanged, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
     }
 }

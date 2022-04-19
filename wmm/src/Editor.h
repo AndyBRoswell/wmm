@@ -40,6 +40,9 @@ namespace WritingMaterialsManager {
         void SetFileType(const QString& FileType);
         QString GetEncoding() const;
         void SetEncoding(const QString& Encoding);
+    signals:
+        void FileTypeChanged();
+        void EncodingChanged();
     public slots:
         void ArrangeContentView();
     signals:
