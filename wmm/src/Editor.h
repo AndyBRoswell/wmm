@@ -26,8 +26,6 @@ namespace WritingMaterialsManager {
             MongoDBExtendedJSON = 2,
         };
 
-        inline static const QFont DefaultFont{ "Consolas", 10 };
-
         QTabWidget* const TabView;
         TreeView* const IntuitiveView;
         TextArea* const RawView;

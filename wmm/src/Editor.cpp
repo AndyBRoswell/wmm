@@ -11,6 +11,8 @@
 #include "JSONHighlighter.h"
 #include "TextArea.h"
 
+#include "global.h"
+
 namespace WritingMaterialsManager {
     const std::unordered_map<QString, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
         { "JSON",                  SupportedFileType::JSON },
@@ -35,7 +37,7 @@ namespace WritingMaterialsManager {
         SetFileType(FileType);
         SetEncoding("UTF-8");
 
-        RawView->setFont(DefaultFont);
+        RawView->setFont(DefaultCodeFont);
 
         IntuitiveView->setModel(TreeModel.get());
         TabView->addTab(IntuitiveView, tr("直观"));
