@@ -3,9 +3,7 @@
 #include <mutex>
 
 namespace WritingMaterialsManager {
-    using JSONHiliter = JSONHighlighter;
-
-    void JSONHiliter::OneOffInit() {
+    void JSONHighlighter::OneOffInit() {
         // set color of keywords
         KeywordFormat.setForeground(VisualStudioColorTheme.Keyword);
         for (const QString& KeywordPattern: KeywordPatterns) {
@@ -25,18 +23,22 @@ namespace WritingMaterialsManager {
         ErrorFormat.setForeground(VisualStudioColorTheme.Error);
     }
 
-    JSONHiliter::JSONHighlighter(QTextDocument
-    * const TargetDoc) :
-    TextHighlighter(TargetDoc) {
+    JSONHighlighter::JSONHighlighter(QTextDocument* const TargetDoc) : TextHighlighter(TargetDoc) {
         static std::once_flag StaticInitFlag;
         std::call_once(StaticInitFlag, OneOffInit);
     }
 
-    void JSONHiliter::highlightBlock(const QString& Text) {
-        Highlight(Text);
+    void JSONHighlighter::highlightBlock(const QString& Text) {
+        try {
+            Highlight(Text);
+        }
+        catch (const std::exception& e) {
+            qDebug() << "Exception at" << __FUNCTION__ << "when attempting to highlight JSON.";
+            qDebug() << e.what();
+        }
     }
 
-    void JSONHiliter::Highlight(const QString& Text) {
+    void JSONHighlighter::Highlight(const QString& Text) {
         using namespace std;
 
         // Match strings and escapes in strings. All intervals conform to the form [a, b).

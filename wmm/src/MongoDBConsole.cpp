@@ -11,10 +11,10 @@ namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
                                                             mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
                                                             ControlArea(new QWidget()),
-                                                            URLForm(new QLineEdit(MongoDBAccessor::LocalMongoDBURI)),
-                                                            mongoshCommandForm(new QLineEdit("mongosh")),
+                                                            URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
+                                                            mongoshCommandForm(new TextField("mongosh")),
                                                             ExecuteButton(new QPushButton("▶")),
-                                                            CommandForm(new QPlainTextEdit("show dbs\n")) {
+                                                            CommandForm(new TextArea("show dbs\n")) {
         mongoshAccessor->moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
@@ -79,6 +79,8 @@ namespace WritingMaterialsManager {
                 qDebug() << "Exception at " << __FUNCTION__ << ": Parsing ERROR when converting to JSON in strict syntax.";
                 qDebug() << e.what();
             }
+            Editor->SetEncoding("UTF-8");
+            Editor->SetFileType("MongoDB Extended JSON");
         }
         DatabaseConsole::ArrangeContentViewForAssociatedEditors();
     }

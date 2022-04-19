@@ -24,7 +24,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="Statusbar"/>
+  <widget class="QStatusBar" name="StatusBar"/>
   <widget class="QToolBar" name="ToolBar">
    <property name="windowTitle">
     <string>toolBar</string>

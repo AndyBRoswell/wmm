@@ -14,6 +14,7 @@
 
 #include "DatabaseConsole.h"
 #include "MongoDBAccessor.h"
+#include "TextArea.h"
 
 namespace WritingMaterialsManager {
     class MongoShAccessor : public QObject {
@@ -34,11 +35,11 @@ namespace WritingMaterialsManager {
     Q_OBJECT
     public:
         QWidget* const ControlArea;
-        QLineEdit* const URLForm;
-        QLineEdit* const mongoshCommandForm;
+        TextField* const URLForm;
+        TextField* const mongoshCommandForm;
         QPushButton* const ExecuteButton;
 
-        QPlainTextEdit* const CommandForm;
+        TextArea* const CommandForm;
 
         explicit MongoDBConsole(QWidget* const Parent = nullptr);
         ~MongoDBConsole();

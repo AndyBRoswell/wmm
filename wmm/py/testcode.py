@@ -23,7 +23,7 @@ def run_test():
 	
 	# synonyms
 	print(globals.linesep + "================ Synonyms ================" + globals.linesep)
-	with open("synonyms.csv") as synonyms_file:
+	with open("synonyms.csv", encoding='gbk') as synonyms_file:
 		reader = csv.reader(synonyms_file)
 		print(globals.linesep + "synonyms:")
 		for row in reader:
@@ -31,7 +31,7 @@ def run_test():
 	print(globals.linesep + "================ End Synonyms ================" + globals.linesep)
 	
 	print(globals.linesep + "================ Lexical & Semantic ================" + globals.linesep)
-	with open("paragraphs.csv") as paragraphs_file, open("entity-list.json", encoding = "utf-8") as entity_list_file:
+	with open("paragraphs.csv", encoding='gbk') as paragraphs_file, open("entity-list.json", encoding = "utf-8") as entity_list_file:
 		entity_list = json.load(entity_list_file)
 		jio_entity_recognizer = jionlp.ner.LexiconNER(entity_list)
 		tr4w = textrank4zh.TextRank4Keyword()

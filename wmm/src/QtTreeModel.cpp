@@ -309,7 +309,7 @@ namespace WritingMaterialsManager {
         return RootNode; // for a certain kind of consistency?
     }
 
-    void QtTreeModel::FromJSON(const QByteArray& JSONString) {
+    void QtTreeModel::FromJSON(const QByteArray& UTF8JSONString) {
         using namespace std;
         using namespace rapidjson;
 
@@ -318,7 +318,7 @@ namespace WritingMaterialsManager {
         RootNode->PushBackChild(JSONRoot);
 
         Document JSONDocument;
-        JSONDocument.Parse(JSONString.constData());
+        JSONDocument.Parse(UTF8JSONString.constData());
 
         beginResetModel();
         stack<const Value*, vector<const Value*>> s;
@@ -332,12 +332,15 @@ namespace WritingMaterialsManager {
             Node* const nt = t.top();
             t.pop();
             switch (ns->GetType()) {
-            case kNullType:nt->PushBackData("");
+            case kNullType:
+                nt->PushBackData("");
                 break;
             case kFalseType:
-            case kTrueType:nt->PushBackData(ns->GetBool());
+            case kTrueType:
+                nt->PushBackData(ns->GetBool());
                 break;
-            case kStringType:nt->PushBackData(ns->GetString());
+            case kStringType:
+                nt->PushBackData(ns->GetString());
                 break;
             case kNumberType:
                 if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
@@ -346,14 +349,14 @@ namespace WritingMaterialsManager {
             case kArrayType:
                 for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
                     s.emplace(&*i);
-//                Node* const c = new Node({ ns->Size() - (i - ns->Begin()) - 1 }, nt);
                     Node* const c = new Node({ i - ns->Begin() }, nt);
                     nt->PushBackChild(c);
                     t.emplace(c);
                 }
                 nt->ReverseChild();
                 break;
-            case kObjectType:if (ns->MemberEnd() == ns->MemberBegin()) break;
+            case kObjectType:
+                if (ns->MemberEnd() == ns->MemberBegin()) break;
                 for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) {
                     s.emplace(&i->value);
                     Node* const c = new Node({ i->name.GetString() }, nt);
