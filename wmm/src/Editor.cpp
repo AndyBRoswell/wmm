@@ -33,6 +33,11 @@ namespace WritingMaterialsManager {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
+        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateFileType);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateEncoding);
+        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateFileType);
+        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateEncoding);
+
         setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
         SetEncoding("UTF-8");

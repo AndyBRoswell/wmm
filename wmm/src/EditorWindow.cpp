@@ -72,8 +72,6 @@ namespace WritingMaterialsManager {
                     this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
                 }
         );
-        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateFileType);
-        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateEncoding);
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
         RootView->addWidget(Console);
@@ -85,8 +83,6 @@ namespace WritingMaterialsManager {
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         Editor* const Editor = new class Editor;
         RootView->addWidget(Editor);
-        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateFileType);
-        connect(Editor->RawView, &TextArea::MouseDown, Editor, &Editor::ShouldUpdateEncoding);
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
     }
