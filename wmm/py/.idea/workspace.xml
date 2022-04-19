@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36f2e2c7-b1f4-40cf-bfbe-21dceb025cd0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../src/JSONHighlighter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../src/JSONHighlighter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/Editor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../src/Editor.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

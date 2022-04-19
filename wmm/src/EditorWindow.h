@@ -1,6 +1,7 @@
 #ifndef WRITING_MATERIALS_MANAGER_EDITORWINDOW_H
 #define WRITING_MATERIALS_MANAGER_EDITORWINDOW_H
 
+#include <QLabel>
 #include <QMainWindow>
 #include <QSplitter>
 
@@ -35,7 +36,11 @@ namespace WritingMaterialsManager {
             EditorOnlyPage(QWidget* const Parent = nullptr);
         };
 
+        inline static const QString DefaultQLabelStyleSheet = "QLabel { color: white; }";
+
         Ui::EditorWindow* UI;
+        QLabel* const FileTypeLabel = new QLabel("<File Type>");
+        QLabel* const EncodingLabel = new QLabel("<Encoding>");
     };
 }
 

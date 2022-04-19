@@ -15,7 +15,7 @@ namespace WritingMaterialsManager {
                                                                                                                     IntuitiveView(new QTreeView),
                                                                                                                     RawView(new QPlainTextEdit),
                                                                                                                     TreeModel(TreeModel) {
-        ModifyFileType(FileType);
+        SetFileType(FileType);
 
         MenuAction.Open->setShortcut(QKeySequence::Open);
         MenuAction.Open->setStatusTip(tr("打开一个文件"));
@@ -37,12 +37,13 @@ namespace WritingMaterialsManager {
     void Editor::SetText(const QString& Text) { RawView->setPlainText(Text); }
     void Editor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
-    void Editor::ModifyFileType(const QString& FileType) {
+    QString Editor::GetFileType() const { return FileType; }
+    void Editor::SetFileType(const QString& FileType) {
         using namespace std;
         using F = SupportedFileType;
 
         try {
-            switch (SupportedFileInternalID.at(FileType)) {
+            switch (FileTypeToEnumID.at(FileType)) {
             case F::JSON:
                 Formatter = make_shared<JSONFormatter>();
                 Highlighter = make_shared<JSONHighlighter>(RawView->document());
@@ -51,6 +52,9 @@ namespace WritingMaterialsManager {
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
+
+    QString Editor::GetEncoding() const { return Encoding; }
+    void Editor::SetEncoding(const QString& Encoding) { this->Encoding = Encoding; }
 
     void Editor::ArrangeContentView() {
         auto PlainText = RawView->toPlainText();
@@ -86,13 +90,10 @@ namespace WritingMaterialsManager {
         if (File.open(QIODevice::ReadWrite) == false) {
             throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
         }
+        QFileInfo FileInfo(File);
+        SetFileType(FileInfo.suffix());
         const QByteArray FileContents = File.readAll();
-        try {
-            RawView->setPlainText(FileContents);
-            TreeModel->FromJSON(FileContents);
-        }
-        catch (const exception& e) {
-
-        }
+        RawView->setPlainText(FileContents);
+        TreeModel->FromJSON(FileContents);
     }
 } // namespace WritingMaterialsManager

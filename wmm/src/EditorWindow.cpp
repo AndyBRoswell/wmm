@@ -7,16 +7,22 @@
 #include "MongoDBConsole.h"
 
 namespace WritingMaterialsManager {
-    EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent), UI(new Ui::EditorWindow), RootView(new QSplitter(this)) {
+    EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),
+                                                  UI(new Ui::EditorWindow),
+                                                  RootView(new QSplitter(this)) {
         UI->setupUi(this);
 
-        // preparation
         QTabWidget* const TabView = new QTabWidget;
         auto* const MDBCPage = new MongoDBConsoleAndEditorPage;
         auto* const EditorPage = new EditorOnlyPage;
         TabView->addTab(MDBCPage, "MongoDB Console");
         TabView->addTab(EditorPage, "Editor Only");
         RootView->addWidget(TabView);
+
+        FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
+        EncodingLabel->setStyleSheet(DefaultQLabelStyleSheet);
+        UI->StatusBar->addPermanentWidget(EncodingLabel);
+        UI->StatusBar->addPermanentWidget(FileTypeLabel);
 
         setWindowTitle(tr("编辑器"));
         centralWidget()->setLayout(new QGridLayout);
