@@ -72,7 +72,7 @@ namespace WritingMaterialsManager {
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         Editor* const Editor = new class Editor;
         RootView->addWidget(Editor);
-        connect(Editor, &Editor::FileTypeChanged, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
-        connect(Editor, &Editor::EncodingChanged, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
+        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
+        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
     }
 }

@@ -41,8 +41,8 @@ namespace WritingMaterialsManager {
         QString GetEncoding() const;
         void SetEncoding(const QString& Encoding);
     signals:
-        void FileTypeChanged();
-        void EncodingChanged();
+        void ShouldUpdateFileType();
+        void ShouldUpdateEncoding();
     public slots:
         void ArrangeContentView();
     signals:
@@ -50,10 +50,7 @@ namespace WritingMaterialsManager {
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
-        inline static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID = {
-            { "JSON", SupportedFileType::JSON },
-        }; // mainly for switch-case statement so far.
-
+        static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
         struct {
             QAction* Open{ new QAction(tr("打开")) };
         } MenuAction;

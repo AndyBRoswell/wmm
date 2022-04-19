@@ -11,6 +11,10 @@
 #include "JSONHighlighter.h"
 
 namespace WritingMaterialsManager {
+    const std::unordered_map<QString, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
+        { "JSON", SupportedFileType::JSON },
+    }; // mainly for switch-case statement so far.
+
     Editor::Editor(const QString& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
                                                                                                                     TabView(new QTabWidget),
                                                                                                                     IntuitiveView(new QTreeView),
@@ -53,7 +57,7 @@ namespace WritingMaterialsManager {
                 break;
             }
             this->FileType = I->first;
-            emit FileTypeChanged();
+            emit ShouldUpdateFileType();
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
@@ -61,7 +65,7 @@ namespace WritingMaterialsManager {
     QString Editor::GetEncoding() const { return Encoding; }
     void Editor::SetEncoding(const QString& Encoding) {
         this->Encoding = Encoding;
-        emit EncodingChanged();
+        emit ShouldUpdateEncoding();
     }
 
     void Editor::ArrangeContentView() {
