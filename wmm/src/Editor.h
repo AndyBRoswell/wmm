@@ -50,6 +50,7 @@ namespace WritingMaterialsManager {
         void NoMoreReturn();
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
+        void focusInEvent(QFocusEvent* Event) override;
     private:
         static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
         struct MenuAction {
@@ -62,7 +63,7 @@ namespace WritingMaterialsManager {
         };
 
         QString FileType;
-        QString Encoding = "UTF-8";
+        QString Encoding;
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;

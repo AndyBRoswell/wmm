@@ -63,6 +63,8 @@ namespace WritingMaterialsManager {
         MongoDBConsole* const Console = new MongoDBConsole;
         Editor* const Editor = new class Editor;
         Console->AddAssociatedEditor(Editor);
+        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, &EditorWindow::UpdateFileTypeLabel);
+        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, &EditorWindow::UpdateEncodingLabel);
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);

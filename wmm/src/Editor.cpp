@@ -29,7 +29,9 @@ namespace WritingMaterialsManager {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
+        setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
+        SetEncoding("UTF-8");
 
         RawView->setFont(DefaultFont);
 
@@ -95,6 +97,11 @@ namespace WritingMaterialsManager {
         const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
         ContextMenu->exec(Event->globalPos());
         disconnect(Connection);
+    }
+
+    void Editor::focusInEvent(QFocusEvent* Event) {
+        emit ShouldUpdateFileType();
+        emit ShouldUpdateEncoding();
     }
 
     void Editor::OpenFile() {
