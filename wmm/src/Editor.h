@@ -15,6 +15,7 @@
 #include "TextArea.h"
 #include "TextFormatter.h"
 #include "TextHighlighter.h"
+#include "TreeView.h"
 
 namespace WritingMaterialsManager {
     class Editor : public QWidget {
@@ -28,7 +29,7 @@ namespace WritingMaterialsManager {
         inline static const QFont DefaultFont{ "Consolas", 10 };
 
         QTabWidget* const TabView;
-        QTreeView* const IntuitiveView;
+        TreeView* const IntuitiveView;
         TextArea* const RawView;
 
         static void OneOffInit();
