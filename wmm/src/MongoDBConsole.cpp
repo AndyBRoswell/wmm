@@ -9,18 +9,18 @@
 
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : ShellConsole(Parent),
-                                                            mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
-                                                            ControlArea(new QWidget()),
-                                                            URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
-                                                            mongoshCommandForm(new TextField(mongoshCommand)),
-                                                            ExecuteButton(new QPushButton("▶")),
-                                                            CommandForm(new TextArea("show dbs\n")) {
-        mongoshAccessor->moveToThread(&mongoshAccessThread);
-        connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
+                                                                                           mongoshAccessor(mongoshCommandForm->text(), URLForm->text()),
+                                                                                           ControlArea(new QWidget()),
+                                                                                           URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
+                                                                                           mongoshCommandForm(new TextField(mongoshCommand)),
+                                                                                           ExecuteButton(new QPushButton("▶")),
+                                                                                           CommandForm(new TextArea("show dbs\n")) {
+        mongoshAccessor.moveToThread(&mongoshAccessThread);
+        connect(&mongoshAccessThread, &QThread::finished, &mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoShAccessor::Execute);
-        connect(mongoshAccessor, &MongoShAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
-        connect(mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
+        connect(this, &MongoDBConsole::SendShellCommand, &mongoshAccessor, &MongoShAccessor::Execute);
+        connect(&mongoshAccessor, &MongoShAccessor::MoreResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
+        connect(&mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -48,11 +48,13 @@ namespace WritingMaterialsManager {
     MongoDBConsole::~MongoDBConsole() {
         mongoshAccessThread.quit();
         mongoshAccessThread.wait();
-        delete mongoshAccessor;
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
         SetTextForAssociatedEditors("");
+        RefreshAssociatedEditors();
+        // Here we don't call MongoShAccessor::Execute(const QString& Command) directly.
+        // Instead, we sent another signal so that the query is run on another thread.
         qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
         emit SendShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
@@ -105,11 +107,15 @@ namespace WritingMaterialsManager {
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
-            if (Result != "") { emit MoreMongoShResult(Result); }
+            if (Result != "") {
+                emit MoreResult(Result);
+                qDebug() << Result;
+            }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
-        emit MoreMongoShResult(Result);
+        emit MoreResult(Result);
+        qDebug() << Result;
         qDebug() << "No more mongosh result.";
         emit NoMoreResult();
     }

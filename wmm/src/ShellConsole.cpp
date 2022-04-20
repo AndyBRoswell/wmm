@@ -23,6 +23,10 @@ namespace WritingMaterialsManager {
         for (auto& Editor: AssociatedEditors) { Editor->AppendText(Text); }
     }
 
+    void ShellConsole::RefreshAssociatedEditors() {
+        for (auto& Editor: AssociatedEditors) { Editor->update(); }
+    }
+
     void ShellConsole::ArrangeContentViewForAssociatedEditors() {
         for (auto& Editor: AssociatedEditors) { Editor->ArrangeContentView(); }
     }

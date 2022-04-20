@@ -5,11 +5,17 @@
 
 namespace WritingMaterialsManager {
     PythonInteractor::PythonInteractor(const QString& PythonCommand, QWidget* const Parent) : QWidget(Parent),
+                                                                                              PyAccessor(PythonCommand),
                                                                                               PyCommandForm(new TextField(PythonCommand)),
                                                                                               ExecuteButton(new QPushButton("▶")),
                                                                                               CodeArea(new TextArea),
                                                                                               ResultArea(new TextArea) {
-        setLayout(new QVBoxLayout);
+        PyAccessor.moveToThread(&PyAccessThread);
+        connect(&PyAccessThread, &QThread::finished, &PyAccessor, &QObject::deleteLater);
+        connect(ExecuteButton, &QPushButton::clicked, this, &PythonInteractor::ExecuteCode);
+        connect(&PyAccessor, &PythonAccessor::MoreResult, ResultArea, &TextArea::appendPlainText);
+        PyAccessThread.start();
+
         QWidget* const ControlArea = new QWidget;
         ControlArea->setLayout(new QHBoxLayout);
         ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
@@ -25,14 +31,49 @@ namespace WritingMaterialsManager {
         InputArea->setStretchFactor(0, 0);
         InputArea->setStretchFactor(1, 4);
 
+        setLayout(new QVBoxLayout);
         layout()->setContentsMargins(0, 0, 0, 0);
         layout()->setSpacing(2);
         layout()->addWidget(ControlArea);
         layout()->addWidget(InputArea);
         static_cast<QVBoxLayout*>(layout())->setStretch(0, 0);
+
+        ResultArea->setPlainText(PyAccessor.GetResult());
+    }
+
+    PythonInteractor::~PythonInteractor() {
+        PyAccessThread.quit();
+        PyAccessThread.wait();
+    }
+
+    void PythonInteractor::ExecuteCode() {
+        ResultArea->setPlainText(""); // clear() will also delete the undo/redo history.
+        PyAccessor.Execute(CodeArea->toPlainText());
     }
 
 /// ----------------------------------------------------------------
 
+    PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonProcess(new QProcess) {
+        PythonProcess->start(PythonCommand);
+    }
 
+    QString PythonAccessor::GetResult() {
+        return QString::fromLocal8Bit(PythonProcess->readAllStandardOutput());
+    }
+
+    void PythonAccessor::Execute(const QString& Code) {
+        using namespace std::chrono;
+        using namespace std::chrono_literals;
+
+        PythonProcess->write(Code.toLocal8Bit());
+        time_point<high_resolution_clock> return_ends_time_point{};
+        while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
+            const QByteArray Result = PythonProcess->readAllStandardOutput();
+            if (Result != "") { emit MoreResult(Result); }
+            else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
+        }
+        const QByteArray Result = PythonProcess->readAllStandardOutput();
+        emit MoreResult(QString::fromLocal8Bit(Result));
+        emit NoMoreResult();
+    }
 }
