@@ -18,7 +18,7 @@
 #include "TreeView.h"
 
 namespace WritingMaterialsManager {
-    class Editor : public QWidget {
+    class TreeEditor : public QWidget {
     Q_OBJECT
     public:
         enum class SupportedFileType : size_t {
@@ -31,8 +31,8 @@ namespace WritingMaterialsManager {
         TextArea* const RawView;
 
         static void OneOffInit();
-        explicit Editor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
-        ~Editor();
+        explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
+        ~TreeEditor();
 
         void SetText(const QString& Text = {});
         void AppendText(const QString& Text = {});

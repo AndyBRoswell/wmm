@@ -3,9 +3,9 @@
 namespace WritingMaterialsManager {
     ShellConsole::ShellConsole(QWidget* const Parent) : QWidget(Parent) {}
 
-    void ShellConsole::AddAssociatedEditor(Editor* const Editor) { AssociatedEditors.emplace(Editor); }
+    void ShellConsole::AddAssociatedEditor(TreeEditor* const Editor) { AssociatedEditors.emplace(Editor); }
 
-    void ShellConsole::DeleteAssociatedEditor(Editor* const Editor) {
+    void ShellConsole::DeleteAssociatedEditor(TreeEditor* const Editor) {
         auto TargetIterator = AssociatedEditors.find(Editor);
         delete *TargetIterator;
         AssociatedEditors.erase(TargetIterator);

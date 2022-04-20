@@ -5,7 +5,7 @@
 
 #include <QWidget>
 
-#include "Editor.h"
+#include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
     class ShellConsole : public QWidget {
@@ -13,15 +13,15 @@ namespace WritingMaterialsManager {
     public:
         explicit ShellConsole(QWidget* const Parent = nullptr);
 
-        void AddAssociatedEditor(Editor* const Editor);
-        void DeleteAssociatedEditor(Editor* const Editor);
+        void AddAssociatedEditor(TreeEditor* const Editor);
+        void DeleteAssociatedEditor(TreeEditor* const Editor);
         void ClearAssociatedEditor();
     public slots:
         void SetTextForAssociatedEditors(const QString& Text);
         void AppendTextForAssociatedEditors(const QString& Text);
         virtual void ArrangeContentViewForAssociatedEditors();
     protected:
-        std::set<Editor*> AssociatedEditors{};
+        std::set<TreeEditor*> AssociatedEditors{};
     };
 }
 

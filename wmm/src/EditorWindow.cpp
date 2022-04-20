@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QGridLayout>
 
-#include "Editor.h"
+#include "TreeEditor.h"
 #include "MongoDBConsole.h"
 
 namespace WritingMaterialsManager {
@@ -36,9 +36,9 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
-    void EditorWindow::UpdateFileTypeLabel() { FileTypeLabel->setText(static_cast<Editor*>(sender())->GetFileType()); }
+    void EditorWindow::UpdateFileTypeLabel() { FileTypeLabel->setText(static_cast<TreeEditor*>(sender())->GetFileType()); }
     void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
-    void EditorWindow::UpdateCharsetLabel() { CharsetLabel->setText(static_cast<Editor*>(sender())->GetCharset()); }
+    void EditorWindow::UpdateCharsetLabel() { CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset()); }
     void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
 
 /// ----------------------------------------------------------------
@@ -58,7 +58,7 @@ namespace WritingMaterialsManager {
 
     EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         MongoDBConsole* const Console = new MongoDBConsole;
-        Editor* const Editor = new class Editor;
+        TreeEditor* const Editor = new class TreeEditor;
         Console->AddAssociatedEditor(Editor);
         auto ShowPlainTextFn = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
@@ -72,8 +72,8 @@ namespace WritingMaterialsManager {
                     this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
                 }
         );
-        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &Editor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
@@ -81,9 +81,9 @@ namespace WritingMaterialsManager {
     }
 
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
-        Editor* const Editor = new class Editor;
+        TreeEditor* const Editor = new class TreeEditor;
         RootView->addWidget(Editor);
-        connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &Editor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
     }
 }
