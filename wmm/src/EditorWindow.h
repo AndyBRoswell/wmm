@@ -20,8 +20,8 @@ namespace WritingMaterialsManager {
     public slots:
         void UpdateFileTypeLabel();
         void UpdateFileTypeLabel(const QString& FileType);
-        void UpdateEncodingLabel();
-        void UpdateEncodingLabel(const QString& Encoding);
+        void UpdateCharsetLabel();
+        void UpdateCharsetLabel(const QString& Charset);
     private:
         class Page : public QWidget {
         public:
@@ -47,7 +47,7 @@ namespace WritingMaterialsManager {
 
         Ui::EditorWindow* UI;
         QLabel* const FileTypeLabel = new QLabel("<File Type>");
-        QLabel* const EncodingLabel = new QLabel("<Encoding>");
+        QLabel* const CharsetLabel = new QLabel("<Charset>");
     };
 }
 

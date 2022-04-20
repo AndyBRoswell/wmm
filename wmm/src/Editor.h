@@ -31,30 +31,39 @@ namespace WritingMaterialsManager {
         TextArea* const RawView;
 
         static void OneOffInit();
-        explicit Editor(const QString& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
+        explicit Editor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~Editor();
 
         void SetText(const QString& Text = {});
         void AppendText(const QString& Text = {});
 
-        QString GetFileType() const;
-        void SetFileType(const QString& FileType);
-        QString GetEncoding() const;
-        void SetEncoding(const QString& Encoding);
     signals:
         void ShouldUpdateFileType();
-        void ShouldUpdateEncoding();
+        void ShouldUpdateCharset();
     public slots:
         void ArrangeContentView();
+        QString GetFileType() const;
+        void SetFileType(const QByteArray& FileType);
+        QString GetCharset() const;
+        void SetCharset();
+        void SetCharset(const QByteArray& Charset);
     signals:
         void NoMoreReturn();
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
-        void focusInEvent(QFocusEvent* Event) override;
     private:
-        static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
+        static const std::unordered_map<QByteArray, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
+        struct Menu {
+            inline static QMenu* Charset;
+            Menu() = delete;
+            Menu(const Menu&) = delete;
+            Menu(Menu&&) = delete;
+            Menu& operator=(const Menu&) = delete;
+            Menu& operator=(Menu&&) = delete;
+        };
         struct MenuAction {
             inline static QAction* Open;
+            inline static QList<QAction*> SetCharset;
             MenuAction() = delete;
             MenuAction(const MenuAction&) = delete;
             MenuAction(MenuAction&&) = delete;
@@ -62,8 +71,8 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
-        QString FileType;
-        QString Encoding;
+        QByteArray FileType;
+        QByteArray Charset;
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;

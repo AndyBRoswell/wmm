@@ -23,8 +23,7 @@ message(STATUS "C++ Compiler Architecture ID: ${CMAKE_CXX_COMPILER_ARCHITECTURE_
 message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-#find_package(Qt6 6.3 COMPONENTS Core Gui Quick QuickControls2 Widgets REQUIRED)
-find_package(Qt6 COMPONENTS Core Gui Quick QuickControls2 Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Quick QuickControls2 Widgets Core5Compat REQUIRED)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/src/*.c*
@@ -68,7 +67,7 @@ set_target_properties(appwmm PROPERTIES
         )
 
 target_compile_definitions(appwmm PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(appwmm PUBLIC Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets)
+target_link_libraries(appwmm PUBLIC Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Qt6::Core5Compat)
 
 if (QT_VERSION_MAJOR EQUAL 6)
     qt_import_qml_plugins(appwmm)

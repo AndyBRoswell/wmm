@@ -21,8 +21,8 @@ namespace WritingMaterialsManager {
         RootView->addWidget(TabView);
 
         FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
-        EncodingLabel->setStyleSheet(DefaultQLabelStyleSheet);
-        UI->StatusBar->addPermanentWidget(EncodingLabel);
+        CharsetLabel->setStyleSheet(DefaultQLabelStyleSheet);
+        UI->StatusBar->addPermanentWidget(CharsetLabel);
         UI->StatusBar->addPermanentWidget(FileTypeLabel);
 
         setWindowTitle(tr("编辑器"));
@@ -38,8 +38,8 @@ namespace WritingMaterialsManager {
 
     void EditorWindow::UpdateFileTypeLabel() { FileTypeLabel->setText(static_cast<Editor*>(sender())->GetFileType()); }
     void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
-    void EditorWindow::UpdateEncodingLabel() { EncodingLabel->setText(static_cast<Editor*>(sender())->GetEncoding()); }
-    void EditorWindow::UpdateEncodingLabel(const QString& Encoding) { EncodingLabel->setText(Encoding); }
+    void EditorWindow::UpdateCharsetLabel() { CharsetLabel->setText(static_cast<Editor*>(sender())->GetCharset()); }
+    void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
 
 /// ----------------------------------------------------------------
 
@@ -62,18 +62,18 @@ namespace WritingMaterialsManager {
         Console->AddAssociatedEditor(Editor);
         auto ShowPlainTextFn = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
-            this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
+            this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
         };
         connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
         connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
         connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
                 [=, this]() {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
-                    this->thisAtEditorWindow->UpdateEncodingLabel("UTF-8");
+                    this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
                 }
         );
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
+        connect(Editor, &Editor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
@@ -84,6 +84,6 @@ namespace WritingMaterialsManager {
         Editor* const Editor = new class Editor;
         RootView->addWidget(Editor);
         connect(Editor, &Editor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &Editor::ShouldUpdateEncoding, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateEncodingLabel));
+        connect(Editor, &Editor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
     }
 }
