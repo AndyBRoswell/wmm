@@ -6,6 +6,10 @@
 #include "TextArea.h"
 
 namespace WritingMaterialsManager {
+    class PythonAccessor : public QObject {
+
+    };
+
     class PythonInteractor : public QWidget {
     Q_OBJECT
     public:

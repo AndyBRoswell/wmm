@@ -31,4 +31,8 @@ namespace WritingMaterialsManager {
         layout()->addWidget(InputArea);
         static_cast<QVBoxLayout*>(layout())->setStretch(0, 0);
     }
+
+/// ----------------------------------------------------------------
+
+
 }

@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="36f2e2c7-b1f4-40cf-bfbe-21dceb025cd0" name="Default Changelist" comment="" />
+    <list default="true" id="36f2e2c7-b1f4-40cf-bfbe-21dceb025cd0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../src/PythonInteractor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../src/PythonInteractor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/PythonInteractor.h" beforeDir="false" afterPath="$PROJECT_DIR$/../src/PythonInteractor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/ShellConsole.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../src/ShellConsole.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/ShellConsole.h" beforeDir="false" afterPath="$PROJECT_DIR$/../src/ShellConsole.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -99,7 +104,7 @@
       <workItem from="1650252816086" duration="133000" />
       <workItem from="1650252986580" duration="230000" />
       <workItem from="1650253322694" duration="9599000" />
-      <workItem from="1650453596203" duration="745000" />
+      <workItem from="1650453596203" duration="1333000" />
     </task>
     <servers />
   </component>

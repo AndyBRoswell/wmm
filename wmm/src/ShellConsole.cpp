@@ -5,9 +5,8 @@ namespace WritingMaterialsManager {
 
     void ShellConsole::AddAssociatedEditor(TreeEditor* const Editor) { AssociatedEditors.emplace(Editor); }
 
-    void ShellConsole::DeleteAssociatedEditor(TreeEditor* const Editor) {
+    void ShellConsole::RemoveAssociatedEditor(TreeEditor* const Editor) {
         auto TargetIterator = AssociatedEditors.find(Editor);
-        delete *TargetIterator;
         AssociatedEditors.erase(TargetIterator);
     }
 

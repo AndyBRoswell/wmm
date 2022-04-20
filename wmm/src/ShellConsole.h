@@ -12,9 +12,10 @@ namespace WritingMaterialsManager {
     Q_OBJECT
     public:
         explicit ShellConsole(QWidget* const Parent = nullptr);
+        ~ShellConsole() = default;
 
         void AddAssociatedEditor(TreeEditor* const Editor);
-        void DeleteAssociatedEditor(TreeEditor* const Editor);
+        void RemoveAssociatedEditor(TreeEditor* const Editor);
         void ClearAssociatedEditor();
     public slots:
         void SetTextForAssociatedEditors(const QString& Text);
