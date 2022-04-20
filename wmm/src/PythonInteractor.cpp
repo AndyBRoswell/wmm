@@ -1,5 +1,6 @@
 #include "PythonInteractor.h"
 
+#include <QDir>
 #include <QSplitter>
 #include <QVBoxLayout>
 
@@ -8,11 +9,12 @@ namespace WritingMaterialsManager {
                                                                                               PyAccessor(PythonCommand),
                                                                                               PyCommandForm(new TextField(PythonCommand)),
                                                                                               ExecuteButton(new QPushButton("▶")),
-                                                                                              CodeArea(new TextArea),
+                                                                                              CodeArea(new TextArea("import this\n")),
                                                                                               ResultArea(new TextArea) {
         PyAccessor.moveToThread(&PyAccessThread);
         connect(&PyAccessThread, &QThread::finished, &PyAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &PythonInteractor::ExecuteCode);
+        connect(this, &PythonInteractor::NewCode, &PyAccessor, &PythonAccessor::Execute);
         connect(&PyAccessor, &PythonAccessor::MoreResult, ResultArea, &TextArea::appendPlainText);
         PyAccessThread.start();
 
@@ -37,8 +39,6 @@ namespace WritingMaterialsManager {
         layout()->addWidget(ControlArea);
         layout()->addWidget(InputArea);
         static_cast<QVBoxLayout*>(layout())->setStretch(0, 0);
-
-        ResultArea->setPlainText(PyAccessor.GetResult());
     }
 
     PythonInteractor::~PythonInteractor() {
@@ -48,17 +48,14 @@ namespace WritingMaterialsManager {
 
     void PythonInteractor::ExecuteCode() {
         ResultArea->setPlainText(""); // clear() will also delete the undo/redo history.
-        PyAccessor.Execute(CodeArea->toPlainText());
+        emit NewCode(CodeArea->toPlainText());
     }
 
 /// ----------------------------------------------------------------
 
     PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonProcess(new QProcess) {
-        PythonProcess->start(PythonCommand);
-    }
-
-    QString PythonAccessor::GetResult() {
-        return QString::fromLocal8Bit(PythonProcess->readAllStandardOutput());
+        PythonProcess->start(QDir::currentPath() + '/' + PythonCommand);
+        qDebug() << "python command:" << PythonProcess->program();
     }
 
     void PythonAccessor::Execute(const QString& Code) {
@@ -69,10 +66,14 @@ namespace WritingMaterialsManager {
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = PythonProcess->readAllStandardOutput();
-            if (Result != "") { emit MoreResult(Result); }
+            if (Result != "") {
+                emit MoreResult(Result);
+                qDebug() << Result;
+            }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = PythonProcess->readAllStandardOutput();
+        qDebug() << Result;
         emit MoreResult(QString::fromLocal8Bit(Result));
         emit NoMoreResult();
     }

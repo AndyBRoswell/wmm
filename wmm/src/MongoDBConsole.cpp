@@ -18,7 +18,7 @@ namespace WritingMaterialsManager {
         mongoshAccessor.moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, &mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        connect(this, &MongoDBConsole::SendShellCommand, &mongoshAccessor, &MongoShAccessor::Execute);
+        connect(this, &MongoDBConsole::NewShellCommand, &mongoshAccessor, &MongoShAccessor::Execute);
         connect(&mongoshAccessor, &MongoShAccessor::MoreResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
         connect(&mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
         mongoshAccessThread.start();
@@ -43,6 +43,8 @@ namespace WritingMaterialsManager {
         MainLayout->addWidget(CommandForm);
         MainLayout->setStretch(0, 0);
         MainLayout->setStretch(1, 1);
+
+        emit NewShellCommand("");
     }
 
     MongoDBConsole::~MongoDBConsole() {
@@ -56,7 +58,7 @@ namespace WritingMaterialsManager {
         // Here we don't call MongoShAccessor::Execute(const QString& Command) directly.
         // Instead, we sent another signal so that the query is run on another thread.
         qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
-        emit SendShellCommand(CommandForm->toPlainText());
+        emit NewShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
     }
 
@@ -97,13 +99,10 @@ namespace WritingMaterialsManager {
 
     MongoShAccessor::~MongoShAccessor() {}
 
-    void MongoShAccessor::Execute(const QString& Command) {
+    void MongoShAccessor::SendResult() {
         using namespace std::chrono;
         using namespace std::chrono_literals;
 
-        qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
-        mongoshProcess->write(Command.toUtf8());
-        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
@@ -118,6 +117,14 @@ namespace WritingMaterialsManager {
         qDebug() << Result;
         qDebug() << "No more mongosh result.";
         emit NoMoreResult();
+
+    }
+
+    void MongoShAccessor::Execute(const QString& Command) {
+        qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
+        mongoshProcess->write(Command.toUtf8());
+        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
+        SendResult();
     }
 
 /// ----------------------------------------------------------------

@@ -22,6 +22,8 @@ namespace WritingMaterialsManager {
     public:
         explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
         ~MongoShAccessor();
+
+        void SendResult();
     public slots:
         void Execute(const QString& Command);
     signals:
@@ -47,7 +49,7 @@ namespace WritingMaterialsManager {
         void ExecuteShellCommand();
         void ArrangeContentViewForAssociatedEditors() override;
     signals:
-        void SendShellCommand(const QString& Command);
+        void NewShellCommand(const QString& Command);
     private:
         MongoShAccessor mongoshAccessor;
         QThread mongoshAccessThread;
