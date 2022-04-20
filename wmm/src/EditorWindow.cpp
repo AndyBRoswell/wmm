@@ -4,8 +4,9 @@
 #include <QApplication>
 #include <QGridLayout>
 
-#include "TreeEditor.h"
 #include "MongoDBConsole.h"
+#include "PythonInteractor.h"
+#include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
     EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),
@@ -16,8 +17,29 @@ namespace WritingMaterialsManager {
         QTabWidget* const TabView = new QTabWidget;
         auto* const MDBCPage = new MongoConAndEditorPage(this);
         auto* const EditorPage = new EditorOnlyPage(this);
+        auto* const PyInteractorPage = new Page(this);
+        {
+            auto* const PyInteractor = new PythonInteractor;
+            PyInteractorPage->RootView->addWidget(PyInteractor);
+            connect(PyInteractor->PyCommandForm, &TextField::MouseDown, this,
+                    [=, this]() {
+                        UpdateFileTypeLabel("Plain Text");
+                        UpdateCharsetLabel("Unicode");
+                    });
+            connect(PyInteractor->CodeArea, &TextArea::MouseDown, this,
+                    [=, this]() {
+                        UpdateFileTypeLabel("Python");
+                        UpdateCharsetLabel("Unicode");
+                    });
+            connect(PyInteractor->ResultArea, &TextArea::MouseDown, this,
+                    [=, this]() {
+                        UpdateFileTypeLabel("Plain Text");
+                        UpdateCharsetLabel("<OS default charset>");
+                    });
+        }
         TabView->addTab(MDBCPage, "MongoDB Console");
-        TabView->addTab(EditorPage, "Editor Only");
+        TabView->addTab(EditorPage, "TreeEditor Only");
+        TabView->addTab(PyInteractorPage, "Python Interactor");
         RootView->addWidget(TabView);
 
         FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
@@ -62,7 +84,7 @@ namespace WritingMaterialsManager {
         Console->AddAssociatedEditor(Editor);
         auto ShowPlainTextFn = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
-            this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
+            this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
         };
         connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
         connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
@@ -70,8 +92,7 @@ namespace WritingMaterialsManager {
                 [=, this]() {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
                     this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
-                }
-        );
+                });
         connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
         RootView->addWidget(Console);

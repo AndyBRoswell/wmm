@@ -41,7 +41,7 @@ namespace WritingMaterialsManager {
 
         TextArea* const CommandForm;
 
-        explicit MongoDBConsole(QWidget* const Parent = nullptr);
+        explicit MongoDBConsole(const QString& mongoshCommand = "mongosh", QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
         void ExecuteShellCommand();

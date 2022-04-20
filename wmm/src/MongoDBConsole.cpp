@@ -8,11 +8,11 @@
 #include <bsoncxx/exception/exception.hpp>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(QWidget* const Parent) : ShellConsole(Parent),
+    MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : ShellConsole(Parent),
                                                             mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
                                                             ControlArea(new QWidget()),
                                                             URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
-                                                            mongoshCommandForm(new TextField("mongosh")),
+                                                            mongoshCommandForm(new TextField(mongoshCommand)),
                                                             ExecuteButton(new QPushButton("▶")),
                                                             CommandForm(new TextArea("show dbs\n")) {
         mongoshAccessor->moveToThread(&mongoshAccessThread);
@@ -39,8 +39,8 @@ namespace WritingMaterialsManager {
         MainLayout->setContentsMargins(0, 0, 0, 0);
         MainLayout->setSpacing(2);
         setLayout(MainLayout);
-        layout()->addWidget(ControlArea);
-        layout()->addWidget(CommandForm);
+        MainLayout->addWidget(ControlArea);
+        MainLayout->addWidget(CommandForm);
         MainLayout->setStretch(0, 0);
         MainLayout->setStretch(1, 1);
     }
