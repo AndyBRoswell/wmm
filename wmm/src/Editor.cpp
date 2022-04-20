@@ -27,8 +27,9 @@ namespace WritingMaterialsManager {
 
         Menu::Charset = new QMenu(tr("字符集"));
         for (const auto& CharsetName: QTextCodec::availableCodecs()) {
-            MenuAction::SetCharset.emplace_back(new QAction(CharsetName));
-            Menu::Charset->addAction(*MenuAction::SetCharset.crbegin());
+            QAction* const CharsetAction = new QAction(CharsetName);
+            MenuAction::SetCharset.emplace_back(CharsetAction);
+            Menu::Charset->addAction(CharsetAction);
         }
     }
 
