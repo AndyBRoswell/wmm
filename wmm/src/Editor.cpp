@@ -50,8 +50,6 @@ namespace WritingMaterialsManager {
         SetFileType(FileType);
         SetCharset("UTF-8");
 
-        RawView->setFont(DefaultCodeFont);
-
         IntuitiveView->setModel(TreeModel.get());
         TabView->addTab(IntuitiveView, tr("直观"));
         TabView->addTab(RawView, tr("原始"));

@@ -10,6 +10,9 @@ namespace WritingMaterialsManager {
     public:
         using QLineEdit::QLineEdit;
 
+        explicit TextField(const QString& Text, QWidget* const Parent = nullptr);
+        explicit TextField(QWidget* const Parent = nullptr);
+
         void mousePressEvent(QMouseEvent* E) override;
     signals:
         void MouseDown();
@@ -19,6 +22,9 @@ namespace WritingMaterialsManager {
     Q_OBJECT
     public:
         using QPlainTextEdit::QPlainTextEdit;
+
+        explicit TextArea(const QString& Text, QWidget* const Parent = nullptr);
+        explicit TextArea(QWidget* const Parent = nullptr);
 
         void mousePressEvent(QMouseEvent* E) override;
     signals:
