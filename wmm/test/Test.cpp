@@ -24,6 +24,7 @@
 #include <QQmlProperty>
 #include <QString>
 #include <QStringView> // QStringRef removed in Qt 6.
+#include <QTextCodec>
 #include <QTextStream>
 
 // mongocxx
@@ -71,6 +72,7 @@ int WMMTest::Start() {
 //        DuckX::QuickStart,
 //        Qt::Widgets::Demo,
 //        Qt::InterProcessCommunication,
+//        Qt::GetSystemLocale,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
@@ -115,6 +117,15 @@ void WMMTest::Qt::EncodingOfFileRW() {
     catch (const std::runtime_error& e) {
         qDebug() << e.what();
     }
+
+    LastFinishedFn.assign(__FUNCTION__);
+}
+
+void WMMTest::Qt::GetSystemLocale() {
+    LastStartedFn.assign(__FUNCTION__);
+
+    qDebug() << QLocale::system();
+    qDebug() << QTextCodec::codecForLocale()->aliases();
 
     LastFinishedFn.assign(__FUNCTION__);
 }
@@ -280,13 +291,17 @@ void WMMTest::RapidJSON::Demo() {
             }
             for (rapidjson::Value::ConstMemberIterator j = Message.MemberBegin() + 1; j != Message.MemberEnd(); ++j) {
                 switch (j->value.GetType()) {
-                case rapidjson::kStringType:qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
+                case rapidjson::kStringType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
                     break;
-                case rapidjson::kObjectType:qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
+                case rapidjson::kObjectType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
                     break;
-                case rapidjson::kArrayType:qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
+                case rapidjson::kArrayType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
                     break;
-                default:qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
+                default:
+                    qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
                     break;
                 }
             }

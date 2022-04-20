@@ -8,10 +8,10 @@
 #include "Editor.h"
 
 namespace WritingMaterialsManager {
-    class DatabaseConsole : public QWidget {
+    class ShellConsole : public QWidget {
     Q_OBJECT
     public:
-        explicit DatabaseConsole(QWidget* const Parent = nullptr);
+        explicit ShellConsole(QWidget* const Parent = nullptr);
 
         void AddAssociatedEditor(Editor* const Editor);
         void DeleteAssociatedEditor(Editor* const Editor);

@@ -12,8 +12,8 @@
 #include <QThread>
 #include <QWidget>
 
-#include "DatabaseConsole.h"
 #include "MongoDBAccessor.h"
+#include "ShellConsole.h"
 #include "TextArea.h"
 
 namespace WritingMaterialsManager {
@@ -31,7 +31,7 @@ namespace WritingMaterialsManager {
         std::shared_ptr<QProcess> mongoshProcess;
     };
 
-    class MongoDBConsole : public DatabaseConsole {
+    class MongoDBConsole : public ShellConsole {
     Q_OBJECT
     public:
         QWidget* const ControlArea;
@@ -53,7 +53,7 @@ namespace WritingMaterialsManager {
         QThread mongoshAccessThread;
     };
 
-    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {
+    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public ShellConsole {
     public:
         QSplitter* const FunctionArea;
 

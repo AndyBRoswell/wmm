@@ -8,7 +8,7 @@
 #include <bsoncxx/exception/exception.hpp>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
+    MongoDBConsole::MongoDBConsole(QWidget* const Parent) : ShellConsole(Parent),
                                                             mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
                                                             ControlArea(new QWidget()),
                                                             URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
@@ -82,7 +82,7 @@ namespace WritingMaterialsManager {
             Editor->SetCharset("UTF-8");
             Editor->SetFileType("MongoDB Extended JSON");
         }
-        DatabaseConsole::ArrangeContentViewForAssociatedEditors();
+        ShellConsole::ArrangeContentViewForAssociatedEditors();
     }
 
 /// ----------------------------------------------------------------
@@ -117,7 +117,7 @@ namespace WritingMaterialsManager {
 /// ----------------------------------------------------------------
 
     [[deprecated("Using MongoDBConsole instead.")]]
-    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : DatabaseConsole(parent),
+    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : ShellConsole(parent),
                                                                         MongoDBAccessor(new class MongoDBAccessor),
                                                                         URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                                         DatabaseListView(new QListView),
