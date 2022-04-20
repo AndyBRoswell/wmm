@@ -37,15 +37,16 @@ namespace WritingMaterialsManager {
         void SetText(const QString& Text = {});
         void AppendText(const QString& Text = {});
 
-        QString GetFileType() const;
-        void SetFileType(const QString& FileType);
-        QString GetCharset() const;
-        void SetCharset(const QString& Charset);
     signals:
         void ShouldUpdateFileType();
         void ShouldUpdateCharset();
     public slots:
         void ArrangeContentView();
+        QString GetFileType() const;
+        void SetFileType(const QString& FileType);
+        QString GetCharset() const;
+        void SetCharset();
+        void SetCharset(const QString& Charset);
     signals:
         void NoMoreReturn();
     protected:
@@ -54,7 +55,7 @@ namespace WritingMaterialsManager {
     private:
         static const std::unordered_map<QString, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
         struct Menu {
-            inline static QMenu* CharsetMenu;
+            inline static QMenu* Charset;
             Menu() = delete;
             Menu(const Menu&) = delete;
             Menu(Menu&&) = delete;
@@ -63,6 +64,7 @@ namespace WritingMaterialsManager {
         };
         struct MenuAction {
             inline static QAction* Open;
+            inline static QList<QAction*> SetCharset;
             MenuAction() = delete;
             MenuAction(const MenuAction&) = delete;
             MenuAction(MenuAction&&) = delete;

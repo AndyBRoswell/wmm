@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QGridLayout>
+#include <QTextCodec>
 
 #include "JSONFormatter.h"
 #include "JSONHighlighter.h"
@@ -23,6 +24,12 @@ namespace WritingMaterialsManager {
         MenuAction::Open = new QAction(tr("打开"));
         MenuAction::Open->setShortcut(QKeySequence::Open);
         MenuAction::Open->setStatusTip(tr("打开一个文件"));
+
+        Menu::Charset = new QMenu(tr("字符集"));
+        for (const auto& CharsetName: QTextCodec::availableCodecs()) {
+            MenuAction::SetCharset.emplace_back(new QAction(CharsetName));
+            Menu::Charset->addAction(*MenuAction::SetCharset.crbegin());
+        }
     }
 
     Editor::Editor(const QString& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
@@ -80,6 +87,10 @@ namespace WritingMaterialsManager {
     }
 
     QString Editor::GetCharset() const { return Charset; }
+    void Editor::SetCharset() {
+        this->Charset = static_cast<QAction*>(sender())->text();
+        emit ShouldUpdateCharset();
+    }
     void Editor::SetCharset(const QString& Charset) {
         this->Charset = Charset;
         emit ShouldUpdateCharset();
@@ -105,8 +116,14 @@ namespace WritingMaterialsManager {
         QMenu* const ContextMenu = new QMenu(this);
         ContextMenu->addAction(MenuAction::Open);
         const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
+        QList<QMetaObject::Connection> CharsetEventHandlerConnections;
+        for (auto* const SetCharsetAction: MenuAction::SetCharset) {
+            CharsetEventHandlerConnections.emplace_back(connect(SetCharsetAction, &QAction::triggered, this, qOverload<>(&Editor::SetCharset)));
+        }
+        ContextMenu->addMenu(Menu::Charset);
         ContextMenu->exec(Event->globalPos());
         disconnect(Connection);
+        for (const auto& Connection: CharsetEventHandlerConnections) disconnect(Connection);
     }
 
     void Editor::focusInEvent(QFocusEvent* Event) {
