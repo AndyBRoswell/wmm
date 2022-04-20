@@ -15,7 +15,7 @@
 #include "global.h"
 
 namespace WritingMaterialsManager {
-    const std::unordered_map<QString, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
+    const std::unordered_map<QByteArray, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
         { "JSON",                  SupportedFileType::JSON },
         { "MongoDB Extended JSON", SupportedFileType::MongoDBExtendedJSON },
     }; // mainly for switch-case statement so far.
@@ -33,7 +33,7 @@ namespace WritingMaterialsManager {
         }
     }
 
-    Editor::Editor(const QString& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
+    Editor::Editor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
                                                                                                                     TabView(new QTabWidget),
                                                                                                                     IntuitiveView(new TreeView),
                                                                                                                     RawView(new TextArea),
@@ -67,7 +67,7 @@ namespace WritingMaterialsManager {
     void Editor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
     QString Editor::GetFileType() const { return FileType; }
-    void Editor::SetFileType(const QString& FileType) {
+    void Editor::SetFileType(const QByteArray& FileType) {
         using namespace std;
         using F = SupportedFileType;
 
@@ -89,10 +89,10 @@ namespace WritingMaterialsManager {
 
     QString Editor::GetCharset() const { return Charset; }
     void Editor::SetCharset() {
-        this->Charset = static_cast<QAction*>(sender())->text();
+        this->Charset = static_cast<QAction*>(sender())->text().toUtf8();
         emit ShouldUpdateCharset();
     }
-    void Editor::SetCharset(const QString& Charset) {
+    void Editor::SetCharset(const QByteArray& Charset) {
         this->Charset = Charset;
         emit ShouldUpdateCharset();
     }
@@ -127,11 +127,6 @@ namespace WritingMaterialsManager {
         for (const auto& Connection: CharsetEventHandlerConnections) disconnect(Connection);
     }
 
-    void Editor::focusInEvent(QFocusEvent* Event) {
-        emit ShouldUpdateFileType();
-        emit ShouldUpdateCharset();
-    }
-
     void Editor::OpenFile() {
         const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
         if (FileName.isEmpty() == false) OpenFile(FileName);
@@ -145,8 +140,9 @@ namespace WritingMaterialsManager {
             throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
         }
         QFileInfo FileInfo(File);
-        SetFileType(FileInfo.suffix());
+        SetFileType(FileInfo.suffix().toUtf8());
         const QByteArray FileContents = File.readAll();
+        QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
         RawView->setPlainText(FileContents);
         TreeModel->FromJSON(FileContents);
     }
