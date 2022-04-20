@@ -34,10 +34,10 @@ namespace WritingMaterialsManager {
     }
 
     Editor::Editor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
-                                                                                                                    TabView(new QTabWidget),
-                                                                                                                    IntuitiveView(new TreeView),
-                                                                                                                    RawView(new TextArea),
-                                                                                                                    TreeModel(TreeModel) {
+                                                                                                                       TabView(new QTabWidget),
+                                                                                                                       IntuitiveView(new TreeView),
+                                                                                                                       RawView(new TextArea),
+                                                                                                                       TreeModel(TreeModel) {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
@@ -141,9 +141,27 @@ namespace WritingMaterialsManager {
         }
         QFileInfo FileInfo(File);
         SetFileType(FileInfo.suffix().toUtf8());
-        const QByteArray FileContents = File.readAll();
-        QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
-        RawView->setPlainText(FileContents);
-        TreeModel->FromJSON(FileContents);
+        QByteArray FileContentsUTF8;
+        QString FileContentsUTF16;
+        if (Charset == "<Charset>") Charset = "UTF-8"; // default encoding: UTF-8
+        if (Charset == "UTF-8") {
+            FileContentsUTF8 = File.readAll();
+            FileContentsUTF16 = QString::fromUtf8(FileContentsUTF8);
+        }
+        else if (Charset == "UTF-16") {
+            QTextStream IFStream(&File);
+            IFStream.setEncoding(QStringConverter::Utf16);
+            FileContentsUTF16 = IFStream.readAll();
+            FileContentsUTF8 = FileContentsUTF16.toUtf8();
+        }
+        else {
+            QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
+            shared_ptr<QTextDecoder> TextDecoder(TextCodec->makeDecoder());
+            const QByteArray FileContentsRaw = File.readAll();
+            FileContentsUTF16 = TextDecoder->toUnicode(FileContentsRaw);
+            FileContentsUTF8 = FileContentsUTF16.toUtf8();
+        }
+        RawView->setPlainText(FileContentsUTF16);
+        TreeModel->FromJSON(FileContentsUTF8);
     }
 } // namespace WritingMaterialsManager
