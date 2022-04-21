@@ -21,6 +21,7 @@ namespace WritingMaterialsManager {
         void NoMoreResult();
     private:
         std::shared_ptr<QProcess> PythonProcess;
+        QString PythonCommand;
     };
 
     class PythonInteractor : public QWidget {
@@ -32,6 +33,7 @@ namespace WritingMaterialsManager {
         TextArea* ResultArea;
 
         explicit PythonInteractor(const QString& PythonCommand = "py/venv/3.8/scripts/python", QWidget* const Parent = nullptr);
+//        explicit PythonInteractor(const QString& PythonCommand = "python", QWidget* const Parent = nullptr);
         ~PythonInteractor();
 
         void ExecuteCode();

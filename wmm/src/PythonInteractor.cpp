@@ -53,11 +53,12 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonProcess(new QProcess) {
-        PythonProcess->start(PythonCommand);
-        PythonProcess->waitForStarted(-1);
-        qDebug() << "Python is running ...";
-        SendResult();
+    PythonAccessor::PythonAccessor(const QString& PythonCommand) : /*PythonProcess(new QProcess),*/
+        PythonCommand(PythonCommand) {
+//        PythonProcess->start("pwsh");
+//        PythonProcess->waitForStarted(-1);
+//        qDebug() << "Shell is running ...";
+//        SendResult();
     }
 
     void PythonAccessor::SendResult() {
@@ -80,7 +81,13 @@ namespace WritingMaterialsManager {
     }
 
     void PythonAccessor::Execute(const QString& Code) {
-        PythonProcess->write(Code.toLocal8Bit());
+        PythonProcess = std::make_shared<QProcess>();
+//        PythonProcess->start(QDir::currentPath() + "/" + PythonCommand, { "-c", R"("import this")" });
+        PythonProcess->start(PythonCommand, { "-c", "import this" });
+        qDebug() << PythonProcess->program() << PythonProcess->arguments();
+        qDebug() << PythonProcess->waitForStarted(-1);
+        PythonProcess->waitForReadyRead(-1);
         SendResult();
+        PythonProcess = nullptr;
     }
 }

@@ -151,10 +151,10 @@ void WMMTest::Qt::InterProcessCommunication() {
     using namespace std::chrono_literals;
 
     const QStringList TestProcessName{ "python"/*, "mongosh"*/ };
-//    const QList<QStringList> TestProcessArguments{{ "-c", "print('hello, world')" },
-//                                                  {}};
-    const QList<QStringList> TestProcessArguments{{},
+    const QList<QStringList> TestProcessArguments{{ "-c", "import this" },
                                                   {}};
+//    const QList<QStringList> TestProcessArguments{{},
+//                                                  {}};
     const QList<int> QProcessWaitingTimeout{ 30 * 1000, 1 * 1000 };
     const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
