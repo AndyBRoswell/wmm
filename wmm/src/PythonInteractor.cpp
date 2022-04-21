@@ -14,6 +14,7 @@ namespace WritingMaterialsManager {
         PyAccessor.moveToThread(&PyAccessThread);
         connect(&PyAccessThread, &QThread::finished, &PyAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &PythonInteractor::ExecuteCode);
+        connect(PyCommandForm, &TextField::textChanged, &PyAccessor, &PythonAccessor::ChangeInterpreter);
         connect(this, &PythonInteractor::NewCode, &PyAccessor, &PythonAccessor::Execute);
         connect(&PyAccessor, &PythonAccessor::MoreResult, ResultArea, &TextArea::appendPlainText);
         PyAccessThread.start();
@@ -53,12 +54,10 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    PythonAccessor::PythonAccessor(const QString& PythonCommand) : /*PythonProcess(new QProcess),*/
-        PythonCommand(PythonCommand) {
-//        PythonProcess->start("pwsh");
-//        PythonProcess->waitForStarted(-1);
-//        qDebug() << "Shell is running ...";
-//        SendResult();
+    PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonCommand(PythonCommand) {}
+
+    void PythonAccessor::ChangeInterpreter(const QString& PythonCommand) {
+        this->PythonCommand = PythonCommand;
     }
 
     void PythonAccessor::SendResult() {

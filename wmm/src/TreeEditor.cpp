@@ -26,8 +26,12 @@ namespace WritingMaterialsManager {
         MenuAction::Open->setStatusTip(tr("打开一个文件"));
 
         Menu::Charset = new QMenu(tr("字符集"));
-        for (const auto& CharsetName: QTextCodec::availableCodecs()) {
-            QAction* const CharsetAction = new QAction(CharsetName);
+        auto AvailableCharsets = QTextCodec::availableCodecs();
+        std::sort(AvailableCharsets.begin(), AvailableCharsets.end(),
+                  [](const QByteArray& A, const QByteArray& B) { return A < B; }
+        );
+        for (const auto& Charset: AvailableCharsets) {
+            QAction* const CharsetAction = new QAction(Charset);
             MenuAction::SetCharset.emplace_back(CharsetAction);
             Menu::Charset->addAction(CharsetAction);
         }

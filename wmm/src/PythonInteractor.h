@@ -11,10 +11,11 @@ namespace WritingMaterialsManager {
     class PythonAccessor : public QObject {
     Q_OBJECT
     public:
-        explicit PythonAccessor(const QString& PythonCommand);
+        explicit PythonAccessor(const QString& PythonCommand = "python");
 
         void SendResult();
     public slots:
+        void ChangeInterpreter(const QString& PythonCommand = "python");
         void Execute(const QString& Code);
     signals:
         void MoreResult(const QString& Result);
@@ -33,7 +34,6 @@ namespace WritingMaterialsManager {
         TextArea* ResultArea;
 
         explicit PythonInteractor(const QString& PythonCommand = "py/venv/3.8/scripts/python", QWidget* const Parent = nullptr);
-//        explicit PythonInteractor(const QString& PythonCommand = "python", QWidget* const Parent = nullptr);
         ~PythonInteractor();
 
         void ExecuteCode();
