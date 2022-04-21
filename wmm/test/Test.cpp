@@ -150,12 +150,12 @@ void WMMTest::Qt::InterProcessCommunication() {
     using namespace std::chrono;
     using namespace std::chrono_literals;
 
-    const QStringList TestProcessName{ "python", "mongosh" };
+    const QStringList TestProcessName{ "python"/*, "mongosh"*/ };
 //    const QList<QStringList> TestProcessArguments{{ "-c", "print('hello, world')" },
 //                                                  {}};
     const QList<QStringList> TestProcessArguments{{},
                                                   {}};
-    const QList<int> QProcessWaitingTimeout{ 5 * 1000, 1 * 1000 };
+    const QList<int> QProcessWaitingTimeout{ 30 * 1000, 1 * 1000 };
     const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
     for (qsizetype i = 0; i < TestProcessName.size(); ++i) {
@@ -169,7 +169,7 @@ void WMMTest::Qt::InterProcessCommunication() {
             Process->waitForReadyRead(QProcessWaitingTimeout[i]);
             qDebug() << Process->readAllStandardOutput();
         }
-        qDebug() << "Outout demonstration completed.";
+        qDebug() << "Output demonstration completed.";
         qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
         qDebug() << (Process->waitForFinished(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
     }

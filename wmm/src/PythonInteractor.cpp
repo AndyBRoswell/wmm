@@ -54,15 +54,16 @@ namespace WritingMaterialsManager {
 /// ----------------------------------------------------------------
 
     PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonProcess(new QProcess) {
-        PythonProcess->start(QDir::currentPath() + '/' + PythonCommand);
-        qDebug() << "python command:" << PythonProcess->program();
+        PythonProcess->start(PythonCommand);
+        PythonProcess->waitForStarted(-1);
+        qDebug() << "Python is running ...";
+        SendResult();
     }
 
-    void PythonAccessor::Execute(const QString& Code) {
+    void PythonAccessor::SendResult() {
         using namespace std::chrono;
         using namespace std::chrono_literals;
 
-        PythonProcess->write(Code.toLocal8Bit());
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = PythonProcess->readAllStandardOutput();
@@ -76,5 +77,10 @@ namespace WritingMaterialsManager {
         qDebug() << Result;
         emit MoreResult(QString::fromLocal8Bit(Result));
         emit NoMoreResult();
+    }
+
+    void PythonAccessor::Execute(const QString& Code) {
+        PythonProcess->write(Code.toLocal8Bit());
+        SendResult();
     }
 }

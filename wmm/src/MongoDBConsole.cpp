@@ -108,13 +108,13 @@ namespace WritingMaterialsManager {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
             if (Result != "") {
                 emit MoreResult(Result);
-                qDebug() << Result;
+//                qDebug() << Result;
             }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
         emit MoreResult(Result);
-        qDebug() << Result;
+//        qDebug() << Result;
         qDebug() << "No more mongosh result.";
         emit NoMoreResult();
 

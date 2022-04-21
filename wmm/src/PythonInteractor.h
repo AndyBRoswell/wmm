@@ -13,6 +13,7 @@ namespace WritingMaterialsManager {
     public:
         explicit PythonAccessor(const QString& PythonCommand);
 
+        void SendResult();
     public slots:
         void Execute(const QString& Code);
     signals:
