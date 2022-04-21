@@ -344,8 +344,9 @@ namespace WritingMaterialsManager {
                 break;
             case kNumberType:
                 if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
-                else { nt->PushBackData(ns->GetInt64()); }
-                break;
+                else if (ns->IsInt64()) { nt->PushBackData(ns->GetInt64()); }
+                else if (ns->IsDouble()) { nt->PushBackData(ns->GetDouble()); }
+                break; // other number types are not supported.
             case kArrayType:
                 for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
                     s.emplace(&*i);
