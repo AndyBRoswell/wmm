@@ -14,6 +14,8 @@
 
 #include "global.h"
 
+#include "FileSystemAccessor.h"
+
 namespace WritingMaterialsManager {
     const std::unordered_map<QByteArray, TreeEditor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> TreeEditor::FileTypeToEnumID = {
         { "JSON",                  SupportedFileType::JSON },
@@ -137,21 +139,18 @@ namespace WritingMaterialsManager {
     void TreeEditor::OpenFile(const QString& FileName) {
         using namespace std;
 
-        QFile File(FileName);
-        if (File.open(QIODevice::ReadWrite) == false) {
-            throw runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
-        }
-        QFileInfo FileInfo(File);
-        SetFileType(FileInfo.suffix().toUtf8());
+        shared_ptr<QFile> File = FileSystemAccessor::Open(FileName);
+        shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
+        SetFileType(FileInfo->suffix().toUtf8());
         QByteArray FileContentsUTF8;
         QString FileContentsUTF16;
         if (Charset == "<Charset>") Charset = "UTF-8"; // default encoding: UTF-8
         if (Charset == "UTF-8") {
-            FileContentsUTF8 = File.readAll();
+            FileContentsUTF8 = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = QString::fromUtf8(FileContentsUTF8);
         }
         else if (Charset == "UTF-16") {
-            QTextStream IFStream(&File);
+            QTextStream IFStream(File.get());
             IFStream.setEncoding(QStringConverter::Utf16);
             FileContentsUTF16 = IFStream.readAll();
             FileContentsUTF8 = FileContentsUTF16.toUtf8();
@@ -159,7 +158,7 @@ namespace WritingMaterialsManager {
         else {
             QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
             shared_ptr<QTextDecoder> TextDecoder(TextCodec->makeDecoder());
-            const QByteArray FileContentsRaw = File.readAll();
+            const QByteArray FileContentsRaw = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = TextDecoder->toUnicode(FileContentsRaw);
             FileContentsUTF8 = FileContentsUTF16.toUtf8();
         }
