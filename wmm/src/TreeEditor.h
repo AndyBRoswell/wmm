@@ -38,16 +38,19 @@ namespace WritingMaterialsManager {
         void AppendText(const QString& Text = {});
 
     signals:
+        void PathNameChanged();
         void FileTypeChanged();
         void CharsetChanged();
     public slots:
         void ArrangeContentView();
+
+        QByteArray GetPathName() const;
+        void SetPathName(const QByteArray& FileName);
         QByteArray GetFileType() const;
         void SetFileType(const QByteArray& FileType);
         QByteArray GetCharset() const;
         void SetCharset();
         void SetCharset(const QByteArray& Charset);
-
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
@@ -70,7 +73,7 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
-        QByteArray FileName;
+        QByteArray PathName;
         QByteArray FileType;
         QByteArray Charset;
         std::shared_ptr<TextFormatter> Formatter;
@@ -78,7 +81,7 @@ namespace WritingMaterialsManager {
         std::shared_ptr<QtTreeModel> TreeModel;
     private slots:
         void OpenFile();
-        void OpenFile(const QString& FileName);
+        void OpenFile(const QString& PathName);
     };
 } // namespace WritingMaterialsManager
 

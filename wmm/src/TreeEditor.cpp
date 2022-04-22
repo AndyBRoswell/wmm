@@ -68,6 +68,12 @@ namespace WritingMaterialsManager {
     void TreeEditor::SetText(const QString& Text) { RawView->setPlainText(Text); }
     void TreeEditor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
+    QByteArray TreeEditor::GetPathName() const { return PathName; }
+    void TreeEditor::SetPathName(const QByteArray& FileName) {
+        this->PathName = FileName;
+        emit PathNameChanged();
+    }
+
     QByteArray TreeEditor::GetFileType() const { return FileType; }
     void TreeEditor::SetFileType(const QByteArray& FileType) {
         using namespace std;
@@ -134,10 +140,10 @@ namespace WritingMaterialsManager {
         if (FileName.isEmpty() == false) OpenFile(FileName);
     }
 
-    void TreeEditor::OpenFile(const QString& FileName) {
+    void TreeEditor::OpenFile(const QString& PathName) {
         using namespace std;
 
-        shared_ptr<QFile> File = FileSystemAccessor::Open(FileName);
+        shared_ptr<QFile> File = FileSystemAccessor::Open(PathName);
         shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
         SetFileType(FileInfo->suffix().toUtf8());
         QByteArray FileContentsUTF8;
