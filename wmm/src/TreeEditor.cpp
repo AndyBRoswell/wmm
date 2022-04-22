@@ -68,7 +68,7 @@ namespace WritingMaterialsManager {
     void TreeEditor::SetText(const QString& Text) { RawView->setPlainText(Text); }
     void TreeEditor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
-    QString TreeEditor::GetFileType() const { return FileType; }
+    QByteArray TreeEditor::GetFileType() const { return FileType; }
     void TreeEditor::SetFileType(const QByteArray& FileType) {
         using namespace std;
         using F = SupportedFileType;
@@ -89,7 +89,7 @@ namespace WritingMaterialsManager {
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
 
-    QString TreeEditor::GetCharset() const { return Charset; }
+    QByteArray TreeEditor::GetCharset() const { return Charset; }
     void TreeEditor::SetCharset() {
         this->Charset = static_cast<QAction*>(sender())->text().toUtf8();
         emit CharsetChanged();

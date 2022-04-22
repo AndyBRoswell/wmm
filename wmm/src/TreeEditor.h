@@ -42,11 +42,12 @@ namespace WritingMaterialsManager {
         void CharsetChanged();
     public slots:
         void ArrangeContentView();
-        QString GetFileType() const;
+        QByteArray GetFileType() const;
         void SetFileType(const QByteArray& FileType);
-        QString GetCharset() const;
+        QByteArray GetCharset() const;
         void SetCharset();
         void SetCharset(const QByteArray& Charset);
+
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
