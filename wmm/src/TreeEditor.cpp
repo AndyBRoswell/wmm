@@ -139,7 +139,7 @@ namespace WritingMaterialsManager {
 
         QFile File(FileName);
         if (File.open(QIODevice::ReadWrite) == false) {
-            throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
+            throw runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
         }
         QFileInfo FileInfo(File);
         SetFileType(FileInfo.suffix().toUtf8());

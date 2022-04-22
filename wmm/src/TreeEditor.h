@@ -47,8 +47,6 @@ namespace WritingMaterialsManager {
         QString GetCharset() const;
         void SetCharset();
         void SetCharset(const QByteArray& Charset);
-    signals:
-        void NoMoreReturn();
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
     private:
@@ -71,6 +69,7 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
+        QByteArray FileName;
         QByteArray FileType;
         QByteArray Charset;
         std::shared_ptr<TextFormatter> Formatter;
