@@ -8,19 +8,19 @@
 #include <bsoncxx/exception/exception.hpp>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent),
-                                                            mongoshAccessor(new class MongoShAccessor(mongoshCommandForm->text(), URLForm->text())),
-                                                            ControlArea(new QWidget()),
-                                                            URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
-                                                            mongoshCommandForm(new TextField("mongosh")),
-                                                            ExecuteButton(new QPushButton("▶")),
-                                                            CommandForm(new TextArea("show dbs\n")) {
-        mongoshAccessor->moveToThread(&mongoshAccessThread);
-        connect(&mongoshAccessThread, &QThread::finished, mongoshAccessor, &QObject::deleteLater);
+    MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : ShellConsole(Parent),
+                                                                                           mongoshAccessor(mongoshCommandForm->text(), URLForm->text()),
+                                                                                           ControlArea(new QWidget()),
+                                                                                           URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
+                                                                                           mongoshCommandForm(new TextField(mongoshCommand)),
+                                                                                           ExecuteButton(new QPushButton("▶")),
+                                                                                           CommandForm(new TextArea("show dbs\n")) {
+        mongoshAccessor.moveToThread(&mongoshAccessThread);
+        connect(&mongoshAccessThread, &QThread::finished, &mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
-        connect(this, &MongoDBConsole::SendShellCommand, mongoshAccessor, &MongoShAccessor::Execute);
-        connect(mongoshAccessor, &MongoShAccessor::MoreMongoShResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
-        connect(mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
+        connect(this, &MongoDBConsole::NewShellCommand, &mongoshAccessor, &MongoShAccessor::Execute);
+        connect(&mongoshAccessor, &MongoShAccessor::MoreResult, this, &MongoDBConsole::AppendTextForAssociatedEditors);
+        connect(&mongoshAccessor, &MongoShAccessor::NoMoreResult, this, &MongoDBConsole::ArrangeContentViewForAssociatedEditors);
         mongoshAccessThread.start();
 
         ControlArea->setLayout(new QHBoxLayout);
@@ -39,22 +39,26 @@ namespace WritingMaterialsManager {
         MainLayout->setContentsMargins(0, 0, 0, 0);
         MainLayout->setSpacing(2);
         setLayout(MainLayout);
-        layout()->addWidget(ControlArea);
-        layout()->addWidget(CommandForm);
+        MainLayout->addWidget(ControlArea);
+        MainLayout->addWidget(CommandForm);
         MainLayout->setStretch(0, 0);
         MainLayout->setStretch(1, 1);
+
+        emit NewShellCommand("");
     }
 
     MongoDBConsole::~MongoDBConsole() {
         mongoshAccessThread.quit();
         mongoshAccessThread.wait();
-        delete mongoshAccessor;
     }
 
     void MongoDBConsole::ExecuteShellCommand() {
         SetTextForAssociatedEditors("");
+        RefreshAssociatedEditors();
+        // Here we don't call MongoShAccessor::Execute(const QString& Command) directly.
+        // Instead, we sent another signal so that the query is run on another thread.
         qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
-        emit SendShellCommand(CommandForm->toPlainText());
+        emit NewShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
     }
 
@@ -82,7 +86,7 @@ namespace WritingMaterialsManager {
             Editor->SetCharset("UTF-8");
             Editor->SetFileType("MongoDB Extended JSON");
         }
-        DatabaseConsole::ArrangeContentViewForAssociatedEditors();
+        ShellConsole::ArrangeContentViewForAssociatedEditors();
     }
 
 /// ----------------------------------------------------------------
@@ -95,29 +99,38 @@ namespace WritingMaterialsManager {
 
     MongoShAccessor::~MongoShAccessor() {}
 
-    void MongoShAccessor::Execute(const QString& Command) {
+    void MongoShAccessor::SendResult() {
         using namespace std::chrono;
         using namespace std::chrono_literals;
 
-        qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
-        mongoshProcess->write(Command.toUtf8());
-        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
-            if (Result != "") { emit MoreMongoShResult(Result); }
+            if (Result != "") {
+                emit MoreResult(Result);
+//                qDebug() << Result;
+            }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
-        emit MoreMongoShResult(Result);
+        emit MoreResult(Result);
+//        qDebug() << Result;
         qDebug() << "No more mongosh result.";
         emit NoMoreResult();
+
+    }
+
+    void MongoShAccessor::Execute(const QString& Command) {
+        qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
+        mongoshProcess->write(Command.toUtf8());
+        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
+        SendResult();
     }
 
 /// ----------------------------------------------------------------
 
     [[deprecated("Using MongoDBConsole instead.")]]
-    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : DatabaseConsole(parent),
+    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : ShellConsole(parent),
                                                                         MongoDBAccessor(new class MongoDBAccessor),
                                                                         URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
                                                                         DatabaseListView(new QListView),

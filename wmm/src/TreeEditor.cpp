@@ -1,4 +1,4 @@
-#include "Editor.h"
+#include "TreeEditor.h"
 
 #include <mutex>
 #include <stdexcept>
@@ -12,45 +12,47 @@
 #include "JSONHighlighter.h"
 #include "TextArea.h"
 
-#include "global.h"
+#include "FileSystemAccessor.h"
 
 namespace WritingMaterialsManager {
-    const std::unordered_map<QByteArray, Editor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> Editor::FileTypeToEnumID = {
+    const std::unordered_map<QByteArray, TreeEditor::SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> TreeEditor::FileTypeToEnumID = {
         { "JSON",                  SupportedFileType::JSON },
         { "MongoDB Extended JSON", SupportedFileType::MongoDBExtendedJSON },
     }; // mainly for switch-case statement so far.
 
-    void Editor::OneOffInit() {
+    void TreeEditor::OneOffInit() {
         MenuAction::Open = new QAction(tr("打开"));
         MenuAction::Open->setShortcut(QKeySequence::Open);
         MenuAction::Open->setStatusTip(tr("打开一个文件"));
 
         Menu::Charset = new QMenu(tr("字符集"));
-        for (const auto& CharsetName: QTextCodec::availableCodecs()) {
-            QAction* const CharsetAction = new QAction(CharsetName);
+        auto AvailableCharsets = QTextCodec::availableCodecs();
+        std::sort(AvailableCharsets.begin(), AvailableCharsets.end(), [](const QByteArray& A, const QByteArray& B) { return A < B; });
+        for (const auto& Charset: AvailableCharsets) {
+            QAction* const CharsetAction = new QAction(Charset);
             MenuAction::SetCharset.emplace_back(CharsetAction);
             Menu::Charset->addAction(CharsetAction);
         }
     }
 
-    Editor::Editor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
-                                                                                                                       TabView(new QTabWidget),
-                                                                                                                       IntuitiveView(new TreeView),
-                                                                                                                       RawView(new TextArea),
-                                                                                                                       TreeModel(TreeModel) {
+    TreeEditor::TreeEditor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
+                                                                                                                               TabView(new QTabWidget),
+                                                                                                                               IntuitiveView(new TreeView),
+                                                                                                                               RawView(new TextArea),
+                                                                                                                               TreeModel(TreeModel) {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
-        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateFileType);
-        connect(IntuitiveView, &TreeView::MouseDown, this, &Editor::ShouldUpdateCharset);
-        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateFileType);
-        connect(RawView, &TextArea::MouseDown, this, &Editor::ShouldUpdateCharset);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
 
         setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
         SetCharset("UTF-8");
-
-        RawView->setFont(DefaultCodeFont);
 
         IntuitiveView->setModel(TreeModel.get());
         TabView->addTab(IntuitiveView, tr("直观"));
@@ -61,13 +63,19 @@ namespace WritingMaterialsManager {
         layout()->addWidget(TabView);
     }
 
-    Editor::~Editor() {}
+    TreeEditor::~TreeEditor() {}
 
-    void Editor::SetText(const QString& Text) { RawView->setPlainText(Text); }
-    void Editor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
+    void TreeEditor::SetText(const QString& Text) { RawView->setPlainText(Text); }
+    void TreeEditor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
-    QString Editor::GetFileType() const { return FileType; }
-    void Editor::SetFileType(const QByteArray& FileType) {
+    QByteArray TreeEditor::GetPathName() const { return PathName; }
+    void TreeEditor::SetPathName(const QByteArray& FileName) {
+        this->PathName = FileName;
+        emit ShouldUpdatePathName();
+    }
+
+    QByteArray TreeEditor::GetFileType() const { return FileType; }
+    void TreeEditor::SetFileType(const QByteArray& FileType) {
         using namespace std;
         using F = SupportedFileType;
 
@@ -87,17 +95,17 @@ namespace WritingMaterialsManager {
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
 
-    QString Editor::GetCharset() const { return Charset; }
-    void Editor::SetCharset() {
+    QByteArray TreeEditor::GetCharset() const { return Charset; }
+    void TreeEditor::SetCharset() {
         this->Charset = static_cast<QAction*>(sender())->text().toUtf8();
         emit ShouldUpdateCharset();
     }
-    void Editor::SetCharset(const QByteArray& Charset) {
+    void TreeEditor::SetCharset(const QByteArray& Charset) {
         this->Charset = Charset;
         emit ShouldUpdateCharset();
     }
 
-    void Editor::ArrangeContentView() {
+    void TreeEditor::ArrangeContentView() {
         auto PlainText = RawView->toPlainText();
         auto PlainTextCopy = PlainText;
         Highlighter->setDocument(nullptr);
@@ -113,13 +121,13 @@ namespace WritingMaterialsManager {
 //        RawView->update();
     }
 
-    void Editor::contextMenuEvent(QContextMenuEvent* Event) {
+    void TreeEditor::contextMenuEvent(QContextMenuEvent* Event) {
         QMenu* const ContextMenu = new QMenu(this);
         ContextMenu->addAction(MenuAction::Open);
-        const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&Editor::OpenFile));
+        const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&TreeEditor::OpenFile));
         QList<QMetaObject::Connection> CharsetEventHandlerConnections;
         for (auto* const SetCharsetAction: MenuAction::SetCharset) {
-            CharsetEventHandlerConnections.emplace_back(connect(SetCharsetAction, &QAction::triggered, this, qOverload<>(&Editor::SetCharset)));
+            CharsetEventHandlerConnections.emplace_back(connect(SetCharsetAction, &QAction::triggered, this, qOverload<>(&TreeEditor::SetCharset)));
         }
         ContextMenu->addMenu(Menu::Charset);
         ContextMenu->exec(Event->globalPos());
@@ -127,29 +135,27 @@ namespace WritingMaterialsManager {
         for (const auto& Connection: CharsetEventHandlerConnections) disconnect(Connection);
     }
 
-    void Editor::OpenFile() {
+    void TreeEditor::OpenFile() {
         const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
         if (FileName.isEmpty() == false) OpenFile(FileName);
     }
 
-    void Editor::OpenFile(const QString& FileName) {
+    void TreeEditor::OpenFile(const QString& PathName) {
         using namespace std;
 
-        QFile File(FileName);
-        if (File.open(QIODevice::ReadWrite) == false) {
-            throw std::runtime_error(("Open file " + FileName + " failed.").toUtf8().constData());
-        }
-        QFileInfo FileInfo(File);
-        SetFileType(FileInfo.suffix().toUtf8());
+        shared_ptr<QFile> File = FileSystemAccessor::Open(PathName);
+        shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
+        SetPathName(PathName.toUtf8());
+        SetFileType(FileInfo->suffix().toUtf8());
         QByteArray FileContentsUTF8;
         QString FileContentsUTF16;
         if (Charset == "<Charset>") Charset = "UTF-8"; // default encoding: UTF-8
         if (Charset == "UTF-8") {
-            FileContentsUTF8 = File.readAll();
+            FileContentsUTF8 = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = QString::fromUtf8(FileContentsUTF8);
         }
         else if (Charset == "UTF-16") {
-            QTextStream IFStream(&File);
+            QTextStream IFStream(File.get());
             IFStream.setEncoding(QStringConverter::Utf16);
             FileContentsUTF16 = IFStream.readAll();
             FileContentsUTF8 = FileContentsUTF16.toUtf8();
@@ -157,7 +163,7 @@ namespace WritingMaterialsManager {
         else {
             QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
             shared_ptr<QTextDecoder> TextDecoder(TextCodec->makeDecoder());
-            const QByteArray FileContentsRaw = File.readAll();
+            const QByteArray FileContentsRaw = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = TextDecoder->toUnicode(FileContentsRaw);
             FileContentsUTF8 = FileContentsUTF16.toUtf8();
         }

@@ -12,8 +12,8 @@
 #include <QThread>
 #include <QWidget>
 
-#include "DatabaseConsole.h"
 #include "MongoDBAccessor.h"
+#include "ShellConsole.h"
 #include "TextArea.h"
 
 namespace WritingMaterialsManager {
@@ -22,16 +22,18 @@ namespace WritingMaterialsManager {
     public:
         explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
         ~MongoShAccessor();
+
+        void SendResult();
     public slots:
         void Execute(const QString& Command);
     signals:
-        void MoreMongoShResult(const QString& Result);
+        void MoreResult(const QString& Result);
         void NoMoreResult();
     private:
         std::shared_ptr<QProcess> mongoshProcess;
     };
 
-    class MongoDBConsole : public DatabaseConsole {
+    class MongoDBConsole : public ShellConsole {
     Q_OBJECT
     public:
         QWidget* const ControlArea;
@@ -41,19 +43,19 @@ namespace WritingMaterialsManager {
 
         TextArea* const CommandForm;
 
-        explicit MongoDBConsole(QWidget* const Parent = nullptr);
+        explicit MongoDBConsole(const QString& mongoshCommand = "mongosh", QWidget* const Parent = nullptr);
         ~MongoDBConsole();
 
         void ExecuteShellCommand();
         void ArrangeContentViewForAssociatedEditors() override;
     signals:
-        void SendShellCommand(const QString& Command);
+        void NewShellCommand(const QString& Command);
     private:
-        MongoShAccessor* mongoshAccessor;
+        MongoShAccessor mongoshAccessor;
         QThread mongoshAccessThread;
     };
 
-    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {
+    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public ShellConsole {
     public:
         QSplitter* const FunctionArea;
 

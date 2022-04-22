@@ -24,6 +24,7 @@
 #include <QQmlProperty>
 #include <QString>
 #include <QStringView> // QStringRef removed in Qt 6.
+#include <QTextCodec>
 #include <QTextStream>
 
 // mongocxx
@@ -71,6 +72,7 @@ int WMMTest::Start() {
 //        DuckX::QuickStart,
 //        Qt::Widgets::Demo,
 //        Qt::InterProcessCommunication,
+//        Qt::GetSystemLocale,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
@@ -119,6 +121,15 @@ void WMMTest::Qt::EncodingOfFileRW() {
     LastFinishedFn.assign(__FUNCTION__);
 }
 
+void WMMTest::Qt::GetSystemLocale() {
+    LastStartedFn.assign(__FUNCTION__);
+
+    qDebug() << QLocale::system();
+    qDebug() << QTextCodec::codecForLocale()->aliases();
+
+    LastFinishedFn.assign(__FUNCTION__);
+}
+
 void WMMTest::Qt::InterProcessCommunication() {
     LastStartedFn.assign(__FUNCTION__);
 
@@ -139,12 +150,12 @@ void WMMTest::Qt::InterProcessCommunication() {
     using namespace std::chrono;
     using namespace std::chrono_literals;
 
-    const QStringList TestProcessName{ "python", "mongosh" };
-//    const QList<QStringList> TestProcessArguments{{ "-c", "print('hello, world')" },
-//                                                  {}};
-    const QList<QStringList> TestProcessArguments{{},
+    const QStringList TestProcessName{ "python"/*, "mongosh"*/ };
+    const QList<QStringList> TestProcessArguments{{ "-c", "import this" },
                                                   {}};
-    const QList<int> QProcessWaitingTimeout{ 5 * 1000, 1 * 1000 };
+//    const QList<QStringList> TestProcessArguments{{},
+//                                                  {}};
+    const QList<int> QProcessWaitingTimeout{ 30 * 1000, 1 * 1000 };
     const QList<decltype(1s)> OutputWaitingDuration{ 120s, 5s };
 
     for (qsizetype i = 0; i < TestProcessName.size(); ++i) {
@@ -158,7 +169,7 @@ void WMMTest::Qt::InterProcessCommunication() {
             Process->waitForReadyRead(QProcessWaitingTimeout[i]);
             qDebug() << Process->readAllStandardOutput();
         }
-        qDebug() << "Outout demonstration completed.";
+        qDebug() << "Output demonstration completed.";
         qDebug() << "Waiting for the completion of" << Process->program() << ", timeout:" << QProcessWaitingTimeout[i] << "ms ...";
         qDebug() << (Process->waitForFinished(QProcessWaitingTimeout[i]) ? "Succeeded." : "Failed.");
     }
@@ -280,13 +291,17 @@ void WMMTest::RapidJSON::Demo() {
             }
             for (rapidjson::Value::ConstMemberIterator j = Message.MemberBegin() + 1; j != Message.MemberEnd(); ++j) {
                 switch (j->value.GetType()) {
-                case rapidjson::kStringType:qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
+                case rapidjson::kStringType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "String" << ',' << j->value.GetString() << '>';
                     break;
-                case rapidjson::kObjectType:qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
+                case rapidjson::kObjectType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "{Object}" << '>';
                     break;
-                case rapidjson::kArrayType:qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
+                case rapidjson::kArrayType:
+                    qDebug() << '<' << j->name.GetString() << ',' << "[Array]" << '>';
                     break;
-                default:qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
+                default:
+                    qDebug() << '<' << j->name.GetString() << ',' << TypeName[j->value.GetType()] << ',' << "(...)" << '>';
                     break;
                 }
             }
