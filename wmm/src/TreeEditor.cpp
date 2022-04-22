@@ -12,8 +12,6 @@
 #include "JSONHighlighter.h"
 #include "TextArea.h"
 
-#include "global.h"
-
 #include "FileSystemAccessor.h"
 
 namespace WritingMaterialsManager {
@@ -47,10 +45,10 @@ namespace WritingMaterialsManager {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
-        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
-        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
-        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
-        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::FileTypeChanged);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::CharsetChanged);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::FileTypeChanged);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::CharsetChanged);
 
         setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
@@ -86,7 +84,7 @@ namespace WritingMaterialsManager {
                 break;
             }
             this->FileType = I->first;
-            emit ShouldUpdateFileType();
+            emit FileTypeChanged();
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
@@ -94,11 +92,11 @@ namespace WritingMaterialsManager {
     QString TreeEditor::GetCharset() const { return Charset; }
     void TreeEditor::SetCharset() {
         this->Charset = static_cast<QAction*>(sender())->text().toUtf8();
-        emit ShouldUpdateCharset();
+        emit CharsetChanged();
     }
     void TreeEditor::SetCharset(const QByteArray& Charset) {
         this->Charset = Charset;
-        emit ShouldUpdateCharset();
+        emit CharsetChanged();
     }
 
     void TreeEditor::ArrangeContentView() {

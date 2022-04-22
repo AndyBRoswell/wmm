@@ -38,8 +38,8 @@ namespace WritingMaterialsManager {
         void AppendText(const QString& Text = {});
 
     signals:
-        void ShouldUpdateFileType();
-        void ShouldUpdateCharset();
+        void FileTypeChanged();
+        void CharsetChanged();
     public slots:
         void ArrangeContentView();
         QString GetFileType() const;
