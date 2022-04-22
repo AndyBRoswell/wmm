@@ -8,11 +8,11 @@
 #include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
-    class ShellConsole : public QWidget {
+    class DatabaseConsole : public QWidget {
     Q_OBJECT
     public:
-        explicit ShellConsole(QWidget* const Parent = nullptr);
-        ~ShellConsole() = default;
+        explicit DatabaseConsole(QWidget* const Parent = nullptr);
+        ~DatabaseConsole() = default;
 
         void AddAssociatedEditor(TreeEditor* const Editor);
         void RemoveAssociatedEditor(TreeEditor* const Editor);
