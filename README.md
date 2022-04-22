@@ -73,6 +73,20 @@ venv/latest/scripts/python -m pip install synonyms jiagu textrank4zh jieba
 ```
 一些 NLP 库在 import（或在初次 import）时，由于需要下载模型或将模型读入内存，需等待一段时间（例如数十秒）方可使用。
 
+安装以后，可以导出 venv 下已安装的全部包，供日后出现意外时重新安装用：
+
+```powershell
+venv/3.8/scripts/python -m pip freeze > requirements-3.8.txt
+venv/latest/scripts/python -m pip freeze > requirements-latest.txt
+```
+
+重新安装：
+
+```powershell
+venv/3.8/scripts/python -m pip install -r requirements-3.8.txt
+venv/latest/scripts/python -m pip install -r requirements-latest.txt
+```
+
 ### Linux
 
 # en-US
