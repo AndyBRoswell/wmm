@@ -8,6 +8,11 @@ namespace WritingMaterialsManager {
         }
         return File;
     }
+
+    std::shared_ptr<QFileInfo> FileSystemAccessor::GetFileInfo(const std::shared_ptr<QFile>& File) {
+        return std::make_shared<QFileInfo>(*File);
+    }
+
     QByteArray FileSystemAccessor::ReadAllRawContents(const std::shared_ptr<QFile>& File) {
         return File->readAll();
     }
