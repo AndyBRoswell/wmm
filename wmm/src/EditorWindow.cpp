@@ -58,9 +58,13 @@ namespace WritingMaterialsManager {
         delete UI;
     }
 
-    void EditorWindow::UpdateFileTypeLabel() { FileTypeLabel->setText(static_cast<TreeEditor*>(sender())->GetFileType()); }
+    void EditorWindow::UpdateFileTypeLabel() {
+        if (focusWidget() == sender()) FileTypeLabel->setText(static_cast<TreeEditor*>(sender())->GetFileType());
+    }
     void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
-    void EditorWindow::UpdateCharsetLabel() { CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset()); }
+    void EditorWindow::UpdateCharsetLabel() {
+        if (focusWidget() == sender()) CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset());
+    }
     void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
 
 /// ----------------------------------------------------------------
@@ -93,8 +97,8 @@ namespace WritingMaterialsManager {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
                     this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
                 });
-        connect(Editor, &TreeEditor::FileTypeChanged, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &TreeEditor::CharsetChanged, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
@@ -104,7 +108,7 @@ namespace WritingMaterialsManager {
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         TreeEditor* const Editor = new class TreeEditor;
         RootView->addWidget(Editor);
-        connect(Editor, &TreeEditor::FileTypeChanged, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &TreeEditor::CharsetChanged, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
+        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
     }
 }

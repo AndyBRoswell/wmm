@@ -38,9 +38,9 @@ namespace WritingMaterialsManager {
         void AppendText(const QString& Text = {});
 
     signals:
-        void PathNameChanged();
-        void FileTypeChanged();
-        void CharsetChanged();
+        void ShouldUpdatePathName();
+        void ShouldUpdateFileType();
+        void ShouldUpdateCharset();
     public slots:
         void ArrangeContentView();
 

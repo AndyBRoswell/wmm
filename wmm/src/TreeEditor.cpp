@@ -45,10 +45,12 @@ namespace WritingMaterialsManager {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, OneOffInit);
 
-        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::FileTypeChanged);
-        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::CharsetChanged);
-        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::FileTypeChanged);
-        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::CharsetChanged);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
+        connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
+        connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
 
         setFocusPolicy(Qt::StrongFocus);
         SetFileType(FileType);
@@ -71,7 +73,7 @@ namespace WritingMaterialsManager {
     QByteArray TreeEditor::GetPathName() const { return PathName; }
     void TreeEditor::SetPathName(const QByteArray& FileName) {
         this->PathName = FileName;
-        emit PathNameChanged();
+        emit ShouldUpdatePathName();
     }
 
     QByteArray TreeEditor::GetFileType() const { return FileType; }
@@ -90,7 +92,7 @@ namespace WritingMaterialsManager {
                 break;
             }
             this->FileType = I->first;
-            emit FileTypeChanged();
+            emit ShouldUpdateFileType();
         }
         catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
     }
@@ -98,11 +100,11 @@ namespace WritingMaterialsManager {
     QByteArray TreeEditor::GetCharset() const { return Charset; }
     void TreeEditor::SetCharset() {
         this->Charset = static_cast<QAction*>(sender())->text().toUtf8();
-        emit CharsetChanged();
+        emit ShouldUpdateCharset();
     }
     void TreeEditor::SetCharset(const QByteArray& Charset) {
         this->Charset = Charset;
-        emit CharsetChanged();
+        emit ShouldUpdateCharset();
     }
 
     void TreeEditor::ArrangeContentView() {
