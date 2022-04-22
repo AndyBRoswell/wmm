@@ -38,8 +38,6 @@ namespace WritingMaterialsManager {
         class MongoConAndEditorPage : public Page {
         public:
             explicit MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
-
-            void mousePressEvent(QMouseEvent* E) override;
         };
 
         class EditorOnlyPage : public Page {
@@ -50,8 +48,6 @@ namespace WritingMaterialsManager {
         class PythonInteractorPage : public Page {
         public:
             explicit PythonInteractorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
-
-            void mousePressEvent(QMouseEvent* E) override;
         };
 
         inline static const char* DefaultWindowTitle = "编辑器";

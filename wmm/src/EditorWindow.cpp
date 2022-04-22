@@ -94,10 +94,6 @@ namespace WritingMaterialsManager {
         RootView->setStretchFactor(1, 4);
     }
 
-    void EditorWindow::MongoConAndEditorPage::mousePressEvent(QMouseEvent* E) {
-        thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console");
-    }
-
 /// ----------------------------------------------------------------
 
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
@@ -128,9 +124,5 @@ namespace WritingMaterialsManager {
                     OuterInstance->UpdateCharsetLabel("<OS default charset>");
                 });
         RootView->addWidget(PyInteractor);
-    }
-
-    void EditorWindow::PythonInteractorPage::mousePressEvent(QMouseEvent* E) {
-        thisAtEditorWindow->UpdateWindowTitleWithSuffix("Python Interactor");
     }
 }
