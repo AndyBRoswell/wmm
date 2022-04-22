@@ -147,6 +147,7 @@ namespace WritingMaterialsManager {
 
         shared_ptr<QFile> File = FileSystemAccessor::Open(PathName);
         shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
+        SetPathName(PathName.toUtf8());
         SetFileType(FileInfo->suffix().toUtf8());
         QByteArray FileContentsUTF8;
         QString FileContentsUTF16;

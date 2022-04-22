@@ -18,6 +18,8 @@ namespace WritingMaterialsManager {
         explicit EditorWindow(QWidget* Parent = nullptr);
         ~EditorWindow();
     public slots:
+        void UpdateWindowTitleWithPathName();
+        void UpdateWindowTitleWithSuffix(const QString& Suffix = {});
         void UpdateFileTypeLabel();
         void UpdateFileTypeLabel(const QString& FileType);
         void UpdateCharsetLabel();
@@ -36,6 +38,8 @@ namespace WritingMaterialsManager {
         class MongoConAndEditorPage : public Page {
         public:
             explicit MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
+
+            void mousePressEvent(QMouseEvent* E) override;
         };
 
         class EditorOnlyPage : public Page {
@@ -43,6 +47,15 @@ namespace WritingMaterialsManager {
             explicit EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
+        class PythonInteractorPage : public Page {
+        public:
+            explicit PythonInteractorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
+
+            void mousePressEvent(QMouseEvent* E) override;
+        };
+
+        inline static const char* DefaultWindowTitle = "编辑器";
+        inline static const char* DefaultWindowTitlePrefix = "编辑器 - ";
         inline static const QString DefaultQLabelStyleSheet = "QLabel { color: white; }";
 
         Ui::EditorWindow* UI;
