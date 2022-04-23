@@ -33,7 +33,7 @@ namespace WritingMaterialsManager {
         TextArea* CodeArea;
         TextArea* ResultArea;
 
-        explicit PythonInteractor(const QString& PythonCommand = "py/venv/3.8/scripts/python", QWidget* const Parent = nullptr);
+        explicit PythonInteractor(const QString& PythonCommand = "py/venv/latest/scripts/python", QWidget* const Parent = nullptr);
         ~PythonInteractor();
 
         void ExecuteCode();
