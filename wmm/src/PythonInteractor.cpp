@@ -64,18 +64,20 @@ namespace WritingMaterialsManager {
         using namespace std::chrono;
         using namespace std::chrono_literals;
 
-        time_point<high_resolution_clock> return_ends_time_point{};
-        while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
-            const QByteArray Result = PythonProcess->readAllStandardOutput();
-            if (Result != "") {
-                emit MoreResult(Result);
-                qDebug() << Result;
-            }
-            else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
-        }
+//        time_point<high_resolution_clock> return_ends_time_point{};
+//        while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
+//            const QByteArray Result = PythonProcess->readAllStandardOutput();
+//            if (Result != "") {
+//                emit MoreResult(Result);
+//                qDebug() << Result;
+//            }
+//            else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
+//        }
+        PythonProcess->waitForFinished(-1);
         const QByteArray Result = PythonProcess->readAllStandardOutput();
-        qDebug() << Result;
+//        qDebug() << Result;
         emit MoreResult(QString::fromLocal8Bit(Result));
+        qDebug() << "No more return from Python.";
         emit NoMoreResult();
     }
 
