@@ -72,9 +72,11 @@ namespace WritingMaterialsManager {
 /// ----------------------------------------------------------------
 
     EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
-        MongoDBConsole* const Console = new MongoDBConsole;
+        MongoDBConsole* const Console = new MongoDBConsole("mongosh", this);
         TreeEditor* const Editor = new TreeEditor;
         Console->AddAssociatedEditor(Editor);
+        auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
+        connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         auto ShowPlainTextFn = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
             this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
@@ -86,6 +88,12 @@ namespace WritingMaterialsManager {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
                     this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
                 });
+        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Console->ExecuteButton, &QPushButton::clicked, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
         RootView->addWidget(Console);

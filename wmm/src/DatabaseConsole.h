@@ -17,6 +17,9 @@ namespace WritingMaterialsManager {
         void AddAssociatedEditor(TreeEditor* const Editor);
         void RemoveAssociatedEditor(TreeEditor* const Editor);
         void ClearAssociatedEditor();
+        void mousePressEvent(QMouseEvent* E) override;
+    signals:
+        void MouseDown();
     public slots:
         void SetTextForAssociatedEditors(const QString& Text);
         void AppendTextForAssociatedEditors(const QString& Text);

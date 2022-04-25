@@ -49,7 +49,7 @@ namespace WritingMaterialsManager {
         QByteArray GetFileType() const;
         void SetFileType(const QByteArray& FileType);
         QByteArray GetCharset() const;
-        void SetCharset();
+        void SetCharset(); // This slot is for QAction::triggered()
         void SetCharset(const QByteArray& Charset);
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
