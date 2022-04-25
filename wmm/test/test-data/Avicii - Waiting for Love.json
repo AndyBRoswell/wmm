@@ -31,7 +31,7 @@
         "labels": []
     },
     "type": [
-        "text/plain",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "audio/x-flac"
     ],
     "is link": [
