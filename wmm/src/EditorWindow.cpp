@@ -113,9 +113,20 @@ namespace WritingMaterialsManager {
 
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         TreeEditor* const Editor = new TreeEditor;
+
         connect(Editor, &TreeEditor::ShouldUpdatePathName, thisAtEditorWindow, &EditorWindow::UpdateWindowTitleWithPathName);
         connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        {
+            auto UpdateStatusInfo = [=]() {
+                thisAtEditorWindow->UpdateWindowTitleWithSuffix(Editor->GetPathName());
+                thisAtEditorWindow->UpdateFileTypeLabel(Editor->GetFileType());
+                thisAtEditorWindow->UpdateCharsetLabel(Editor->GetCharset());
+            };
+            connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        };
+
         RootView->addWidget(Editor);
     }
 

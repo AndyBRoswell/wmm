@@ -73,9 +73,9 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
-        QByteArray PathName;
-        QByteArray FileType;
-        QByteArray Charset;
+        QByteArray PathName{};
+        QByteArray FileType{};
+        QByteArray Charset{};
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;
