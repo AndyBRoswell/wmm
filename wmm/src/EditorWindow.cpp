@@ -77,10 +77,6 @@ namespace WritingMaterialsManager {
         Console->AddAssociatedEditor(Editor);
 
         auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
-        auto ShowPlainText = [=, this]() {
-            this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
-            this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
-        };
         connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->ExecuteButton, &QPushButton::clicked, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, [=]() {
@@ -90,7 +86,8 @@ namespace WritingMaterialsManager {
         });
         {
             auto UpdateStatusInfo = [=]() {
-                ShowPlainText();
+                thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
+                thisAtEditorWindow->UpdateCharsetLabel("Unicode");
                 ShowMongoDBInWndTitle();
             };
             connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
@@ -105,7 +102,7 @@ namespace WritingMaterialsManager {
             connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
             connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
         }
-        
+
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
