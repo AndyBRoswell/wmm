@@ -72,22 +72,37 @@ namespace WritingMaterialsManager {
 /// ----------------------------------------------------------------
 
     EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
-        MongoDBConsole* const Console = new MongoDBConsole;
+        MongoDBConsole* const Console = new MongoDBConsole("mongosh", this);
         TreeEditor* const Editor = new TreeEditor;
         Console->AddAssociatedEditor(Editor);
-        auto ShowPlainTextFn = [=, this]() {
-            this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
-            this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
-        };
-        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
-        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
-        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
-                [=, this]() {
-                    this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
-                    this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
-                });
-        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+
+        auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
+        connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Console->ExecuteButton, &QPushButton::clicked, thisAtEditorWindow, ShowMongoDBInWndTitle);
+        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, [=]() {
+            ShowMongoDBInWndTitle();
+            thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
+            thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
+        });
+        {
+            auto UpdateStatusInfo = [=]() {
+                thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
+                thisAtEditorWindow->UpdateCharsetLabel("Unicode");
+                ShowMongoDBInWndTitle();
+            };
+            connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        }
+        {
+            auto UpdateStatusInfo = [=]() {
+                ShowMongoDBInWndTitle();
+                thisAtEditorWindow->UpdateFileTypeLabel("MongoDB Extended JSON");
+                thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
+            };
+            connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        }
+
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
@@ -98,9 +113,20 @@ namespace WritingMaterialsManager {
 
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         TreeEditor* const Editor = new TreeEditor;
+
         connect(Editor, &TreeEditor::ShouldUpdatePathName, thisAtEditorWindow, &EditorWindow::UpdateWindowTitleWithPathName);
         connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
         connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        {
+            auto UpdateStatusInfo = [=]() {
+                thisAtEditorWindow->UpdateWindowTitleWithSuffix(Editor->GetPathName());
+                thisAtEditorWindow->UpdateFileTypeLabel(Editor->GetFileType());
+                thisAtEditorWindow->UpdateCharsetLabel(Editor->GetCharset());
+            };
+            connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        };
+
         RootView->addWidget(Editor);
     }
 

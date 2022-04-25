@@ -30,4 +30,8 @@ namespace WritingMaterialsManager {
     void DatabaseConsole::ArrangeContentViewForAssociatedEditors() {
         for (auto& Editor: AssociatedEditors) { Editor->ArrangeContentView(); }
     }
+
+    void DatabaseConsole::mousePressEvent(QMouseEvent* E) {
+        emit MouseDown();
+    }
 }

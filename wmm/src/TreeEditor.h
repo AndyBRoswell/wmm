@@ -49,7 +49,7 @@ namespace WritingMaterialsManager {
         QByteArray GetFileType() const;
         void SetFileType(const QByteArray& FileType);
         QByteArray GetCharset() const;
-        void SetCharset();
+        void SetCharset(); // This slot is for QAction::triggered()
         void SetCharset(const QByteArray& Charset);
     protected:
         void contextMenuEvent(QContextMenuEvent* Event) override;
@@ -73,9 +73,9 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
-        QByteArray PathName;
-        QByteArray FileType;
-        QByteArray Charset;
+        QByteArray PathName{};
+        QByteArray FileType{};
+        QByteArray Charset{};
         std::shared_ptr<TextFormatter> Formatter;
         std::shared_ptr<TextHighlighter> Highlighter;
         std::shared_ptr<QtTreeModel> TreeModel;
