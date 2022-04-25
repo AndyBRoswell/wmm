@@ -348,6 +348,7 @@ namespace WritingMaterialsManager {
                 else if (ns->IsDouble()) { nt->PushBackData(ns->GetDouble()); }
                 break; // other number types are not supported.
             case kArrayType:
+                if (ns->End() == ns->Begin()) break;
                 for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
                     s.emplace(&*i);
                     Node* const c = new Node({ i - ns->Begin() }, nt);
