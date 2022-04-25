@@ -35,11 +35,11 @@
         "audio/x-flac"
     ],
     "is link": [
-        false,
+        true,
         true
     ],
     "content": [
-        "",
+        "doc/Avicii - Waiting for Love.docx",
         "aud/Avicii - Waiting For Love.flac"
     ],
     "comment": null
