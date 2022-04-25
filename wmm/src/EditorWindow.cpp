@@ -76,20 +76,20 @@ namespace WritingMaterialsManager {
         TreeEditor* const Editor = new TreeEditor;
         Console->AddAssociatedEditor(Editor);
         auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
-        connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         auto ShowPlainTextFn = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
             this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
         };
+        connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
+        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
+        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
                 [=, this]() {
                     this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
                     this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
                 });
-        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->ExecuteButton, &QPushButton::clicked, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
