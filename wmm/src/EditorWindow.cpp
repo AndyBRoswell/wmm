@@ -75,27 +75,37 @@ namespace WritingMaterialsManager {
         MongoDBConsole* const Console = new MongoDBConsole("mongosh", this);
         TreeEditor* const Editor = new TreeEditor;
         Console->AddAssociatedEditor(Editor);
+
         auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
-        auto ShowPlainTextFn = [=, this]() {
+        auto ShowPlainText = [=, this]() {
             this->thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
             this->thisAtEditorWindow->UpdateCharsetLabel("Unicode");
         };
         connect(Console, &MongoDBConsole::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
-        connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowPlainTextFn);
-        connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow,
-                [=, this]() {
-                    this->thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
-                    this->thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
-                });
-        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
         connect(Console->ExecuteButton, &QPushButton::clicked, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, ShowMongoDBInWndTitle);
-        connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateFileTypeLabel));
-        connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, qOverload<>(&EditorWindow::UpdateCharsetLabel));
+        connect(Console->CommandForm, &TextArea::MouseDown, thisAtEditorWindow, [=]() {
+            ShowMongoDBInWndTitle();
+            thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
+            thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
+        });
+        {
+            auto UpdateStatusInfo = [=]() {
+                ShowPlainText();
+                ShowMongoDBInWndTitle();
+            };
+            connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        }
+        {
+            auto UpdateStatusInfo = [=]() {
+                ShowMongoDBInWndTitle();
+                thisAtEditorWindow->UpdateFileTypeLabel("MongoDB Extended JSON");
+                thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
+            };
+            connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+        }
+        
         RootView->addWidget(Console);
         RootView->addWidget(Editor);
         RootView->setStretchFactor(0, 1);
