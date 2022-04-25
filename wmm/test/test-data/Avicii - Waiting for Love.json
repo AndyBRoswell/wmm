@@ -1,0 +1,46 @@
+{
+    "meta": {
+        "title": "Waiting for Love",
+        "lyricist": "",
+        "composer": "",
+        "songwriter": [
+            "Salem Al Fakir",
+            "Simon Aldred",
+            "Tim Bergling",
+            "Martijn Garritsen",
+            "Vincent Pontare"
+        ],
+        "arranger": "",
+        "artist": "",
+        "producer": [
+            "Avicii",
+            "Martin Garrix"
+        ],
+        "album": "Stories",
+        "album artist": "Avicii",
+        "date": "2015-05-22",
+        "track": 1,
+        "translator": null
+    },
+    "gmeta": {
+        "keywords": [],
+        "genre": [
+            "Progressive House"
+        ],
+        "sentiments": [],
+        "labels": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/Avicii - Waiting for Love.docx",
+        "aud/Avicii - Waiting For Love.flac"
+    ],
+    "comment": null
+}
