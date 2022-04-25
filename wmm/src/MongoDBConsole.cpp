@@ -106,18 +106,13 @@ namespace WritingMaterialsManager {
         time_point<high_resolution_clock> return_ends_time_point{};
         while (return_ends_time_point.time_since_epoch().count() == 0 || high_resolution_clock::now() - return_ends_time_point <= 1s) {
             const QByteArray Result = mongoshProcess->readAllStandardOutput();
-            if (Result != "") {
-                emit MoreResult(Result);
-//                qDebug() << Result;
-            }
+            if (Result != "") { emit MoreResult(Result); }
             else if (return_ends_time_point.time_since_epoch().count() == 0) return_ends_time_point = high_resolution_clock::now();
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
         emit MoreResult(Result);
-//        qDebug() << Result;
         qDebug() << "No more mongosh result.";
         emit NoMoreResult();
-
     }
 
     void MongoShAccessor::Execute(const QString& Command) {
