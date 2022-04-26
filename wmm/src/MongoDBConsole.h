@@ -55,7 +55,7 @@ namespace WritingMaterialsManager {
         QThread mongoshAccessThread;
     };
 
-    class [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole : public DatabaseConsole {
+    class AnotherMongoDBConsole : public DatabaseConsole {
     public:
         QSplitter* const FunctionArea;
 
@@ -69,8 +69,8 @@ namespace WritingMaterialsManager {
 
         QSplitter* const RootView;
 
-        explicit MongoDBLegacyConsole(QWidget* const Parent = nullptr);
-        ~MongoDBLegacyConsole();
+        explicit AnotherMongoDBConsole(QWidget* const Parent = nullptr);
+        ~AnotherMongoDBConsole();
     private:
         QStringListModel* const DatabaseListModel;
         QStringListModel* const CollectionListModel;
