@@ -125,10 +125,13 @@ namespace WritingMaterialsManager {
 
         QWidget* const CtrlArea = new QWidget;
         QVBoxLayout* const CtrlAreaLayout = new QVBoxLayout;
+        CtrlAreaLayout->setContentsMargins(0, 0, 0, 0);
+        CtrlAreaLayout->setSpacing(2);
         CtrlArea->setLayout(CtrlAreaLayout);
 
         QWidget* const ExecArea = new QWidget;
         QHBoxLayout* const ExecAreaLayout = new QHBoxLayout;
+        ExecAreaLayout->setContentsMargins(0, 0, 0, 0);
         ExecArea->setLayout(ExecAreaLayout);
         QSplitter* const ExecParamArea = new QSplitter;
         ExecParamArea->addWidget(DatabaseNameForm);
