@@ -40,6 +40,11 @@ namespace WritingMaterialsManager {
             explicit MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
+        class AnotherMongoConAndEditorPage : public Page {
+        public:
+            explicit AnotherMongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
+        };
+
         class EditorOnlyPage : public Page {
         public:
             explicit EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
