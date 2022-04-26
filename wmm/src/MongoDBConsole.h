@@ -30,18 +30,17 @@ namespace WritingMaterialsManager {
         void MoreResult(const QString& Result);
         void NoMoreResult();
     private:
-        std::shared_ptr<QProcess> mongoshProcess;
+        std::shared_ptr<QProcess> mongoshProcess = std::make_shared<QProcess>();
     };
 
     class MongoDBConsole : public DatabaseConsole {
     Q_OBJECT
     public:
-        QWidget* const ControlArea;
-        TextField* const URLForm;
+        QWidget* const ControlArea = new QWidget;
+        TextField* const URLForm = new TextField(MongoDBAccessor::LocalMongoDBURI);
         TextField* const mongoshCommandForm;
-        QPushButton* const ExecuteButton;
-
-        TextArea* const CommandForm;
+        QPushButton* const ExecuteButton = new QPushButton("▶");
+        TextArea* const CommandForm = new TextArea("show dbs\n");
 
         explicit MongoDBConsole(const QString& mongoshCommand = "mongosh", QWidget* const Parent = nullptr);
         ~MongoDBConsole();
@@ -57,24 +56,17 @@ namespace WritingMaterialsManager {
 
     class AnotherMongoDBConsole : public DatabaseConsole {
     public:
-        QSplitter* const FunctionArea;
-
-        QPlainTextEdit* const URLForm;
-        QListView* const DatabaseListView;
-        QListView* const CollectionListView;
-        QComboBox* const FunctionComboBox;
-        QPushButton* const ExecuteButton;
-
-        QListView* const ParamEditor;
-
-        QSplitter* const RootView;
+        TextField* const URLForm = new TextField(MongoDBAccessor::LocalMongoDBURI);
+        TextField* const DatabaseNameForm = new TextField("test");
+        TextField* const CollectionNameForm = new TextField("coll");
+        QComboBox* const FunctionComboBox = new QComboBox;
+        QPushButton* const ExecuteButton = new QPushButton(")");
+        QListView* const ParamListView = new QListView;
 
         explicit AnotherMongoDBConsole(QWidget* const Parent = nullptr);
         ~AnotherMongoDBConsole();
     private:
-        QStringListModel* const DatabaseListModel;
-        QStringListModel* const CollectionListModel;
-        QStringListModel* const ParamListModel;
+        QStringListModel ParamListModel;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
     };
 }
