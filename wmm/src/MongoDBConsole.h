@@ -60,7 +60,7 @@ namespace WritingMaterialsManager {
         TextField* const DatabaseNameForm = new TextField("test");
         TextField* const CollectionNameForm = new TextField("coll");
         QComboBox* const FunctionComboBox = new QComboBox;
-        QPushButton* const ExecuteButton = new QPushButton(")");
+        QPushButton* const ExecuteButton = new QPushButton("▶");
         QListView* const ParamListView = new QListView;
 
         explicit AnotherMongoDBConsole(QWidget* const Parent = nullptr);

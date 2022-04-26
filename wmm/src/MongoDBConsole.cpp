@@ -120,8 +120,34 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    AnotherMongoDBConsole::AnotherMongoDBConsole(QWidget* const parent) : DatabaseConsole(parent) {
+    AnotherMongoDBConsole::AnotherMongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent) {
+        ParamListView->setModel(&ParamListModel);
 
+        QWidget* const CtrlArea = new QWidget;
+        QVBoxLayout* const CtrlAreaLayout = new QVBoxLayout;
+        CtrlArea->setLayout(CtrlAreaLayout);
+
+        QWidget* const ExecArea = new QWidget;
+        QHBoxLayout* const ExecAreaLayout = new QHBoxLayout;
+        ExecArea->setLayout(ExecAreaLayout);
+        QSplitter* const ExecParamArea = new QSplitter;
+        ExecParamArea->addWidget(DatabaseNameForm);
+        ExecParamArea->addWidget(CollectionNameForm);
+        ExecParamArea->addWidget(FunctionComboBox);
+        ExecAreaLayout->addWidget(ExecParamArea);
+        ExecAreaLayout->addWidget(ExecuteButton);
+        ExecAreaLayout->setStretch(1, 0);
+
+        CtrlAreaLayout->addWidget(URLForm);
+        CtrlAreaLayout->addWidget(ExecArea);
+
+        QVBoxLayout* const MainLayout = new QVBoxLayout;
+        MainLayout->setContentsMargins(0, 0, 0, 0);
+        MainLayout->setSpacing(2);
+        setLayout(MainLayout);
+        MainLayout->addWidget(CtrlArea);
+        MainLayout->addWidget(ParamListView);
+        MainLayout->setStretch(0, 0);
     }
 
     AnotherMongoDBConsole::~AnotherMongoDBConsole() {}
