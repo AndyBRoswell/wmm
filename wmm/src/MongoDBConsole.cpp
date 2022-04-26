@@ -122,6 +122,7 @@ namespace WritingMaterialsManager {
 
     AnotherMongoDBConsole::AnotherMongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent) {
         ParamListView->setModel(&ParamListModel);
+        connect(ExecuteButton, &QPushButton::clicked, this, &AnotherMongoDBConsole::ExecuteFunction);
 
         QWidget* const CtrlArea = new QWidget;
         QVBoxLayout* const CtrlAreaLayout = new QVBoxLayout;
@@ -154,4 +155,14 @@ namespace WritingMaterialsManager {
     }
 
     AnotherMongoDBConsole::~AnotherMongoDBConsole() {}
+
+    void AnotherMongoDBConsole::ExecuteFunction() {
+        static mongocxx::database Database;
+        static mongocxx::collection Collection;
+        static QByteArray LastAccessedDatabaseName;
+        static QByteArray LastAccessedCollectionName;
+        const QByteArray CurrentDatabaseName = DatabaseNameForm->text().toUtf8();
+        const QByteArray CurrentCollectionName = CollectionNameForm->text().toUtf8();
+        if (CurrentDatabaseName != LastAccessedDatabaseName) {}
+    }
 }

@@ -1,6 +1,8 @@
 #ifndef WRITING_MATERIALS_MANAGER_MONGODBCONSOLE_H
 #define WRITING_MATERIALS_MANAGER_MONGODBCONSOLE_H
 
+#include <functional>
+
 #include <QComboBox>
 #include <QListView>
 #include <QLineEdit>
@@ -68,6 +70,8 @@ namespace WritingMaterialsManager {
     private:
         QStringListModel ParamListModel;
         std::shared_ptr<MongoDBAccessor> MongoDBAccessor;
+
+        void ExecuteFunction();
     };
 }
 
