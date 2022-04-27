@@ -1,0 +1,39 @@
+{
+    "meta": {
+        "标题": "一万の軌跡",
+        "作词": "",
+        "作曲": ["折戸伸治", "戸越まごめ"],
+        "编曲": "",
+        "演唱": "riya",
+        "合唱": "",
+        "艺术家": "",
+        "原曲": "町, 時の流れ, 人",
+        "专辑": "ソララド",
+        "专辑艺术家": "Key Sounds Label",
+        "发行商": "",
+        "日期": "2003-12-28",
+        "碟片": 1,
+        "曲目": 5,
+        "译者": "诅咒教主",
+        "备注" : ""
+    },
+    "gmeta": {
+        "关键词": [],
+        "流派": [],
+        "情感": [],
+        "标签": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/Riya - 一万の軌跡.docx",
+        ""
+    ],
+    "comment": ""
+}

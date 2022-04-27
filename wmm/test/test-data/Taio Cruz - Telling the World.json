@@ -1,0 +1,42 @@
+{
+    "meta": {
+        "title": "Telling The World",
+        "lyricist": "",
+        "composer": "",
+        "songwriter": [
+            "Alan Kasirye",
+            "Taio Cruz"
+        ],
+        "arranger": "",
+        "vocal": "",
+        "chorus": "",
+        "artist": "",
+        "producer": "",
+        "album": "Rio: Music From The Motion Picture",
+        "album artist": "",
+        "date": "2011-03-18",
+        "disc": 1,
+        "track": 7,
+        "translator": "",
+        "comment": "动画电影《里约大冒险》片尾曲"
+    },
+    "gmeta": {
+        "keywords": [],
+        "genre": [],
+        "sentiments": [],
+        "labels": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/Taio Cruz - Telling the World.docx",
+        ""
+    ],
+    "comment": ""
+}
