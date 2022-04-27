@@ -397,6 +397,7 @@ void WMMTest::mongocxx::CustomDataDemo() {
     // prepare JSON strings for test
     vector<QFile*> TestFiles{
         new QFile("test/test-data/utf8test.json"),
+//        new QFile("test/test-data/utf16letest.json"),
 //        new QFile("test/test-data/Haruhi的沙雕日常.json"),
     };
     vector<QTextStream*> StreamsForTestFiles;
