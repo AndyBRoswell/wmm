@@ -1,0 +1,35 @@
+{
+    "meta": {
+        "标题": "one dream",
+        "作词": "八木沼悟志",
+        "作曲": ["八木沼悟志", "齋藤真也"],
+        "编曲": ["八木沼悟志", "齋藤真也"],
+        "演唱": "南條愛乃",
+        "艺术家": "fripSide",
+        "专辑": "infinite synthesis 4",
+        "专辑艺术家": "fripSide",
+        "日期": "2018-10-10",
+        "曲目": "",
+        "译者": "",
+        "备注" : "广州印象曲"
+    },
+    "gmeta": {
+        "关键词": [],
+        "流派": [],
+        "情感": [],
+        "标签": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/fripSide - One Dream（广州印象曲）.docx",
+        ""
+    ],
+    "comment": ""
+}

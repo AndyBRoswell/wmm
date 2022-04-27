@@ -1,18 +1,20 @@
 {
     "meta": {
-        "title": "Winter in My Heart",
-        "lyricist": "",
+        "title": "Ana (full ver.)",
+        "lyricist": "萩原ゆう",
         "composer": "",
         "songwriter": "",
-        "arranger": "",
-        "artist": "beFour",
+        "arranger": "戸越まごめ",
+        "vocal": "Lia",
+        "artist": "",
         "producer": "",
-        "album": "Hand in Hand (The Winter Album)",
-        "album artist": "beFour",
-        "publisher": "",
-        "date": "",
-        "track": "",
-        "translator": ""
+        "album": "CLANNAD ORIGINAL SOUNDTRACK",
+        "album artist": "Key Sounds Label",
+        "date": "2004-08-13",
+        "disc": 3,
+        "track": 14,
+        "translator": "",
+        "comment": ""
     },
     "gmeta": {
         "keywords": [],
@@ -29,7 +31,7 @@
         true
     ],
     "content": [
-        "doc/beFour - Winter in My Heart.docx",
+        "doc/Lia - Ana (full ver.).docx",
         ""
     ],
     "comment": ""

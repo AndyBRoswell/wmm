@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "标题": "Farewell Song",
+        "作词": "麻枝准",
+        "作曲": "戸越まごめ",
+        "编曲": "",
+        "演唱": "Lia",
+        "艺术家": "",
+        "专辑": "AIR ORIGINAL SOUNDTRACK",
+        "专辑艺术家": "Key Sounds Label",
+        "日期": "2002-09-27",
+        "碟片": 1,
+        "曲目": 26,
+        "译者": "",
+        "备注" : "游戏《AIR》ED"
+    },
+    "gmeta": {
+        "关键词": [],
+        "流派": [],
+        "情感": [],
+        "标签": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/Lia - Farewell Song.docx",
+        ""
+    ],
+    "comment": ""
+}

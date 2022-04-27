@@ -1,0 +1,43 @@
+{
+    "meta": {
+        "title": "What Makes You Beautiful",
+        "lyricist": "",
+        "composer": "",
+        "songwriter": [
+            "Rami Yacoub",
+            "Savan Kotecha",
+            "Carl Falk"
+        ],
+        "arranger": "",
+        "vocal": "",
+        "artist": "One Direction",
+        "producer": "",
+        "album": "What Makes You Beautiful",
+        "album artist": "One Direction",
+        "publisher": "Sony Music",
+        "date": "2011-09-11",
+        "disc": 1,
+        "track": 1,
+        "translator": "",
+        "comment": ""
+    },
+    "gmeta": {
+        "keywords": [],
+        "genre": [],
+        "sentiments": [],
+        "labels": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/One Direction - What Makes You Beautiful.docx",
+        ""
+    ],
+    "comment": ""
+}
