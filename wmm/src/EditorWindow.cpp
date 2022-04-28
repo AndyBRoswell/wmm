@@ -9,7 +9,7 @@
 #include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
-    EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),
+    EditorWindow::EditorWindow(QWidget* const Parent) : QMainWindow(Parent),
                                                   UI(new Ui::EditorWindow),
                                                   RootView(new QSplitter(this)) {
         UI->setupUi(this);

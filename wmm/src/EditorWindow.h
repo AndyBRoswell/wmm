@@ -15,7 +15,7 @@ namespace WritingMaterialsManager {
     public:
         QSplitter* RootView;
 
-        explicit EditorWindow(QWidget* Parent = nullptr);
+        explicit EditorWindow(QWidget* const Parent = nullptr);
         ~EditorWindow();
     public slots:
         void UpdateWindowTitleWithPathName();
