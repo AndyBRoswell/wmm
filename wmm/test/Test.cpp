@@ -404,7 +404,7 @@ void WMMTest::mongocxx::CustomDataDemo() {
     }
     vector<shared_ptr<QTextStream>> StreamsForTestFiles;
     vector<QByteArray> TestStrings;
-    for (const auto TestFile: TestFiles) {
+    for (const auto& TestFile: TestFiles) {
         TestFile->open(QIODevice::ReadOnly); // don't forget to open file
         TestStrings.emplace_back(move(TestFile->readAll()));
     }
