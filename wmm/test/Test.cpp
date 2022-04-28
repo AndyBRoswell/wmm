@@ -400,8 +400,7 @@ void WMMTest::mongocxx::CustomDataDemo() {
     const QDir TestDataDir("test/data");
     const QStringList ExtraTestFiles = TestDataDir.entryList({ "*.json" });
     for (const auto& ExtraTestFile: ExtraTestFiles) {
-        qDebug() << "File:" << ExtraTestFile;
-        TestFiles.emplace_back(new QFile(ExtraTestFile));
+        TestFiles.emplace_back(new QFile("test/data/" + ExtraTestFile));
     }
     vector<shared_ptr<QTextStream>> StreamsForTestFiles;
     vector<QByteArray> TestStrings;
