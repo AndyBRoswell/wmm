@@ -15,9 +15,9 @@ namespace WritingMaterialsManager {
     public:
         explicit ExtraFunctionWindow(QWidget* const Parent = nullptr);
     private:
-        class DOCXExtractPage : public QWidget {
+        class DocumentExtractPage : public QWidget {
         public:
-            explicit DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent = nullptr);
+            explicit DocumentExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent = nullptr);
         protected:
             ExtraFunctionWindow* const thisAtExtraFunctionWindow;
         private:
@@ -25,11 +25,13 @@ namespace WritingMaterialsManager {
             public:
                 inline static QAction* Open;
 
-                explicit DocumentDisplayArea();
+                explicit DocumentDisplayArea(DocumentExtractPage* const OuterInstance);
                 void contextMenuEvent(QContextMenuEvent* const E) override;
+            private:
+                DocumentExtractPage* const thisAtDocumentExtractPage;
             };
 
-            DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea;
+            DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea(this);
 
             void OpenFile();
         };

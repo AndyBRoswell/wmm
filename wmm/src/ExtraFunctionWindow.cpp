@@ -4,6 +4,7 @@
 
 #include <QApplication>
 #include <QGridLayout>
+#include <QtPdf/QPdfDocument>
 
 #include "duckx.hpp"
 
@@ -29,7 +30,7 @@ namespace WritingMaterialsManager {
         QMetaObject::connectSlotsByName(this);
 
         // initialize demo pages
-        RootView->addTab(new DOCXExtractPage(this), "DOCX Extract");
+        RootView->addTab(new DocumentExtractPage(this), "DOCX/PDF Extract");
 
         QGridLayout* const MainLayout = new QGridLayout;
         CentralWidget->setLayout(MainLayout);
@@ -39,17 +40,17 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
-                                                                                                                             thisAtExtraFunctionWindow(OuterInstance) {
+    ExtraFunctionWindow::DocumentExtractPage::DocumentExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
+                                                                                                                                     thisAtExtraFunctionWindow(OuterInstance) {
 
         setLayout(new QGridLayout);
         layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(DocumentDisplayArea);
 
-        const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DOCXExtractPage::OpenFile);
+        const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
     }
 
-    ExtraFunctionWindow::DOCXExtractPage::DocumentDisplayArea::DocumentDisplayArea() {
+    ExtraFunctionWindow::DocumentExtractPage::DocumentDisplayArea::DocumentDisplayArea(DocumentExtractPage* const OuterInstance) : thisAtDocumentExtractPage(OuterInstance) {
         static std::once_flag StaticInitialized;
         std::call_once(StaticInitialized, []() {
             Open = new QAction(tr("打开"));
@@ -60,21 +61,30 @@ namespace WritingMaterialsManager {
         setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard); // read-only
     }
 
-    void ExtraFunctionWindow::DOCXExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
+    void ExtraFunctionWindow::DocumentExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
         QMenu* const ContextMenu = createStandardContextMenu();
         ContextMenu->addSeparator();
         ContextMenu->addAction(Open);
         ContextMenu->exec(E->globalPos());
     }
 
-    void ExtraFunctionWindow::DOCXExtractPage::OpenFile() {
-        const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("Microsoft DOCX (*.docx)"));
+    void ExtraFunctionWindow::DocumentExtractPage::OpenFile() {
+        const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("Microsoft DOCX (*.docx);;Portable Document Format(*.pdf)"));
         if (FileName.isEmpty() == false) {
-            duckx::Document Doc(FileName.toUtf8().constData());
-            Doc.open();
-            for (auto p = Doc.paragraphs(); p.has_next(); p.next())
-                for (auto r = p.runs(); r.has_next(); r.next())
-                    DocumentDisplayArea->appendPlainText(r.get_text().c_str());
+            QFileInfo FileInfo(FileName);
+            if (FileInfo.suffix() == "docx") {
+                DocumentDisplayArea->clear();
+                duckx::Document Doc(FileName.toUtf8().constData());
+                Doc.open();
+                for (auto p = Doc.paragraphs(); p.has_next(); p.next())
+                    for (auto r = p.runs(); r.has_next(); r.next()) DocumentDisplayArea->appendPlainText(r.get_text().c_str());
+            }
+            else if (FileInfo.suffix() == "pdf") {
+                DocumentDisplayArea->clear();
+                QPdfDocument Doc;
+                Doc.load(FileName);
+                for (int i = 0; i < Doc.pageCount(); ++i) DocumentDisplayArea->appendPlainText(Doc.getAllText(i).text());
+            }
         }
     }
 } // WritingMaterialsManager
