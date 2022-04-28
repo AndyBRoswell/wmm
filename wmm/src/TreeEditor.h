@@ -30,7 +30,6 @@ namespace WritingMaterialsManager {
         TreeView* const IntuitiveView;
         TextArea* const RawView;
 
-        static void OneOffInit();
         explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~TreeEditor();
 

@@ -1,7 +1,11 @@
 #include "ExtraFunctionWindow.h"
 
+#include <mutex>
+
 #include <QApplication>
 #include <QGridLayout>
+
+#include "duckx.hpp"
 
 namespace WritingMaterialsManager {
     ExtraFunctionWindow::ExtraFunctionWindow(QWidget* const Parent) : QMainWindow(Parent) {
@@ -37,22 +41,40 @@ namespace WritingMaterialsManager {
 
     ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
                                                                                                                              thisAtExtraFunctionWindow(OuterInstance) {
-        class DocumentDisplayArea : public TextArea {
-        protected:
-            void contextMenuEvent(QContextMenuEvent* const E) override {
-                QMenu* const ContextMenu = createStandardContextMenu();
-                QAction* const Open = new QAction(tr("打开"));
-                Open->setShortcut(QKeySequence::Open);
-                Open->setStatusTip(tr("打开一个文件"));
-                ContextMenu->addSeparator();
-                ContextMenu->addAction(Open);
-                ContextMenu->exec(E->globalPos());
-            }
-        };
-        DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea;
 
         setLayout(new QGridLayout);
         layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(DocumentDisplayArea);
+
+        const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DOCXExtractPage::OpenFile);
+    }
+
+    ExtraFunctionWindow::DOCXExtractPage::DocumentDisplayArea::DocumentDisplayArea() {
+        static std::once_flag StaticInitialized;
+        std::call_once(StaticInitialized, []() {
+            Open = new QAction(tr("打开"));
+            Open->setShortcut(QKeySequence::Open);
+            Open->setStatusTip(tr("打开一个文件"));
+        });
+
+        setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard); // read-only
+    }
+
+    void ExtraFunctionWindow::DOCXExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
+        QMenu* const ContextMenu = createStandardContextMenu();
+        ContextMenu->addSeparator();
+        ContextMenu->addAction(Open);
+        ContextMenu->exec(E->globalPos());
+    }
+
+    void ExtraFunctionWindow::DOCXExtractPage::OpenFile() {
+        const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("Microsoft DOCX (*.docx)"));
+        if (FileName.isEmpty() == false) {
+            duckx::Document Doc(FileName.toUtf8().constData());
+            Doc.open();
+            for (auto p = Doc.paragraphs(); p.has_next(); p.next())
+                for (auto r = p.runs(); r.has_next(); r.next())
+                    DocumentDisplayArea->appendPlainText(r.get_text().c_str());
+        }
     }
 } // WritingMaterialsManager
