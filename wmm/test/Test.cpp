@@ -397,13 +397,11 @@ void WMMTest::mongocxx::CustomDataDemo() {
 //        new QFile("test/test-data/utf16letest.json"),
 //        new QFile("test/test-data/Haruhi的沙雕日常.json"),
     };
-    QFileSystemModel TestFileFinder;
-    TestFileFinder.setRootPath("test/data");
-    for (auto i = 1; i < TestFileFinder.columnCount(); ++i) {
-        const auto CurrentFile = make_shared<QFile>(TestFileFinder.data(TestFileFinder.index("test/data", i)).toString());
-        const QFileInfo CurrentFileInfo(*CurrentFile);
-        qDebug() << "File:" << CurrentFileInfo.fileName();
-        if (CurrentFileInfo.suffix() == "json") TestFiles.emplace_back(CurrentFile);
+    const QDir TestDataDir("test/data");
+    const QStringList ExtraTestFiles = TestDataDir.entryList({ "*.json" });
+    for (const auto& ExtraTestFile: ExtraTestFiles) {
+        qDebug() << "File:" << ExtraTestFile;
+        TestFiles.emplace_back(new QFile(ExtraTestFile));
     }
     vector<shared_ptr<QTextStream>> StreamsForTestFiles;
     vector<QByteArray> TestStrings;

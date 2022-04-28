@@ -115,4 +115,5 @@ include_directories(appwmm PUBLIC ${DEP_ROOT}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/in
 file(COPY "py" DESTINATION "${PROJECT_BINARY_DIR}")
 file(COPY "src/main.qml" DESTINATION "${PROJECT_BINARY_DIR}/src")
 file(COPY "src/thm" DESTINATION "${PROJECT_BINARY_DIR}/src")
+file(COPY "test/data" DESTINATION "${PROJECT_BINARY_DIR}/test")
 file(COPY "test/test-data" DESTINATION "${PROJECT_BINARY_DIR}/test")
