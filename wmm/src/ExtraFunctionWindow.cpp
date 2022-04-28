@@ -37,6 +37,8 @@ namespace WritingMaterialsManager {
 
     ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
                                                                                                                              thisAtExtraFunctionWindow(OuterInstance) {
-
+        setLayout(new QGridLayout);
+        layout()->setContentsMargins(0, 0, 0, 0);
+        layout()->addWidget(DocumentDisplayArea);
     }
 } // WritingMaterialsManager

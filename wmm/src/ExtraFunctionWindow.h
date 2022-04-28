@@ -6,6 +6,8 @@
 #include <QStatusBar>
 #include <QToolBar>
 
+#include "TextArea.h"
+
 namespace WritingMaterialsManager {
     class ExtraFunctionWindow : public QMainWindow {
     public:
@@ -16,6 +18,8 @@ namespace WritingMaterialsManager {
             explicit DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent = nullptr);
         protected:
             ExtraFunctionWindow* const thisAtExtraFunctionWindow;
+        private:
+            TextArea* DocumentDisplayArea = new TextArea;
         };
 
         class PDFExtractPage : public QWidget {
