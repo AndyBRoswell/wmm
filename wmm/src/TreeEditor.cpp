@@ -121,7 +121,7 @@ namespace WritingMaterialsManager {
 //        RawView->update();
     }
 
-    void TreeEditor::contextMenuEvent(QContextMenuEvent* Event) {
+    void TreeEditor::contextMenuEvent(QContextMenuEvent* const Event) {
         QMenu* const ContextMenu = new QMenu(this);
         ContextMenu->addAction(MenuAction::Open);
         const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&TreeEditor::OpenFile));

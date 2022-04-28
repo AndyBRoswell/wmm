@@ -19,7 +19,6 @@ namespace WritingMaterialsManager {
         protected:
             ExtraFunctionWindow* const thisAtExtraFunctionWindow;
         private:
-            TextArea* DocumentDisplayArea = new TextArea;
         };
 
         class PDFExtractPage : public QWidget {

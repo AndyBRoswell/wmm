@@ -37,6 +37,20 @@ namespace WritingMaterialsManager {
 
     ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
                                                                                                                              thisAtExtraFunctionWindow(OuterInstance) {
+        class DocumentDisplayArea : public TextArea {
+        protected:
+            void contextMenuEvent(QContextMenuEvent* const E) override {
+                QMenu* const ContextMenu = createStandardContextMenu();
+                QAction* const Open = new QAction(tr("打开"));
+                Open->setShortcut(QKeySequence::Open);
+                Open->setStatusTip(tr("打开一个文件"));
+                ContextMenu->addSeparator();
+                ContextMenu->addAction(Open);
+                ContextMenu->exec(E->globalPos());
+            }
+        };
+        DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea;
+
         setLayout(new QGridLayout);
         layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addWidget(DocumentDisplayArea);
