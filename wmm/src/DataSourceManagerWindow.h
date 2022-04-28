@@ -10,14 +10,14 @@
 
 namespace WritingMaterialsManager {
     namespace Ui {
-        class DataSourceManager;
+        class DataSourceManagerWindow;
     }
 
-    class DataSourceManager : public QMainWindow {
+    class DataSourceManagerWindow : public QMainWindow {
     Q_OBJECT
     public:
-        explicit DataSourceManager(QWidget* Parent = nullptr);
-        ~DataSourceManager();
+        explicit DataSourceManagerWindow(QWidget* Parent = nullptr);
+        ~DataSourceManagerWindow();
     private:
         class Page: public QWidget {
         public:
@@ -27,7 +27,7 @@ namespace WritingMaterialsManager {
             QTreeView* TreeView;
         };
 
-        Ui::DataSourceManager* UI;
+        Ui::DataSourceManagerWindow* UI;
 
         MongoDBAccessor MongoDBAccessor;
     };

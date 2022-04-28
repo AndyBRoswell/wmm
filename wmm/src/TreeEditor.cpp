@@ -20,28 +20,26 @@ namespace WritingMaterialsManager {
         { "MongoDB Extended JSON", SupportedFileType::MongoDBExtendedJSON },
     }; // mainly for switch-case statement so far.
 
-    void TreeEditor::OneOffInit() {
-        MenuAction::Open = new QAction(tr("打开"));
-        MenuAction::Open->setShortcut(QKeySequence::Open);
-        MenuAction::Open->setStatusTip(tr("打开一个文件"));
-
-        Menu::Charset = new QMenu(tr("字符集"));
-        auto AvailableCharsets = QTextCodec::availableCodecs();
-        std::sort(AvailableCharsets.begin(), AvailableCharsets.end(), [](const QByteArray& A, const QByteArray& B) { return A < B; });
-        for (const auto& Charset: AvailableCharsets) {
-            QAction* const CharsetAction = new QAction(Charset);
-            MenuAction::SetCharset.emplace_back(CharsetAction);
-            Menu::Charset->addAction(CharsetAction);
-        }
-    }
-
     TreeEditor::TreeEditor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
                                                                                                                                TabView(new QTabWidget),
                                                                                                                                IntuitiveView(new TreeView),
                                                                                                                                RawView(new TextArea),
                                                                                                                                TreeModel(TreeModel) {
         static std::once_flag StaticInitCompleted;
-        std::call_once(StaticInitCompleted, OneOffInit);
+        std::call_once(StaticInitCompleted, [](){
+            MenuAction::Open = new QAction(tr("打开"));
+            MenuAction::Open->setShortcut(QKeySequence::Open);
+            MenuAction::Open->setStatusTip(tr("打开一个文件"));
+
+            Menu::Charset = new QMenu(tr("字符集"));
+            auto AvailableCharsets = QTextCodec::availableCodecs();
+            std::sort(AvailableCharsets.begin(), AvailableCharsets.end(), [](const QByteArray& A, const QByteArray& B) { return A < B; });
+            for (const auto& Charset: AvailableCharsets) {
+                QAction* const CharsetAction = new QAction(Charset);
+                MenuAction::SetCharset.emplace_back(CharsetAction);
+                Menu::Charset->addAction(CharsetAction);
+            }
+        });
 
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
@@ -121,7 +119,7 @@ namespace WritingMaterialsManager {
 //        RawView->update();
     }
 
-    void TreeEditor::contextMenuEvent(QContextMenuEvent* Event) {
+    void TreeEditor::contextMenuEvent(QContextMenuEvent* const Event) {
         QMenu* const ContextMenu = new QMenu(this);
         ContextMenu->addAction(MenuAction::Open);
         const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&TreeEditor::OpenFile));

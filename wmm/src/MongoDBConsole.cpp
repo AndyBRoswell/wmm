@@ -10,11 +10,7 @@
 namespace WritingMaterialsManager {
     MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : DatabaseConsole(Parent),
                                                                                            mongoshAccessor(mongoshCommandForm->text(), URLForm->text()),
-                                                                                           ControlArea(new QWidget()),
-                                                                                           URLForm(new TextField(MongoDBAccessor::LocalMongoDBURI)),
-                                                                                           mongoshCommandForm(new TextField(mongoshCommand)),
-                                                                                           ExecuteButton(new QPushButton("▶")),
-                                                                                           CommandForm(new TextArea("show dbs\n")) {
+                                                                                           mongoshCommandForm(new TextField(mongoshCommand)) {
         mongoshAccessor.moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, &mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
@@ -91,7 +87,7 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    MongoShAccessor::MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL) : mongoshProcess(new QProcess) {
+    MongoShAccessor::MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL) {
         mongoshProcess->start(mongoshCommand, { MongoDBURL });
         qDebug() << "Waiting for the start of mongoshProcess ...";
         qDebug() << (mongoshProcess->waitForStarted(-1) ? "Started." : "Start failed.");
@@ -124,54 +120,49 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    [[deprecated("Using MongoDBConsole instead.")]]
-    MongoDBLegacyConsole::MongoDBLegacyConsole(QWidget* const parent) : DatabaseConsole(parent),
-                                                                        MongoDBAccessor(new class MongoDBAccessor),
-                                                                        URLForm(new QPlainTextEdit(MongoDBAccessor::LocalMongoDBURI)),
-                                                                        DatabaseListView(new QListView),
-                                                                        CollectionListView(new QListView),
-                                                                        FunctionComboBox(new QComboBox),
-                                                                        ExecuteButton(new QPushButton("▶")),
-                                                                        ParamEditor(new QListView),
-                                                                        RootView(new QSplitter),
-                                                                        FunctionArea(new QSplitter),
-                                                                        DatabaseListModel(new QStringListModel),
-                                                                        CollectionListModel(new QStringListModel),
-                                                                        ParamListModel(new QStringListModel) {
-        DatabaseListView->setModel(DatabaseListModel);
-        CollectionListView->setModel(CollectionListModel);
-        ParamEditor->setModel(ParamListModel);
+    AnotherMongoDBConsole::AnotherMongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent) {
+        ParamListView->setModel(&ParamListModel);
+        connect(ExecuteButton, &QPushButton::clicked, this, &AnotherMongoDBConsole::ExecuteFunction);
 
-        FunctionArea->addWidget(DatabaseListView);
-        FunctionArea->addWidget(CollectionListView);
-        QWidget* const ControlArea = new QWidget;
-        QGridLayout* const ControlAreaLayout = new QGridLayout;
-        ControlArea->setLayout(ControlAreaLayout);
-        ControlAreaLayout->addWidget(URLForm);
-        QWidget* const ExecutionArea = new QWidget;
-        QHBoxLayout* const ExecutionAreaLayout = new QHBoxLayout;
-        ExecutionArea->setLayout(ExecutionAreaLayout);
-        ExecutionAreaLayout->addWidget(FunctionComboBox);
-        ExecutionAreaLayout->addWidget(ExecuteButton);
-        ControlAreaLayout->addWidget(ExecutionArea);
-        ControlAreaLayout->setColumnStretch(0, 1);
-        ControlAreaLayout->setColumnStretch(1, 0);
-        ExecutionAreaLayout->setStretch(0, 1);
-        ExecutionAreaLayout->setStretch(1, 0);
-        FunctionArea->addWidget(ControlArea);
-        FunctionArea->setStretchFactor(0, 1);
-        FunctionArea->setStretchFactor(1, 1);
-        FunctionArea->setStretchFactor(2, 2);
+        QWidget* const CtrlArea = new QWidget;
+        QVBoxLayout* const CtrlAreaLayout = new QVBoxLayout;
+        CtrlAreaLayout->setContentsMargins(0, 0, 0, 0);
+        CtrlAreaLayout->setSpacing(2);
+        CtrlArea->setLayout(CtrlAreaLayout);
 
-        RootView->setOrientation(Qt::Vertical);
-        RootView->addWidget(FunctionArea);
-        RootView->addWidget(ParamEditor);
-        RootView->setStretchFactor(0, 1);
-        RootView->setStretchFactor(1, 2);
+        QWidget* const ExecArea = new QWidget;
+        QHBoxLayout* const ExecAreaLayout = new QHBoxLayout;
+        ExecAreaLayout->setContentsMargins(0, 0, 0, 0);
+        ExecArea->setLayout(ExecAreaLayout);
+        QSplitter* const ExecParamArea = new QSplitter;
+        ExecParamArea->addWidget(DatabaseNameForm);
+        ExecParamArea->addWidget(CollectionNameForm);
+        ExecParamArea->addWidget(FunctionComboBox);
+        ExecAreaLayout->addWidget(ExecParamArea);
+        ExecAreaLayout->addWidget(ExecuteButton);
+        ExecAreaLayout->setStretch(1, 0);
 
-        setLayout(new QGridLayout);
-        layout()->addWidget(RootView);
+        CtrlAreaLayout->addWidget(URLForm);
+        CtrlAreaLayout->addWidget(ExecArea);
+
+        QVBoxLayout* const MainLayout = new QVBoxLayout;
+        MainLayout->setContentsMargins(0, 0, 0, 0);
+        MainLayout->setSpacing(2);
+        setLayout(MainLayout);
+        MainLayout->addWidget(CtrlArea);
+        MainLayout->addWidget(ParamListView);
+        MainLayout->setStretch(0, 0);
     }
 
-    [[deprecated("Using MongoDBConsole instead.")]] MongoDBLegacyConsole::~MongoDBLegacyConsole() {}
+    AnotherMongoDBConsole::~AnotherMongoDBConsole() {}
+
+    void AnotherMongoDBConsole::ExecuteFunction() {
+        static mongocxx::database Database;
+        static mongocxx::collection Collection;
+        static QByteArray LastAccessedDatabaseName;
+        static QByteArray LastAccessedCollectionName;
+        const QByteArray CurrentDatabaseName = DatabaseNameForm->text().toUtf8();
+        const QByteArray CurrentCollectionName = CollectionNameForm->text().toUtf8();
+        if (CurrentDatabaseName != LastAccessedDatabaseName) {}
+    }
 }

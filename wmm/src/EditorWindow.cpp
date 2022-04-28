@@ -9,16 +9,18 @@
 #include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
-    EditorWindow::EditorWindow(QWidget* parent) : QMainWindow(parent),
+    EditorWindow::EditorWindow(QWidget* const Parent) : QMainWindow(Parent),
                                                   UI(new Ui::EditorWindow),
                                                   RootView(new QSplitter(this)) {
         UI->setupUi(this);
 
         QTabWidget* const TabView = new QTabWidget;
         auto* const MDBCPage = new MongoConAndEditorPage(this);
+        auto* const AMDBCPage = new AnotherMongoConAndEditorPage(this);
         auto* const EditorPage = new EditorOnlyPage(this);
         auto* const PyInteractorPage = new PythonInteractorPage(this);
         TabView->addTab(MDBCPage, "MongoDB Console");
+        TabView->addTab(AMDBCPage, "Another MongoDB Console");
         TabView->addTab(EditorPage, "TreeEditor Only");
         TabView->addTab(PyInteractorPage, "Python Interactor");
         RootView->addWidget(TabView);
@@ -32,7 +34,6 @@ namespace WritingMaterialsManager {
         centralWidget()->setLayout(new QGridLayout);
         centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
         centralWidget()->layout()->addWidget(RootView);
-        show();
     }
 
     EditorWindow::~EditorWindow() {
@@ -102,6 +103,19 @@ namespace WritingMaterialsManager {
             connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
             connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
         }
+
+        RootView->addWidget(Console);
+        RootView->addWidget(Editor);
+        RootView->setStretchFactor(0, 1);
+        RootView->setStretchFactor(1, 4);
+    }
+
+/// ----------------------------------------------------------------
+
+    EditorWindow::AnotherMongoConAndEditorPage::AnotherMongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
+        AnotherMongoDBConsole* const Console = new AnotherMongoDBConsole;
+        TreeEditor* const Editor = new TreeEditor;
+        Console->AddAssociatedEditor(Editor);
 
         RootView->addWidget(Console);
         RootView->addWidget(Editor);

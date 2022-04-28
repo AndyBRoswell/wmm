@@ -1,0 +1,35 @@
+{
+    "meta": {
+        "标题": "メグメル ~cuckool mix 2007~",
+        "作词": "",
+        "作曲": "",
+        "编曲": "",
+        "演唱": "riya",
+        "艺术家": "eufonius",
+        "专辑": "メグメル ~cuckool mix 2007~/だんご大家族",
+        "专辑艺术家": "",
+        "日期": "",
+        "曲目": "",
+        "译者": "",
+        "备注" : "TV动画《CLANNAD》片头曲"
+    },
+    "gmeta": {
+        "关键词": [],
+        "流派": [],
+        "情感": [],
+        "标签": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/eufonius - メグメル ~cuckool mix 2007~.docx",
+        ""
+    ],
+    "comment": ""
+}

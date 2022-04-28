@@ -375,10 +375,7 @@ void WMMTest::mongocxx::Tutorial() {
 }
 
 void WMMTest::mongocxx::CustomDataDemo() {
-    using std::exception;
-    using std::move;
-    using std::runtime_error;
-    using std::vector;
+    using namespace std;
 
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -395,13 +392,19 @@ void WMMTest::mongocxx::CustomDataDemo() {
     test.drop();
 
     // prepare JSON strings for test
-    vector<QFile*> TestFiles{
-        new QFile("test/test-data/utf8test.json"),
+    vector<shared_ptr<QFile>> TestFiles{
+//        new QFile("test/test-data/utf8test.json"),
+//        new QFile("test/test-data/utf16letest.json"),
 //        new QFile("test/test-data/Haruhi的沙雕日常.json"),
     };
-    vector<QTextStream*> StreamsForTestFiles;
+    const QDir TestDataDir("test/data");
+    const QStringList ExtraTestFiles = TestDataDir.entryList({ "*.json" });
+    for (const auto& ExtraTestFile: ExtraTestFiles) {
+        TestFiles.emplace_back(new QFile("test/data/" + ExtraTestFile));
+    }
+    vector<shared_ptr<QTextStream>> StreamsForTestFiles;
     vector<QByteArray> TestStrings;
-    for (const auto TestFile: TestFiles) {
+    for (const auto& TestFile: TestFiles) {
         TestFile->open(QIODevice::ReadOnly); // don't forget to open file
         TestStrings.emplace_back(move(TestFile->readAll()));
     }
@@ -460,4 +463,3 @@ void WMMTest::DuckX::QuickStart() {
 
     LastFinishedFn.assign(__FUNCTION__);
 }
-

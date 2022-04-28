@@ -1,0 +1,36 @@
+{
+    "meta": {
+        "title": "Winter in My Heart",
+        "lyricist": "",
+        "composer": "",
+        "songwriter": "",
+        "arranger": "",
+        "artist": "beFour",
+        "producer": "",
+        "album": "Hand in Hand (The Winter Album)",
+        "album artist": "beFour",
+        "publisher": "",
+        "date": "",
+        "track": "",
+        "translator": ""
+    },
+    "gmeta": {
+        "keywords": [],
+        "genre": [],
+        "sentiments": [],
+        "labels": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/beFour - Winter in My Heart.docx",
+        ""
+    ],
+    "comment": ""
+}

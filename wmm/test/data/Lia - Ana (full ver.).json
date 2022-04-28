@@ -1,0 +1,38 @@
+{
+    "meta": {
+        "title": "Ana (full ver.)",
+        "lyricist": "萩原ゆう",
+        "composer": "",
+        "songwriter": "",
+        "arranger": "戸越まごめ",
+        "vocal": "Lia",
+        "artist": "",
+        "producer": "",
+        "album": "CLANNAD ORIGINAL SOUNDTRACK",
+        "album artist": "Key Sounds Label",
+        "date": "2004-08-13",
+        "disc": 3,
+        "track": 14,
+        "translator": "",
+        "comment": ""
+    },
+    "gmeta": {
+        "keywords": [],
+        "genre": [],
+        "sentiments": [],
+        "labels": []
+    },
+    "type": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "audio/x-flac"
+    ],
+    "is link": [
+        true,
+        true
+    ],
+    "content": [
+        "doc/Lia - Ana (full ver.).docx",
+        ""
+    ],
+    "comment": ""
+}

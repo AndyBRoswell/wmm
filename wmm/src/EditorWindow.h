@@ -15,7 +15,7 @@ namespace WritingMaterialsManager {
     public:
         QSplitter* RootView;
 
-        explicit EditorWindow(QWidget* Parent = nullptr);
+        explicit EditorWindow(QWidget* const Parent = nullptr);
         ~EditorWindow();
     public slots:
         void UpdateWindowTitleWithPathName();
@@ -38,6 +38,11 @@ namespace WritingMaterialsManager {
         class MongoConAndEditorPage : public Page {
         public:
             explicit MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
+        };
+
+        class AnotherMongoConAndEditorPage : public Page {
+        public:
+            explicit AnotherMongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent = nullptr);
         };
 
         class EditorOnlyPage : public Page {

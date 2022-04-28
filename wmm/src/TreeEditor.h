@@ -30,7 +30,6 @@ namespace WritingMaterialsManager {
         TreeView* const IntuitiveView;
         TextArea* const RawView;
 
-        static void OneOffInit();
         explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~TreeEditor();
 
@@ -52,7 +51,7 @@ namespace WritingMaterialsManager {
         void SetCharset(); // This slot is for QAction::triggered()
         void SetCharset(const QByteArray& Charset);
     protected:
-        void contextMenuEvent(QContextMenuEvent* Event) override;
+        void contextMenuEvent(QContextMenuEvent* const Event) override;
     private:
         static const std::unordered_map<QByteArray, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
         struct Menu {
