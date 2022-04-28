@@ -12,7 +12,7 @@
 #include <QStyleFactory>
 
 // headers of wmm
-#include "DataSourceManager.h"
+#include "DataSourceManagerWindow.h"
 #include "EditorWindow.h"
 #include "ExtraFunctionWindow.h"
 
@@ -81,11 +81,11 @@ int main(int argc, char* argv[]) {
 
     int ret = Test::Start();
 
-    auto DataSourceManagerWnd = new class DataSourceManager();
+    auto DataSourceManagerWnd = new class DataSourceManagerWindow;
     DataSourceManagerWnd->showMaximized();
-    auto EditorWnd = new class EditorWindow();
+    auto EditorWnd = new class EditorWindow;
     EditorWnd->showMaximized();
-    auto ExtFnWnd = new class ExtraFunctionWindow();
+    auto ExtFnWnd = new class ExtraFunctionWindow;
     ExtFnWnd->showMaximized();
 
     return App.exec();

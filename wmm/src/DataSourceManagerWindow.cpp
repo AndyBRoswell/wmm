@@ -1,5 +1,5 @@
-#include "DataSourceManager.h"
-#include "ui_DataSourceManager.h"
+#include "DataSourceManagerWindow.h"
+#include "ui_DataSourceManagerWindow.h"
 
 #include <QFileSystemModel>
 #include <QGridLayout>
@@ -8,7 +8,7 @@
 #include "QtTreeModel.h"
 
 namespace WritingMaterialsManager {
-    DataSourceManager::DataSourceManager(QWidget* Parent) : QMainWindow(Parent), UI(new Ui::DataSourceManager) {
+    DataSourceManagerWindow::DataSourceManagerWindow(QWidget* Parent) : QMainWindow(Parent), UI(new Ui::DataSourceManagerWindow) {
         UI->setupUi(this);
 
         // preparation
@@ -33,18 +33,18 @@ namespace WritingMaterialsManager {
         UI->DataSourceTab->addTab(FileSystemPage, "File System");
     }
 
-    DataSourceManager::~DataSourceManager() {
+    DataSourceManagerWindow::~DataSourceManagerWindow() {
         while (UI->DataSourceTab->count()) { delete UI->DataSourceTab->widget(0); }
         delete UI;
     }
 
 /// ----------------------------------------------------------------
 
-    DataSourceManager::Page::Page(QWidget* const Parent) : QWidget(Parent), TreeView(new QTreeView(this)) {
+    DataSourceManagerWindow::Page::Page(QWidget* const Parent) : QWidget(Parent), TreeView(new QTreeView(this)) {
         setLayout(new QGridLayout);
         layout()->addWidget(TreeView);
         show();
     }
 
-    DataSourceManager::Page::~Page() {}
+    DataSourceManagerWindow::Page::~Page() {}
 }

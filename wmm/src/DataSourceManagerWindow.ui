@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WritingMaterialsManager::DataSourceManager</class>
- <widget class="QMainWindow" name="WritingMaterialsManager::DataSourceManager">
+ <class>WritingMaterialsManager::DataSourceManagerWindow</class>
+ <widget class="QMainWindow" name="WritingMaterialsManager::DataSourceManagerWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
