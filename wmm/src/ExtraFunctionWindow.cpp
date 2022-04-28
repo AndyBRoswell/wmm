@@ -22,5 +22,15 @@ namespace WritingMaterialsManager {
         ToolBar->setWindowTitle(QCoreApplication::translate("WritingMaterialsManager::ExtraFunctionWindow", "ToolBar", nullptr));
 
         QMetaObject::connectSlotsByName(this);
+
+        // initialize demo pages
+
+    }
+
+/// ----------------------------------------------------------------
+
+    ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
+                                                                                                                             thisAtExtraFunctionWindow(OuterInstance) {
+        
     }
 } // WritingMaterialsManager
