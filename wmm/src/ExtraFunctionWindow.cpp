@@ -1,6 +1,7 @@
 #include "ExtraFunctionWindow.h"
 
 #include <QApplication>
+#include <QGridLayout>
 
 namespace WritingMaterialsManager {
     ExtraFunctionWindow::ExtraFunctionWindow(QWidget* const Parent) : QMainWindow(Parent) {
@@ -24,13 +25,18 @@ namespace WritingMaterialsManager {
         QMetaObject::connectSlotsByName(this);
 
         // initialize demo pages
+        RootView->addTab(new DOCXExtractPage(this), "DOCX Extract");
 
+        QGridLayout* const MainLayout = new QGridLayout;
+        CentralWidget->setLayout(MainLayout);
+        MainLayout->setContentsMargins(0, 0, 0, 0);
+        MainLayout->addWidget(RootView);
     }
 
 /// ----------------------------------------------------------------
 
     ExtraFunctionWindow::DOCXExtractPage::DOCXExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
                                                                                                                              thisAtExtraFunctionWindow(OuterInstance) {
-        
+
     }
 } // WritingMaterialsManager

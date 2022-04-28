@@ -34,7 +34,6 @@ namespace WritingMaterialsManager {
         centralWidget()->setLayout(new QGridLayout);
         centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
         centralWidget()->layout()->addWidget(RootView);
-        show();
     }
 
     EditorWindow::~EditorWindow() {
