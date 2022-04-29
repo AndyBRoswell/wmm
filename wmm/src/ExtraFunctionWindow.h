@@ -15,31 +15,6 @@ namespace WritingMaterialsManager {
     public:
         explicit ExtraFunctionWindow(QWidget* const Parent = nullptr);
     private:
-        class DocumentExtractPage : public QWidget {
-        public:
-            explicit DocumentExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent = nullptr);
-        protected:
-            ExtraFunctionWindow* const thisAtExtraFunctionWindow;
-        private:
-            class DocumentDisplayArea : public TextArea {
-            public:
-                inline static QAction* Open;
-
-                explicit DocumentDisplayArea(DocumentExtractPage* const OuterInstance);
-                void contextMenuEvent(QContextMenuEvent* const E) override;
-            private:
-                DocumentExtractPage* const thisAtDocumentExtractPage;
-            };
-
-            DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea(this);
-
-            void OpenFile();
-        };
-
-        class PDFExtractPage : public QWidget {
-
-        };
-
         inline static const char* DefaultWindowTitle = "附加功能";
 
         QWidget* const CentralWidget = new QWidget(this);
@@ -48,6 +23,29 @@ namespace WritingMaterialsManager {
         QStatusBar* const StatusBar = new QStatusBar(this);
 
         QTabWidget* const RootView = new QTabWidget;
+    };
+
+    class DocumentExtractPage : public QWidget {
+    Q_OBJECT
+    public:
+        inline static const char* DefaultPageTitle = "DOCX/PDF提取";
+        inline static const char* DefaultPageTitleSuffix = "DOCX/PDF提取 - ";
+
+        explicit DocumentExtractPage(QWidget* const Parent = nullptr);
+    signals:
+        void DocumentOpened(const QString& FileName);
+    private:
+        class DocumentDisplayArea : public TextArea {
+        public:
+            inline static QAction* Open;
+
+            explicit DocumentDisplayArea();
+            void contextMenuEvent(QContextMenuEvent* const E) override;
+        };
+
+        DocumentDisplayArea* const DocumentDisplayArea = new class DocumentDisplayArea;
+
+        void OpenFile();
     };
 } // WritingMaterialsManager
 

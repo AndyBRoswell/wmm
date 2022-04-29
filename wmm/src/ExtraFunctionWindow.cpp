@@ -30,7 +30,14 @@ namespace WritingMaterialsManager {
         QMetaObject::connectSlotsByName(this);
 
         // initialize demo pages
-        RootView->addTab(new DocumentExtractPage(this), "DOCX/PDF Extract");
+        DocumentExtractPage* const DocumentExtractPage = new class DocumentExtractPage(this);
+        RootView->addTab(DocumentExtractPage, tr(DocumentExtractPage::DefaultPageTitle));
+        connect(DocumentExtractPage, &DocumentExtractPage::DocumentOpened, [=](const QString& FileName) {
+//            qDebug() << "sender() ==" << sender();
+//            qDebug() << "currentWidget() ==" << RootView->currentWidget();
+//            RootView->setTabText(RootView->indexOf(static_cast<QWidget*>(sender())), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
+            RootView->setTabText(RootView->indexOf(DocumentExtractPage), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
+        });
 
         QGridLayout* const MainLayout = new QGridLayout;
         CentralWidget->setLayout(MainLayout);
@@ -40,8 +47,7 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    ExtraFunctionWindow::DocumentExtractPage::DocumentExtractPage(ExtraFunctionWindow* const OuterInstance, QWidget* const Parent) : QWidget(Parent),
-                                                                                                                                     thisAtExtraFunctionWindow(OuterInstance) {
+    DocumentExtractPage::DocumentExtractPage(QWidget* const Parent) : QWidget(Parent) {
 
         setLayout(new QGridLayout);
         layout()->setContentsMargins(0, 0, 0, 0);
@@ -50,7 +56,7 @@ namespace WritingMaterialsManager {
         const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
     }
 
-    ExtraFunctionWindow::DocumentExtractPage::DocumentDisplayArea::DocumentDisplayArea(DocumentExtractPage* const OuterInstance) : thisAtDocumentExtractPage(OuterInstance) {
+    DocumentExtractPage::DocumentDisplayArea::DocumentDisplayArea() {
         static std::once_flag StaticInitialized;
         std::call_once(StaticInitialized, []() {
             Open = new QAction(tr("打开"));
@@ -61,14 +67,14 @@ namespace WritingMaterialsManager {
         setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard); // read-only
     }
 
-    void ExtraFunctionWindow::DocumentExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
+    void DocumentExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
         QMenu* const ContextMenu = createStandardContextMenu();
         ContextMenu->addSeparator();
         ContextMenu->addAction(Open);
         ContextMenu->exec(E->globalPos());
     }
 
-    void ExtraFunctionWindow::DocumentExtractPage::OpenFile() {
+    void DocumentExtractPage::OpenFile() {
         const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("Microsoft DOCX (*.docx);;Portable Document Format(*.pdf)"));
         if (FileName.isEmpty() == false) {
             QFileInfo FileInfo(FileName);
@@ -86,5 +92,6 @@ namespace WritingMaterialsManager {
                 for (int i = 0; i < Doc.pageCount(); ++i) DocumentDisplayArea->appendPlainText(Doc.getAllText(i).text());
             }
         }
+        emit DocumentOpened(FileName);
     }
 } // WritingMaterialsManager
