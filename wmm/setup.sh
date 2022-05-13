@@ -22,3 +22,10 @@ mkdir 3rd/build
 mkdir 3rd/download
 mkdir 3rd/install
 
+# lib information:
+    # 0. lib name
+    # 1. download link
+    # 2. extra cmake flags
+    # 3. cmake prefix path
+$LibCount=6;
+
