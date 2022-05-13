@@ -29,4 +29,4 @@ mkdir 3rd/install
     # 3. cmake prefix path
 LibCount=6
 
-Lib[0]=('mongo-c-driver-1.21.0' 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.21.0.zip' "-DBUILD_VERSION='1.21.0'" "")
+Lib0=('mongo-c-driver-1.21.0' 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.21.0.zip' "-DBUILD_VERSION='1.21.0'" "")
