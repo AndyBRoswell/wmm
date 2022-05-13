@@ -1,5 +1,5 @@
 # This script MUST be put at the root dir of this project.
-# Remember to run "set-executionpolicy bypass process" and select "Yes" or "Yes to All" before running scripts in PowerShell.
+# Remember to run "set-executionpolicy bypass process" and select "Yes" or "Yes to All" before running scripts in PowerShell v7.2.2 and earlier.
 # Running this script will DELETE all the dependencies downloaded, built and installed, and then REDOWNLOAD, REBUILD and REINSTALL them again.
 
 $cwd = $pwd
