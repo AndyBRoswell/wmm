@@ -4,9 +4,9 @@
 cwd=$PWD
 shsd=$cwd/$(dirname $0)
 prjd=$shsd
-3rdd=$shsd/3rd
-buildd=${3rdd}/build
-dld=${3rdd}/download
-instd=${3rdd}/install/GCC
+thirdd=$shsd/3rd
+buildd=$thirdd/build
+dld=$thirdd/download
+instd=$thirdd/install/GCC
 
-echo $cwd $shsd $prjd ${3rdd} $buildd $dld $instd
+echo $cwd $shsd $prjd $thirdd $buildd $dld $instd
