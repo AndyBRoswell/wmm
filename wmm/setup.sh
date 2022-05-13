@@ -27,5 +27,5 @@ mkdir 3rd/install
     # 1. download link
     # 2. extra cmake flags
     # 3. cmake prefix path
-$LibCount=6
+LibCount=6
 
