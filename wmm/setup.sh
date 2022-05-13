@@ -4,7 +4,7 @@
 cwd=$PWD
 shsd=$cwd/$(dirname $0)
 prjd=$shsd
-${3rdd}=$shsd/3rd
+3rdd=$shsd/3rd
 buildd=${3rdd}/build
 dld=${3rdd}/download
 instd=${3rdd}/install/GCC
