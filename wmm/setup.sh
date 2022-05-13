@@ -11,10 +11,10 @@ instd=$thirdd/install/GCC
 
 # clear previous builds and dependencies
 cd $prjd
-if [-d build]; then
+if [ -d build ]; then
     rm -rf build
 fi
-if [-d 3rd]; then
+if [ -d 3rd ]; then
     rm -rf 3rd
 fi
 mkdir 3rd
@@ -27,5 +27,5 @@ mkdir 3rd/install
     # 1. download link
     # 2. extra cmake flags
     # 3. cmake prefix path
-$LibCount=6;
+$LibCount=6
 
