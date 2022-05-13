@@ -15,9 +15,9 @@ cd $prjd
 if (Test-Path build) { rm -r build } # also delete the previous builds of the entire project
 if (Test-Path 3rd) { rm -r 3rd }
 mkdir 3rd
-mkdir 3rd\build
-mkdir 3rd\download
-mkdir 3rd\install
+mkdir 3rd/build
+mkdir 3rd/download
+mkdir 3rd/install
 
 # web client for downloads
 $WebClient = New-Object System.Net.WebClient
