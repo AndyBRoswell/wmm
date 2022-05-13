@@ -9,4 +9,16 @@ buildd=$thirdd/build
 dld=$thirdd/download
 instd=$thirdd/install/GCC
 
-echo $cwd $shsd $prjd $thirdd $buildd $dld $instd
+# clear previous builds and dependencies
+cd $prjd
+if [-d build]; then
+    rm -rf build
+fi
+if [-d 3rd]; then
+    rm -rf 3rd
+fi
+mkdir 3rd
+mkdir 3rd/build
+mkdir 3rd/download
+mkdir 3rd/install
+
