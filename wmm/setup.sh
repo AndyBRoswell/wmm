@@ -3,3 +3,4 @@
 
 cwd=$pwd
 echo $cwd
+echo $pwd
