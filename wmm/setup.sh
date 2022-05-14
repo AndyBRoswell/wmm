@@ -30,3 +30,4 @@ mkdir 3rd/install
 LibCount=6
 
 Lib[0, 1]='mongo-c-driver-1.21.0'
+echo ${Lib[0, 1]}
