@@ -27,7 +27,7 @@ mkdir 3rd/install
     # 1. download link
     # 2. extra cmake flags
     # 3. cmake prefix path
-declare -a Lib
+declare -A Lib
 LibCount=6
 
 Lib[0, 1]='mongo-c-driver-1.21.0'
