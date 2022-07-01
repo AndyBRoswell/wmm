@@ -23,7 +23,7 @@ message(STATUS "C++ Compiler Architecture ID: ${CMAKE_CXX_COMPILER_ARCHITECTURE_
 message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-find_package(Qt6 COMPONENTS Core Gui Quick QuickControls2 Widgets Core5Compat PdfWidgets REQUIRED)
+find_package(Qt6 6.3 COMPONENTS Core Gui Quick QuickControls2 Widgets Core5Compat PdfWidgets REQUIRED)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/src/*.c*

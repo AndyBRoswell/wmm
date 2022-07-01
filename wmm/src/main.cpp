@@ -71,13 +71,13 @@ int main(int argc, char* argv[]) {
         qApp->setPalette(palette);
     }
 
-    QQmlApplicationEngine QMLEngine;
-//    const QUrl MainQMLFile(u"qrc:/wmm/src/main.qml"_qs);
-    const QUrl MainQMLFile = QUrl::fromLocalFile(u"src/main.qml"_qs);
-    QObject::connect(&QMLEngine, &QQmlApplicationEngine::objectCreated, &App,
-                     [MainQMLFile](QObject* Obj, const QUrl& ObjURL) { if (!Obj && MainQMLFile == ObjURL) QCoreApplication::exit(-1); },
-                     Qt::QueuedConnection);
-    QMLEngine.load(MainQMLFile);
+//    QQmlApplicationEngine QMLEngine;
+////    const QUrl MainQMLFile(u"qrc:/wmm/src/main.qml"_qs);
+//    const QUrl MainQMLFile = QUrl::fromLocalFile(u"src/main.qml"_qs);
+//    QObject::connect(&QMLEngine, &QQmlApplicationEngine::objectCreated, &App,
+//                     [MainQMLFile](QObject* Obj, const QUrl& ObjURL) { if (!Obj && MainQMLFile == ObjURL) QCoreApplication::exit(-1); },
+//                     Qt::QueuedConnection);
+//    QMLEngine.load(MainQMLFile);
 
     int ret = Test::Start();
 
