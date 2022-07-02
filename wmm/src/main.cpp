@@ -1,22 +1,19 @@
 #include "predefined.h"
 
 #include <QApplication>
-#include <QQmlApplicationEngine>
 
 #include <QLocale>
 #include <QTranslator>
 
-#include <QFile>
-#include <QQuickStyle>
 #include <QStyle>
 #include <QStyleFactory>
 
-// headers of wmm
+// headers of this project wmm
 #include "DataSourceManagerWindow.h"
 #include "EditorWindow.h"
 #include "ExtraFunctionWindow.h"
 
-// tests
+// tests of this project wmm
 #include "test/Test.h"
 
 // NOTE: Meta object features are NOT supported for nested classes.
@@ -26,58 +23,41 @@ using namespace std::chrono_literals;
 using namespace WritingMaterialsManager;
 
 int main(int argc, char* argv[]) {
-    QApplication App(argc, argv);
+    QApplication App(argc, argv); // <only 1 instance> manages the Widgets app's control flow and main settings
 
-    QTranslator Translator;
-    const QStringList UILanguages = QLocale::system().uiLanguages();
+    QTranslator Translator; // internationalization support for text output
+    const QStringList UILanguages = QLocale::system().uiLanguages(); // A list of locale names for translation in preference order
     for (const QString& Locale: UILanguages) {
         const QString baseName = "wmm_" + QLocale(Locale).name();
-        if (Translator.load(":/i18n/" + baseName)) {
-            App.installTranslator(&Translator);
+        if (Translator.load(":/i18n/" + baseName)) { // load translation
+            QApplication::installTranslator(&Translator);
             break;
         }
     }
 
-    // default theme
-    {
-        QQuickStyle::setStyle("Universal"); // default theme of the start window
-
-//        QFile DarkThemeStyleSheetFile("src/thm/dark/style.qss");
-//        DarkThemeStyleSheetFile.open(QIODevice::ReadOnly);
-//        App.setStyleSheet(DarkThemeStyleSheetFile.readAll());
-    }
-    {
-//        qApp->setStyle(QStyleFactory::create("fusion"));
+    {// default theme
         qApp->setStyle(QStyleFactory::create("windows"));
 
-        QPalette palette;
-        palette.setColor(QPalette::Window, Qt::black);
-        palette.setColor(QPalette::WindowText, Qt::white);
-        palette.setColor(QPalette::Base, QColor(15,15,15));
-        palette.setColor(QPalette::AlternateBase, QColor(53,53,53));
-        palette.setColor(QPalette::ToolTipBase, Qt::white);
-        palette.setColor(QPalette::ToolTipText, Qt::white);
-        palette.setColor(QPalette::Text, Qt::white);
-        palette.setColor(QPalette::Button, QColor(53,53,53));
-        palette.setColor(QPalette::ButtonText, Qt::white);
-        palette.setColor(QPalette::BrightText, Qt::red);
+        QPalette p; // contains color groups (active, disabled, inactive) for each widget state for Widgets, etc
+        p.setColor(QPalette::Window, Qt::black);
+        p.setColor(QPalette::WindowText, Qt::white);
+        p.setColor(QPalette::Base, QColor(15, 15, 15));
+        p.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+        p.setColor(QPalette::ToolTipBase, Qt::white);
+        p.setColor(QPalette::ToolTipText, Qt::white);
+        p.setColor(QPalette::Text, Qt::white);
+        p.setColor(QPalette::Button, QColor(53, 53, 53));
+        p.setColor(QPalette::ButtonText, Qt::white);
+        p.setColor(QPalette::BrightText, Qt::red);
 
-        palette.setColor(QPalette::Highlight, QColor(142,45,197).lighter());
-        palette.setColor(QPalette::HighlightedText, Qt::black);
+        p.setColor(QPalette::Highlight, QColor(142, 45, 197).lighter());
+        p.setColor(QPalette::HighlightedText, Qt::black);
 
-        palette.setColor(QPalette::Disabled, QPalette::Text, Qt::darkGray);
-        palette.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
+        p.setColor(QPalette::Disabled, QPalette::Text, Qt::darkGray);
+        p.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
 
-        qApp->setPalette(palette);
+        QApplication::setPalette(p);
     }
-
-    QQmlApplicationEngine QMLEngine;
-//    const QUrl MainQMLFile(u"qrc:/wmm/src/main.qml"_qs);
-    const QUrl MainQMLFile = QUrl::fromLocalFile(u"src/main.qml"_qs);
-    QObject::connect(&QMLEngine, &QQmlApplicationEngine::objectCreated, &App,
-                     [MainQMLFile](QObject* Obj, const QUrl& ObjURL) { if (!Obj && MainQMLFile == ObjURL) QCoreApplication::exit(-1); },
-                     Qt::QueuedConnection);
-    QMLEngine.load(MainQMLFile);
 
     int ret = Test::Start();
 
@@ -88,5 +68,5 @@ int main(int argc, char* argv[]) {
     auto ExtFnWnd = new class ExtraFunctionWindow;
     ExtFnWnd->showMaximized();
 
-    return App.exec();
+    return QApplication::exec(); // Enters the main event loop and waits until exit() is called
 }

@@ -16,4 +16,4 @@ namespace WritingMaterialsManager {
     };
 }
 
-#endif //WMM_ALGORITHM_H
+#endif //WRITING_MATERIALS_MANAGER_ALGORITHM_H

@@ -21,7 +21,6 @@
 #include <QJsonDocument>
 #include <QKeyEvent>
 #include <QProcess>
-#include <QQmlProperty>
 #include <QString>
 #include <QStringView> // QStringRef removed in Qt 6.
 #include <QTextCodec>
