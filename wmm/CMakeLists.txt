@@ -23,7 +23,7 @@ message(STATUS "C++ Compiler Architecture ID: ${CMAKE_CXX_COMPILER_ARCHITECTURE_
 message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 
-find_package(Qt6 6.3 COMPONENTS Core Gui Quick QuickControls2 Widgets Core5Compat PdfWidgets REQUIRED)
+find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
 
 file(GLOB_RECURSE SOURCES
         ${PROJECT_SOURCE_DIR}/src/*.c*
@@ -52,12 +52,6 @@ qt_add_executable(appwmm
         ${CODE_FILES}
         )
 
-qt_add_qml_module(appwmm
-        URI wmm
-        VERSION 1.0
-        QML_FILES src/main.qml
-        )
-
 set_target_properties(appwmm PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -67,7 +61,7 @@ set_target_properties(appwmm PROPERTIES
         )
 
 target_compile_definitions(appwmm PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(appwmm PUBLIC Qt6::Core Qt6::Quick Qt6::QuickControls2 Qt6::Widgets Qt6::Core5Compat Qt6::PdfWidgets)
+target_link_libraries(appwmm PUBLIC Qt6::Core Qt6::Widgets Qt6::Core5Compat Qt6::PdfWidgets)
 
 if (QT_VERSION_MAJOR EQUAL 6)
     qt_import_qml_plugins(appwmm)
@@ -113,7 +107,6 @@ include_directories(appwmm PUBLIC ${DEP_ROOT}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/in
 
 # copy essential data
 file(COPY "py" DESTINATION "${PROJECT_BINARY_DIR}")
-file(COPY "src/main.qml" DESTINATION "${PROJECT_BINARY_DIR}/src")
 file(COPY "src/thm" DESTINATION "${PROJECT_BINARY_DIR}/src")
 file(COPY "test/data" DESTINATION "${PROJECT_BINARY_DIR}/test")
 file(COPY "test/test-data" DESTINATION "${PROJECT_BINARY_DIR}/test")
