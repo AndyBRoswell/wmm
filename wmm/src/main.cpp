@@ -1,12 +1,10 @@
 #include "predefined.h"
 
 #include <QApplication>
-#include <QQmlApplicationEngine>
 
 #include <QLocale>
 #include <QTranslator>
 
-#include <QQuickStyle>
 #include <QStyle>
 #include <QStyleFactory>
 
@@ -70,5 +68,5 @@ int main(int argc, char* argv[]) {
     auto ExtFnWnd = new class ExtraFunctionWindow;
     ExtFnWnd->showMaximized();
 
-    return QApplication::exec();
+    return QApplication::exec(); // Enters the main event loop and waits until exit() is called
 }
