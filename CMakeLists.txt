@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(wmm VERSION 0.1 LANGUAGES CXX)
+project(wmm VERSION 0.1 LANGUAGES CXX) # Writing Materials Manager (WMM)
 
 # basic compilation options
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # Automatically add the current source and build directories to the include path (without subdirectories).
