@@ -18,12 +18,12 @@ IN DEVELOPMENT
 
 # zh-CN
 
-# 编译
+# 依赖、开发与编译
 
 ## Windows
 
-安装：
-- Visual Studio 2022，或至少安装 MSVC（VS C++ Build Tools）14.3
+需要安装的软件：
+- Visual Studio 2022，或：至少安装 MSVC（VS C++ Build Tools）14.3（其它支持 C17 和 C++20 的版本亦可）
 - CMake
 - Qt（版本不低于 6.3）
 - MongoDB
