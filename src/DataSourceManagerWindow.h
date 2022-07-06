@@ -4,15 +4,13 @@
 #include <memory>
 
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QStatusBar>
 #include <QTreeView>
 
 #include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
-    namespace Ui {
-        class DataSourceManagerWindow;
-    }
-
     class DataSourceManagerWindow : public QMainWindow {
     Q_OBJECT
     public:
@@ -27,7 +25,10 @@ namespace WritingMaterialsManager {
             QTreeView* TreeView;
         };
 
-        Ui::DataSourceManagerWindow* UI;
+        QWidget* const CentralWidget;
+        QTabWidget* const DataSourceTab;
+        QMenuBar* const MenuBar;
+        QStatusBar* const StatusBar;
 
         MongoDBAccessor MongoDBAccessor;
     };

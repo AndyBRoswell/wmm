@@ -1,5 +1,4 @@
 #include "EditorWindow.h"
-#include "ui_EditorWindow.h"
 
 #include <QApplication>
 #include <QGridLayout>
@@ -10,9 +9,27 @@
 
 namespace WritingMaterialsManager {
     EditorWindow::EditorWindow(QWidget* const Parent) : QMainWindow(Parent),
-                                                  UI(new Ui::EditorWindow),
-                                                  RootView(new QSplitter(this)) {
-        UI->setupUi(this);
+                                                        centralwidget(new QWidget(this)),
+                                                        MenuBar(new QMenuBar(this)),
+                                                        StatusBar(new QStatusBar(this)),
+                                                        ToolBar(new QToolBar(this)),
+                                                        RootView(new QSplitter(this)) {
+        if (objectName().isEmpty() == true) setObjectName(QString::fromUtf8("WritingMaterialsManager__EditorWindow"));
+        resize(1280, 720);
+
+        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        setCentralWidget(centralwidget);
+
+        MenuBar->setObjectName(QString::fromUtf8("MenuBar"));
+        MenuBar->setGeometry(QRect(0, 0, 1280, 21));
+        setMenuBar(MenuBar);
+
+        StatusBar->setObjectName(QString::fromUtf8("StatusBar"));
+        setStatusBar(StatusBar);
+
+        ToolBar->setObjectName(QString::fromUtf8("ToolBar"));
+        ToolBar->setWindowTitle(QCoreApplication::translate("WritingMaterialsManager::EditorWindow", "ToolBar", nullptr));
+        addToolBar(Qt::TopToolBarArea, ToolBar);
 
         QTabWidget* const TabView = new QTabWidget;
         auto* const MDBCPage = new MongoConAndEditorPage(this);
@@ -27,8 +44,8 @@ namespace WritingMaterialsManager {
 
         FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
         CharsetLabel->setStyleSheet(DefaultQLabelStyleSheet);
-        UI->StatusBar->addPermanentWidget(CharsetLabel);
-        UI->StatusBar->addPermanentWidget(FileTypeLabel);
+        StatusBar->addPermanentWidget(CharsetLabel);
+        StatusBar->addPermanentWidget(FileTypeLabel);
 
         setWindowTitle(tr(DefaultWindowTitle));
         centralWidget()->setLayout(new QGridLayout);
@@ -36,9 +53,7 @@ namespace WritingMaterialsManager {
         centralWidget()->layout()->addWidget(RootView);
     }
 
-    EditorWindow::~EditorWindow() {
-        delete UI;
-    }
+    EditorWindow::~EditorWindow() {}
 
     void EditorWindow::UpdateWindowTitleWithPathName() {
         if (focusWidget() == sender()) setWindowTitle(tr(DefaultWindowTitlePrefix) + static_cast<TreeEditor*>(sender())->GetPathName());
