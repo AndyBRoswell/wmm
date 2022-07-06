@@ -11,10 +11,6 @@
 #include "MongoDBAccessor.h"
 
 namespace WritingMaterialsManager {
-//    namespace Ui {
-//        class DataSourceManagerWindow;
-//    }
-
     class DataSourceManagerWindow : public QMainWindow {
     Q_OBJECT
     public:
@@ -29,9 +25,7 @@ namespace WritingMaterialsManager {
             QTreeView* TreeView;
         };
 
-//        Ui::DataSourceManagerWindow* UI;
-
-        QWidget* const centralwidget;
+        QWidget* const CentralWidget;
         QTabWidget* const DataSourceTab;
         QMenuBar* const MenuBar;
         QStatusBar* const StatusBar;

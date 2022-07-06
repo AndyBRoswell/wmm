@@ -8,8 +8,8 @@
 
 namespace WritingMaterialsManager {
     DataSourceManagerWindow::DataSourceManagerWindow(QWidget* Parent) : QMainWindow(Parent),
-                                                                        centralwidget(new QWidget(this)),
-                                                                        DataSourceTab(new QTabWidget(centralwidget)),
+                                                                        CentralWidget(new QWidget(this)),
+                                                                        DataSourceTab(new QTabWidget(CentralWidget)),
                                                                         MenuBar(new QMenuBar(this)),
                                                                         StatusBar(new QStatusBar(this)) {
         // preparation
@@ -17,7 +17,7 @@ namespace WritingMaterialsManager {
         resize(1280, 720);
         setWindowTitle(tr("数据来源管理器"));
 
-        setCentralWidget(centralwidget);
+        setCentralWidget(CentralWidget);
         centralWidget()->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget()->setLayout(new QGridLayout);
         centralWidget()->layout()->addWidget(DataSourceTab);
