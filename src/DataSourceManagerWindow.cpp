@@ -1,5 +1,4 @@
 #include "DataSourceManagerWindow.h"
-#include "ui_DataSourceManagerWindow.h"
 
 #include <QFileSystemModel>
 #include <QGridLayout>
@@ -8,14 +7,33 @@
 #include "QtTreeModel.h"
 
 namespace WritingMaterialsManager {
-    DataSourceManagerWindow::DataSourceManagerWindow(QWidget* Parent) : QMainWindow(Parent), UI(new Ui::DataSourceManagerWindow) {
-        UI->setupUi(this);
-
+    DataSourceManagerWindow::DataSourceManagerWindow(QWidget* Parent) : QMainWindow(Parent),
+                                                                        centralwidget(new QWidget(this)),
+                                                                        DataSourceTab(new QTabWidget(centralwidget)),
+                                                                        MenuBar(new QMenuBar(this)),
+                                                                        StatusBar(new QStatusBar(this)) {
         // preparation
+        if (objectName().isEmpty() == true) setObjectName(QString::fromUtf8("WritingMaterialsManager__DataSourceManagerWindow"));
+        resize(1280, 720);
         setWindowTitle(tr("数据来源管理器"));
 
+        setCentralWidget(centralwidget);
+        centralWidget()->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget()->setLayout(new QGridLayout);
-        centralWidget()->layout()->addWidget(UI->DataSourceTab);
+        centralWidget()->layout()->addWidget(DataSourceTab);
+
+        DataSourceTab->setObjectName(QString::fromUtf8("DataSourceTab"));
+        DataSourceTab->setGeometry(QRect(0, 0, 1280, 671));
+        DataSourceTab->setCurrentIndex(-1);
+
+        MenuBar->setObjectName(QString::fromUtf8("MenuBar"));
+        MenuBar->setGeometry(QRect(0, 0, 1280, 21));
+        setMenuBar(MenuBar);
+
+        StatusBar->setObjectName(QString::fromUtf8("StatusBar"));
+        setStatusBar(StatusBar);
+
+        QMetaObject::connectSlotsByName(this);
 
         Page* const MongoDBPage = new Page(centralWidget());
         QtTreeModel* MongoDBInfoTree = new QtTreeModel(MongoDBPage);
@@ -27,15 +45,13 @@ namespace WritingMaterialsManager {
         FileSystemTree->setRootPath(QDir::currentPath());
         FileSystemTree->setFilter(QDir::AllDirs);
         FileSystemPage->TreeView->setModel(FileSystemTree);
-//    FileSystemPage->TreeView->setRootIndex(FileSystemTree->index(QDir::currentPath()));
 
-        UI->DataSourceTab->addTab(MongoDBPage, "MongoDB");
-        UI->DataSourceTab->addTab(FileSystemPage, "File System");
+        DataSourceTab->addTab(MongoDBPage, "MongoDB");
+        DataSourceTab->addTab(FileSystemPage, "File System");
     }
 
     DataSourceManagerWindow::~DataSourceManagerWindow() {
-        while (UI->DataSourceTab->count()) { delete UI->DataSourceTab->widget(0); }
-        delete UI;
+        while (DataSourceTab->count()) { delete DataSourceTab->widget(0); }
     }
 
 /// ----------------------------------------------------------------

@@ -28,10 +28,10 @@ namespace WritingMaterialsManager {
     class PythonInteractor : public QWidget {
     Q_OBJECT
     public:
-        TextField* PyCommandForm;
-        QPushButton* ExecuteButton;
-        TextArea* CodeArea;
-        TextArea* ResultArea;
+        TextField* const PyCommandForm;
+        QPushButton* const ExecuteButton;
+        TextArea* const CodeArea;
+        TextArea* const ResultArea;
 
         explicit PythonInteractor(const QString& PythonCommand = "py/venv/latest/scripts/python", QWidget* const Parent = nullptr);
         ~PythonInteractor();
