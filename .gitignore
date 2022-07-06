@@ -8,7 +8,7 @@
 CMakeSettings.json
 
 # Qt Creator
-CMakeList.txt.user
+CMakeLists.txt.user
 
 # Build
 /build/*
