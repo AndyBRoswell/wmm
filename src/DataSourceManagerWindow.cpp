@@ -9,9 +9,9 @@
 namespace WritingMaterialsManager {
     DataSourceManagerWindow::DataSourceManagerWindow(QWidget* Parent) : QMainWindow(Parent),
                                                                         CentralWidget(new QWidget(this)),
-                                                                        DataSourceTab(new QTabWidget(CentralWidget)),
                                                                         MenuBar(new QMenuBar(this)),
-                                                                        StatusBar(new QStatusBar(this)) {
+                                                                        StatusBar(new QStatusBar(this)),
+                                                                        DataSourceTab(new QTabWidget(CentralWidget)) {
         // preparation
         if (objectName().isEmpty() == true) setObjectName(QString::fromUtf8("WritingMaterialsManager__DataSourceManagerWindow"));
         resize(1280, 720);

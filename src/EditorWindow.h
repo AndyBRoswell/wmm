@@ -3,13 +3,12 @@
 
 #include <QLabel>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QToolBar>
 #include <QSplitter>
 
 namespace WritingMaterialsManager {
-    namespace Ui {
-        class EditorWindow;
-    }
-
     class EditorWindow : public QMainWindow {
     Q_OBJECT
     public:
@@ -59,7 +58,10 @@ namespace WritingMaterialsManager {
         inline static const char* DefaultWindowTitlePrefix = "编辑器 - ";
         inline static const QString DefaultQLabelStyleSheet = "QLabel { color: white; }";
 
-        Ui::EditorWindow* UI;
+        QWidget* const centralwidget;
+        QMenuBar* const MenuBar;
+        QStatusBar* const StatusBar;
+        QToolBar* const ToolBar;
         QLabel* const FileTypeLabel = new QLabel("<File Type>");
         QLabel* const CharsetLabel = new QLabel("<Charset>");
     };
