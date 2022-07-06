@@ -61,17 +61,17 @@ int WMMTest::Start() {
     int ret;
 
     std::vector<std::function<void(void)>> TestFunctions{
-//        SimpleTest,
-//        Qt::EncodingOfFileRW,
-//        Qt::Quick::TextAreaKeyEvent,
-//        simdjson::Demo,
-//        RapidJSON::Demo,
-//        mongocxx::Tutorial,
+        //SimpleTest,
+        //Qt::EncodingOfFileRW,
+        //Qt::Quick::TextAreaKeyEvent,
+        //simdjson::Demo,
+        //RapidJSON::Demo,
+        //mongocxx::Tutorial,
         mongocxx::CustomDataDemo,
-//        DuckX::QuickStart,
-//        Qt::Widgets::Demo,
-//        Qt::InterProcessCommunication,
-//        Qt::GetSystemLocale,
+        //DuckX::QuickStart,
+        //Qt::Widgets::Demo,
+        //Qt::InterProcessCommunication,
+        //Qt::GetSystemLocale,
     };
 
     for (const std::function<void(void)>& f: TestFunctions) {
