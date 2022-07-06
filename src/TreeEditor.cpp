@@ -81,8 +81,7 @@ namespace WritingMaterialsManager {
             const auto I = FileTypeToEnumID.find(FileType);
             if (I == FileTypeToEnumID.cend()) return; // not supported file type
             switch (I->second) {
-            case F::JSON:
-            case F::MongoDBExtendedJSON:
+            case F::JSON: case F::MongoDBExtendedJSON:
                 Formatter = make_shared<JSONFormatter>();
                 Highlighter = make_shared<JSONHighlighter>(RawView->document());
                 break;

@@ -87,14 +87,7 @@ namespace WritingMaterialsManager {
                 }
             case StrDFAState::Escaped:
                 switch (Text[i].unicode()) { // \", \\, \/, \b, \f, \n, \r, \t, \uhhhh
-                case u'\"':
-                case u'\\':
-                case u'/':
-                case u'b':
-                case u'f':
-                case u'n':
-                case u'r':
-                case u't':
+                case u'\"': case u'\\': case u'/': case u'b': case u'f': case u'n': case u'r': case u't':
                     CurrentEscape.second = i + 1;
                     EscapedRange.emplace_back(CurrentEscape);
                     EscapeError.emplace_back(false);
