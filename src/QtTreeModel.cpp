@@ -332,16 +332,9 @@ namespace WritingMaterialsManager {
             Node* const nt = t.top();
             t.pop();
             switch (ns->GetType()) {
-            case kNullType:
-                nt->PushBackData("");
-                break;
-            case kFalseType:
-            case kTrueType:
-                nt->PushBackData(ns->GetBool());
-                break;
-            case kStringType:
-                nt->PushBackData(ns->GetString());
-                break;
+            case kNullType: nt->PushBackData(""); break;
+            case kFalseType: case kTrueType: nt->PushBackData(ns->GetBool()); break;
+            case kStringType: nt->PushBackData(ns->GetString()); break;
             case kNumberType:
                 if (ns->IsUint64()) { nt->PushBackData(ns->GetUint64()); }
                 else if (ns->IsInt64()) { nt->PushBackData(ns->GetInt64()); }
