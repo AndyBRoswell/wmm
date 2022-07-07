@@ -1,0 +1,15 @@
+* {
+    font-family: Consolas, sans-serif;
+    border-color: dimgray;
+    color: lightgray;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+}
+
+header .h0 {
+    font-family: "Times New Roman", sans-serif;
+    font-size: xxx-large;
+}

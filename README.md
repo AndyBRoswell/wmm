@@ -53,11 +53,13 @@ set-executionpolicy bypass process
 
 #### JetBrains CLion
 
-在菜单栏上，依次点击：File -> Settings -> Build, Execution, Deployment -> CMake，在 Profiles 下添加所需的生成类型。在 CMake Options 输入框中，设置 CMAKE_PREFIX_PATH 变量的值为 Qt 二进制文件所在的目录。
+在菜单栏上，依次点击：File -> Settings -> Build, Execution, Deployment -> CMake，在 Profiles 下添加所需的生成类型。在 CMake Options 输入框中，同样地，设置 CMAKE_PREFIX_PATH 变量的值为 Qt 二进制文件所在的目录。
 
 #### Qt Creator
 
-在 Qt Creator 中，可以直接编译。打开本仓库根目录下的 writing_assistant 项目，在 Projects 选项卡中选定正确的 Kit，编译即可。
+在 Qt Creator 中，可以直接编译。
+
+打开本仓库根目录下的 writing_assistant 项目，在 Projects 选项卡中选定正确的 Kit，编译即可。
 
 如需在 Qt Creator 中查看 qDebug() 等的调试内容，需要启用 “使用 Unicode UTF-8 提供全球语言支持”。
 
