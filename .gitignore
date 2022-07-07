@@ -1,5 +1,6 @@
 # JetBrains CLion
 /.idea/*
+/doc/.idea/*
 
 # Microsoft Visual Studio
 /.vs/*
