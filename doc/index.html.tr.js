@@ -3,8 +3,7 @@ const Dict = {
     "架构图": "architecture diagram",
 }
 
-console.log('Reading translation file ...')
-
+console.log('Translation started.')
 const ElementsTranslate = document.querySelectorAll('.tr')
 console.log('Translating ' + ElementsTranslate.length + ' elements ...')
 ElementsTranslate.forEach(e => {
