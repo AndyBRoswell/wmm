@@ -8,9 +8,7 @@ console.log('Reading translation file ...')
 const ElementsTranslate = document.querySelectorAll('.tr')
 console.log('Translating ' + ElementsTranslate.length + ' elements ...')
 ElementsTranslate.forEach(e => {
-    console.log(e.innerHTML)
     const TranslatedText = Dict[e.innerHTML]
-    console.log(TranslatedText)
     if (TranslatedText) e.innerHTML = TranslatedText
 })
 console.log('Translation completed.')
