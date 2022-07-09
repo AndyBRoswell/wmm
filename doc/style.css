@@ -9,14 +9,18 @@ body {
     background-color: black;
 }
 
-.h0 {
+.title {
     font-size: xxx-large;
     font-weight: bold;
-    line-height: 2.5;
+    line-height: 2;
 }
 
 fieldset {
     display: inline-block;
+}
+
+#lang-selector {
+    float: right;
 }
 
 .main-ch {
