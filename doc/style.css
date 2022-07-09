@@ -19,6 +19,12 @@ fieldset {
     display: inline-block;
 }
 
+#lang-selector {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .main-ch {
     font-size: xx-large;
 }
