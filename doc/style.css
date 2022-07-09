@@ -9,12 +9,16 @@ body {
     background-color: black;
 }
 
-header .h0 {
+.h0 {
     font-size: xxx-large;
     font-weight: bold;
-    line-height: 2;
+    line-height: 2.5;
 }
 
-.ch {
-    font-size: larger;
+fieldset {
+    display: inline-block;
+}
+
+.main-ch {
+    font-size: xx-large;
 }
