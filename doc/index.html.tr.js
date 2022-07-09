@@ -3,6 +3,11 @@ const Dict = {
     "架构图": "Architecture Diagram",
 }
 
+const LanguageSelector = document.getElementById('lang-selector');
+LanguageSelector.addEventListener('change', (event) => {
+
+})
+
 const ElementsTranslate = document.querySelectorAll('.tr')
 ElementsTranslate.forEach(e => {
     const TranslatedText = Dict[e.innerHTML]
