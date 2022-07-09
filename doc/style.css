@@ -1,5 +1,5 @@
 * {
-    font-family: Consolas, sans-serif;
+    font-family: "Times New Roman", sans-serif;
     border-color: dimgray;
     color: lightgray;
     box-sizing: border-box;
@@ -9,7 +9,16 @@ body {
     background-color: black;
 }
 
-header .h0 {
-    font-family: "Times New Roman", sans-serif;
+.h0 {
     font-size: xxx-large;
+    font-weight: bold;
+    line-height: 2.5;
+}
+
+fieldset {
+    display: inline-block;
+}
+
+.main-ch {
+    font-size: xx-large;
 }

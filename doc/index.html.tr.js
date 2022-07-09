@@ -1,16 +1,10 @@
 const Dict = {
     "写作素材管理器": "Writing Materials Manager",
-    "架构图": "architecture diagram",
+    "架构图": "Architecture Diagram",
 }
 
-console.log('Reading translation file ...')
-
 const ElementsTranslate = document.querySelectorAll('.tr')
-console.log('Translating ' + ElementsTranslate.length + ' elements ...')
 ElementsTranslate.forEach(e => {
-    console.log(e.innerHTML)
     const TranslatedText = Dict[e.innerHTML]
-    console.log(TranslatedText)
     if (TranslatedText) e.innerHTML = TranslatedText
 })
-console.log('Translation completed.')
