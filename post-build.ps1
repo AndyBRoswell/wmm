@@ -31,9 +31,7 @@ if ([string]::IsNullOrEmpty($QtBinaryDir)) {
     exit
 }
 if ((test-path $BuildDir) -eq $false) {
-    echo "The build directory specified by the argument BuildDir doesn't exist. You should build first then run this post-build script."
-    echo $usage
-    exit
+    mkdir $BuildDir
 }
 $BuildTypeIsIllegal = $true
 foreach ($t in $supportedbuildtype) {
@@ -66,10 +64,10 @@ cp -r src/thm $buildd/src/thm
 cp -r test $buildd/test
 
 # 3rd libraries
-cp $3rdd/mongo-c-driver-1.21.0/$BuildType/bin/bson-1.0.dll $buildd/bson-1.0.dll
-cp $3rdd/mongo-c-driver-1.21.0/$BuildType/bin/mongoc-1.0.dll $buildd/mongoc-1.0.dll
-cp $3rdd/mongo-cxx-driver-r3.6.6/$BuildType/bin/bsoncxx.dll $buildd/bsoncxx.dll
-cp $3rdd/mongo-cxx-driver-r3.6.6/$BuildType/bin/mongocxx.dll $buildd/mongocxx.dll
+cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/bson-1.0.dll $buildd/bson-1.0.dll
+cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/mongoc-1.0.dll $buildd/mongoc-1.0.dll
+cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/bsoncxx.dll $buildd/bsoncxx.dll
+cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/mongocxx.dll $buildd/mongocxx.dll
 # Windeployqt doesn't support RelWithDebInfo and MinSizeRel yet. Use Release provisionally.
 if ($BuildType -ieq 'debug') { & $QtBinaryDir/windeployqt --debug --libdir $buildd $buildd --verbose 0 }
 else { & $QtBinaryDir/windeployqt --release --libdir $buildd $buildd --verbose 0 }

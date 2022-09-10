@@ -30,9 +30,9 @@ $WebClient = New-Object System.Net.WebClient
 $LibCount = 6;
 
 $Lib = [string[, ]]::New($LibCount, 4)
-$Lib[0, 0] = 'mongo-c-driver-1.21.0'
-$Lib[0, 1] = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.21.0.zip'
-$Lib[0, 2] = "-DBUILD_VERSION='1.21.0'"
+$Lib[0, 0] = 'mongo-c-driver-1.22.1'
+$Lib[0, 1] = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.22.1.zip'
+$Lib[0, 2] = "-DBUILD_VERSION='1.22.1'"
 $Lib[0, 3] = ""
 
 $mongocbase = $Lib[0, 0]
@@ -92,7 +92,7 @@ for ($i = 0; $i -lt $LibCount; ++$i) {
         cd $Lib[$i, 0]
         Write-Host "Running cmake for $($Lib[$i, 0]) using config $($BuildType[$j]) ..."
         cmake $dld/$($Lib[$i, 0]) $CommonCFlags $CommonCPPFlags $($Lib[$i, 2]) -DCMAKE_BUILD_TYPE="$($BuildType[$j])" -DCMAKE_INSTALL_PREFIX="$InstallPrefix" $PrefixPathFlag `
-            -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc /wd4996" # if using MSVC
+            -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc /wd4996 /wd4244 /wd4267 /wd4146" # if using MSVC
         Write-Host "Building $($Lib[$i, 0]) using config $($BuildType[$j]) ..."
         cmake --build . --config $($BuildType[$j]) -j
         Write-Host "Installing $($Lib[$i, 0]) using config $($BuildType[$j]) ..."
