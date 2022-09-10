@@ -36,9 +36,9 @@ $Lib[0, 2] = "-DBUILD_VERSION='1.21.0'"
 $Lib[0, 3] = ""
 
 $mongocbase = $Lib[0, 0]
-$Lib[1, 0] = 'mongo-cxx-driver-r3.6.6'
-$Lib[1, 1] = 'https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r3.6.6.zip'
-$Lib[1, 2] = "-DBUILD_VERSION='3.6.6'"
+$Lib[1, 0] = 'mongo-cxx-driver-r3.6.7'
+$Lib[1, 1] = 'https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r3.6.7.zip'
+$Lib[1, 2] = "-DBUILD_VERSION='3.6.7'"
 $Lib[1, 3] = "$instd/$mongocbase"
 
 $Lib[2, 0] = 'simdjson-1.0.2'
