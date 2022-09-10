@@ -8,6 +8,6 @@
 
 ## The Statement of Hiding Test Data
 
-This project acted as my graduation project of my undergrad stage. The publication of the test data in the past was just for the convenience of the review team of graduation papers to verify the correctness of the implemented functions. By reason of the notice of copyright and privacy leak problems and my success of the undergrad thesis, I will impermanently not publish test data.
+This project acted as my graduation project of my undergrad stage. The publication of the test data in the past was just for the convenience of the review team of graduation papers to verify the correctness of the implemented functions. By reason of the notice of copyright and privacy leak problems and my success of the undergrad thesis, I will impermanently not publish the test data.
 
-With the purpose of purging these data outright, the original repository is not public any more. The elimination of all commits was equivalently achieved by copying the remaining files to this repository.
+With the purpose of purging these data outright, the original repository is not public any more. The elimination of all commits was equivalently achieved by copying the remaining files to this repository after the deletion of the private data.
