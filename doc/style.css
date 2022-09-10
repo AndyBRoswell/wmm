@@ -1,0 +1,28 @@
+* {
+    font-family: "Times New Roman", sans-serif;
+    border-color: dimgray;
+    color: lightgray;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+}
+
+.title {
+    font-size: xxx-large;
+    font-weight: bold;
+    line-height: 2;
+}
+
+fieldset {
+    display: inline-block;
+}
+
+#lang-selector {
+    float: right;
+}
+
+.main-ch {
+    font-size: xx-large;
+}

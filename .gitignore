@@ -1,32 +1,23 @@
-# Prerequisites
-*.d
+# JetBrains CLion
+/.idea/*
+/doc/.idea/*
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Microsoft Visual Studio
+/.vs/*
+/x64/*
+/x86/*
+CMakeSettings.json
 
-# Precompiled Headers
-*.gch
-*.pch
+# Qt Creator
+CMakeLists.txt.user
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Build
+/build/*
+/cmake-build-debug/*
+/cmake-build-release/*
+/cmake-build-relwithdebinfo/*
+/cmake-build-minsizerel/*
+/out/*
 
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# 3rd libraries
+/3rd/*
