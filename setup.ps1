@@ -30,9 +30,9 @@ $WebClient = New-Object System.Net.WebClient
 $LibCount = 6;
 
 $Lib = [string[, ]]::New($LibCount, 4)
-$Lib[0, 0] = 'mongo-c-driver-1.23.0'
-$Lib[0, 1] = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.23.0.zip'
-$Lib[0, 2] = "-DBUILD_VERSION='1.23.0'"
+$Lib[0, 0] = 'mongo-c-driver-1.21.0'
+$Lib[0, 1] = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.21.0.zip'
+$Lib[0, 2] = "-DBUILD_VERSION='1.21.0'"
 $Lib[0, 3] = ""
 
 $mongocbase = $Lib[0, 0]
