@@ -18,8 +18,8 @@ Usage
             Debug, Release, RelWithDebInfo, MinSizeRel.
         
     Examples:
-        .\post-build.ps1 -QtBinaryDir C:\Qt\6.3.1\msvc2019_64\bin -BuildDir out/build/x64-Debug -BuildType Debug
-        ./post-build -qtbinarydir c:/qt/6.3.1/msvc2019_64/bin -builddir out/build/x64-release
+        .\post-build.ps1 -QtBinaryDir C:\Qt\6.4.0\msvc2019_64\bin -BuildDir out/build/x64-Debug -BuildType Debug
+        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -builddir out/build/x64-release
 
 "@
 
