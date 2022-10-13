@@ -97,7 +97,7 @@ set-executionpolicy bypass process
 ```powershell
 # Qt bin 目录视 Qt 安装目录的不同而不同，需要替换成你的计算机上的相应目录。
 # 编译生成的文件夹必须事先存在，否则无法进行编译后处理。若生成类型省略不写，则默认为 Release。
-./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -builddir out/build/x64-release --buildtype release
+./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -bindir out/build/x64-release/bin --buildtype release
 ```
 
 复制需要的文件到编译出来的 exe 所在的目录下。

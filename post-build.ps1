@@ -1,6 +1,6 @@
 param( # command-line args
     [string] $QtBinaryDir,
-    [string] $BuildDir = 'out/build',
+    [string] $BinDir,
     [string] $BuildType = 'Release'
 )
 
@@ -12,26 +12,26 @@ Usage
     Parameters:
         QtBinaryDir
             The binary directory of Qt. This is determined by the path you installed the Qt binaries and the compiler (MSVC / G++) you choosed.
-        BuildDir (default: out/build)
+        BinDir
             The build directory of this program.
         BuildType (default: Release)
             Debug, Release, RelWithDebInfo, MinSizeRel.
         
     Examples:
-        .\post-build.ps1 -QtBinaryDir C:\Qt\6.4.0\msvc2019_64\bin -BuildDir out/build/x64-Debug -BuildType Debug
-        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -builddir out/build/x64-release
+        .\post-build.ps1 -QtBinaryDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-Debug/bin -BuildType Debug
+        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -bindir out/build/x64-release/bin
 
 "@
 
-set SupportedBuildType -option constant -value @('Debug','Release','RelWithDebInfo','MinSizeRel')
+set SupportedBuildType -option constant -value @('Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel')
 
 if ([string]::IsNullOrEmpty($QtBinaryDir)) {
     echo 'The binary directory of Qt specified by the argument QtBinaryDir is illegal.'
     echo $usage
     exit
 }
-if ((test-path $BuildDir) -eq $false) {
-    mkdir $BuildDir
+if ((test-path $BinDir) -eq $false) {
+    mkdir $BinDir
 }
 $BuildTypeIsIllegal = $true
 foreach ($t in $supportedbuildtype) {
@@ -51,7 +51,7 @@ if ($BuildTypeIsIllegal -eq $true) {
 $cwd = $pwd                         # save the current working directory for the restoration of working directory at the end
 $shsd = $psscriptroot               # path of this post-build script
 $3rdd = "$shsd/3rd/install/MSVC"    # path of 3rd dependencies
-$buildd = $BuildDir                 # binary directory of this software
+$buildd = $BinDir                   # binary directory of this software
 
 # post-build begins here
 echo 'Post-Build: Copying essentials to build directory ...'
