@@ -47,7 +47,7 @@ With the purpose of purging these data outright, the original repository is not 
 添加所需的生成类型（Debug, Release, RelWithDebInfo, MinSizeRel）后，在 Command arguments 中的 CMake command arguments 输入框，设置 CMAKE_PREFIX_PATH 变量的值为 Qt 二进制文件所在的目录。例如：
 
 ```powershell
--DCMAKE_PREFIX_PATH=C:/Qt/6.3.1/msvc2019_64
+-DCMAKE_PREFIX_PATH=C:/Qt/6.4.0/msvc2019_64
 ```
 
 #### JetBrains CLion
@@ -97,7 +97,7 @@ set-executionpolicy bypass process
 ```powershell
 # Qt bin 目录视 Qt 安装目录的不同而不同，需要替换成你的计算机上的相应目录。
 # 编译生成的文件夹必须事先存在，否则无法进行编译后处理。若生成类型省略不写，则默认为 Release。
-./post-build -qtbinarydir c:/qt/6.3.1/msvc2019_64/bin -builddir out/build/x64-release --buildtype release
+./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -builddir out/build/x64-release --buildtype release
 ```
 
 复制需要的文件到编译出来的 exe 所在的目录下。
