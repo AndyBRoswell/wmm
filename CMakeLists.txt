@@ -96,7 +96,7 @@ list(APPEND MONGO_LIBS ${MONGOC})
 list(APPEND MONGO_LIBS ${BSONCXX})
 list(APPEND MONGO_LIBS ${MONGOCXX})
 target_link_libraries(wmm LINK_PUBLIC ${MONGO_LIBS})
-include_directories(wmm PUBLIC ${MONGO_INCLUDE_DIR})
+target_include_directories(wmm PUBLIC ${MONGO_INCLUDE_DIR})
 message(STATUS "Found MongoDB dependencies: ${MONGO_LIBS}")
 
 # dependency: JSON libs
