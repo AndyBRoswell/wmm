@@ -1,5 +1,7 @@
 #include "predefined.h"
 
+#pragma warning(push, 0) // begin the suppression of all warnings for Qt libraries
+
 #include <QApplication>
 
 #include <QLocale>
@@ -7,6 +9,8 @@
 
 #include <QStyle>
 #include <QStyleFactory>
+
+#pragma warning(pop) // end suppression
 
 // headers of this project wmm
 #include "DataSourceManagerWindow.h"
