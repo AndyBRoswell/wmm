@@ -1,5 +1,5 @@
 param( # command-line args
-    [string] $QtBinaryDir,
+    [string] $QtBinDir,
     [string] $BinDir,
     [string] $BuildType = 'Release'
 )
@@ -25,7 +25,7 @@ Usage
 
 set SupportedBuildType -option constant -value @('Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel')
 
-if ([string]::IsNullOrEmpty($QtBinaryDir)) {
+if ([string]::IsNullOrEmpty($QtBinDir)) {
     echo 'The binary directory of Qt specified by the argument QtBinaryDir is illegal.'
     echo $usage
     exit
@@ -70,8 +70,8 @@ cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/mongoc-1.0.dll $bind/mongoc-1.0.dl
 cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/bsoncxx.dll $bind/bsoncxx.dll
 cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/mongocxx.dll $bind/mongocxx.dll
 # Windeployqt doesn't support RelWithDebInfo and MinSizeRel yet. Use Release provisionally.
-if ($BuildType -ieq 'debug') { & $QtBinaryDir/windeployqt --debug --libdir $bind $bind --verbose 0 }
-else { & $QtBinaryDir/windeployqt --release --libdir $bind $bind --verbose 0 }
+if ($BuildType -ieq 'debug') { & $QtBinDir/windeployqt --debug --libdir $bind $bind --verbose 0 }
+else { & $QtBinDir/windeployqt --release --libdir $bind $bind --verbose 0 }
 
 echo 'Post-build process completed.'
 cd $cwd # restore the last working directory
