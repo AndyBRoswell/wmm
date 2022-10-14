@@ -43,19 +43,19 @@ $Lib = @(
         Link = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.22.1.zip'
         Flags = "-DBUILD_VERSION='1.22.1'"
         PrefixPath = ""
-    },
+    }
     @{
         Name = 'mongo-cxx-driver-r3.6.7'
         Link = 'https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r3.6.7.zip'
         Flags = "-DBUILD_VERSION='3.6.7'"
         PrefixPath = "$instd/mongo-c-driver-1.22.1"
-    },
+    }
     @{
         Name = 'simdjson-1.0.2'
         Link = 'https://github.com/simdjson/simdjson/archive/refs/tags/v1.0.2.zip'
         Flags = ""
         PrefixPath = ""
-    },
+    }
     # @{
     #     Name = 'yyjson-0.4.0'
     #     Link = 'https://github.com/ibireme/yyjson/archive/refs/tags/0.4.0.zip'
@@ -67,19 +67,19 @@ $Lib = @(
         Link = 'https://github.com/Tencent/rapidjson/archive/refs/tags/v1.1.0.zip'
         Flags = ""
         PrefixPath = ""
-    },
+    }
     @{
         Name = 'duckx-1.2.2'
         Link = 'https://github.com/amiremohamadi/DuckX/archive/refs/tags/v1.2.2.zip'
         Flags = ""
         PrefixPath = ""
     }
-    # @{
-    #     Name = 'googletest'
-    #     Link = 'https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip'
-    #     Flags = ""
-    #     PrefixPath = ""
-    # }
+    @{
+        Name = 'googletest-release-1.12.1'
+        Link = 'https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip'
+        Flags = "-DGTEST_CREATE_SHARED_LIBRARY=1 -DGTEST_LINKED_AS_SHARED_LIBRARY=1"
+        PrefixPath = ""
+    }
 )
 
 # download sources
