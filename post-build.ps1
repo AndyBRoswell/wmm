@@ -19,7 +19,7 @@ Usage
         
     Examples:
         .\post-build.ps1 -QtBinaryDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-Debug/bin -BuildType Debug
-        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -bindir out/build/x64-release/bin
+        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -bindir out/build/x64-Release/bin
 
 "@
 
@@ -51,7 +51,7 @@ if ($BuildTypeIsIllegal -eq $true) {
 $cwd = $pwd                         # save the current working directory for the restoration of working directory at the end
 $shsd = $psscriptroot               # path of this post-build script
 $3rdd = "$shsd/3rd/install/MSVC"    # path of 3rd dependencies
-$buildd = $BinDir                   # binary directory of this software
+$bind = $BinDir                     # binary directory of this software
 
 # post-build begins here
 echo 'Post-Build: Copying essentials to build directory ...'
@@ -59,18 +59,19 @@ echo 'Post-Build: Copying essentials to build directory ...'
 cd $shsd
 
 # Python related code, themes and test data
-cp -r py $buildd/py
-cp -r src/thm $buildd/src/thm
-cp -r test $buildd/test
+cp -r py $bind/py
+cp -r src/thm $bind/thm
+cp -r src/ts $bind/ts
+cp -r test $bind/test
 
 # 3rd libraries
-cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/bson-1.0.dll $buildd/bson-1.0.dll
-cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/mongoc-1.0.dll $buildd/mongoc-1.0.dll
-cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/bsoncxx.dll $buildd/bsoncxx.dll
-cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/mongocxx.dll $buildd/mongocxx.dll
+cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/bson-1.0.dll $bind/bson-1.0.dll
+cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/mongoc-1.0.dll $bind/mongoc-1.0.dll
+cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/bsoncxx.dll $bind/bsoncxx.dll
+cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/mongocxx.dll $bind/mongocxx.dll
 # Windeployqt doesn't support RelWithDebInfo and MinSizeRel yet. Use Release provisionally.
-if ($BuildType -ieq 'debug') { & $QtBinaryDir/windeployqt --debug --libdir $buildd $buildd --verbose 0 }
-else { & $QtBinaryDir/windeployqt --release --libdir $buildd $buildd --verbose 0 }
+if ($BuildType -ieq 'debug') { & $QtBinaryDir/windeployqt --debug --libdir $bind $bind --verbose 0 }
+else { & $QtBinaryDir/windeployqt --release --libdir $bind $bind --verbose 0 }
 
 echo 'Post-build process completed.'
 cd $cwd # restore the last working directory

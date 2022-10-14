@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     QTranslator Translator; // internationalization support for text output
     const QStringList UILanguages = QLocale::system().uiLanguages(); // A list of locale names for translation in preference order
     for (const QString& Locale: UILanguages) {
-        const QString baseName = "wmm_" + QLocale(Locale).name();
+        const QString baseName = "ts/" + QLocale(Locale).name();
         if (Translator.load(":/i18n/" + baseName)) { // load translation
             QApplication::installTranslator(&Translator);
             break;
