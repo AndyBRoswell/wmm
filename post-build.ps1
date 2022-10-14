@@ -18,8 +18,14 @@ Usage
             Debug, Release, RelWithDebInfo, MinSizeRel.
         
     Examples:
-        .\post-build.ps1 -QtBinaryDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-Debug/bin -BuildType Debug
-        ./post-build -qtbinarydir c:/qt/6.4.0/msvc2019_64/bin -bindir out/build/x64-Release/bin
+        .\post-build.ps1 -QtBinDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-Debug/bin -BuildType Debug
+        .\post-build.ps1 -QtBinDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-Release/bin -BuildType Release
+        .\post-build.ps1 -QtBinDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-RelWithDebInfo/bin -BuildType RelWithDebInfo
+        .\post-build.ps1 -QtBinDir C:\Qt\6.4.0\msvc2019_64\bin -BinDir out/build/x64-MinSizeRel/bin -BuildType MinSizeRel
+
+    Notes:
+        1. By default PowerShell treats commands, path names and parameter names case-insensitively.
+        2. On Windows, you can use / instead of \ as the delimiter of hierachical directories in a path name.
 
 "@
 
