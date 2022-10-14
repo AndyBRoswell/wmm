@@ -12,7 +12,6 @@ $instd = "$3rdd\install\MSVC"
 
 # clear previous builds and dependencies
 cd $prjd
-if (Test-Path build) { rm -r build } # also delete the previous builds of the entire project
 if (Test-Path 3rd) { rm -r 3rd }
 mkdir 3rd
 mkdir 3rd/build
@@ -72,7 +71,7 @@ for ($i = 0; $i -lt $LibCount; ++$i) {
     Expand-Archive -LiteralPath "$($Lib[$i, 0]).zip" -DestinationPath .
 }
 
-Write-Host "Download and extract dependencies completed."
+Write-Host "Dependencies download and extraction completed."
 
 # start to build dependencies
 cd $buildd
@@ -92,6 +91,7 @@ for ($i = 0; $i -lt $LibCount; ++$i) {
         cd $Lib[$i, 0]
         Write-Host "Running cmake for $($Lib[$i, 0]) using config $($BuildType[$j]) ..."
         cmake $dld/$($Lib[$i, 0]) $CommonCFlags $CommonCPPFlags $($Lib[$i, 2]) -DCMAKE_BUILD_TYPE="$($BuildType[$j])" -DCMAKE_INSTALL_PREFIX="$InstallPrefix" $PrefixPathFlag `
+            # -G "Visual Studio 17 2022" -A x64 `
             -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc /wd4996 /wd4244 /wd4267 /wd4146" # if using MSVC
         Write-Host "Building $($Lib[$i, 0]) using config $($BuildType[$j]) ..."
         cmake --build . --config $($BuildType[$j]) -j
