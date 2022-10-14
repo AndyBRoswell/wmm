@@ -37,7 +37,7 @@
 #include <bsoncxx/builder/stream/array.hpp>
 
 // json libs
-#include "simdjson.h"
+//#include "simdjson.h"
 #include "rapidjson/document.h"
 
 // DuckX
@@ -218,27 +218,27 @@ void WMMTest::Qt::Quick::TextAreaKeyEvent() {
 }
 
 void WMMTest::simdjson::Demo() {
-    using namespace ::simdjson;
-    using std::endl;
-    using std::string;
-    using std::string_view;
-    using std::exception;
+    //using namespace ::simdjson;
+    //using std::endl;
+    //using std::string;
+    //using std::string_view;
+    //using std::exception;
 
-    LastStartedFn.assign(__FUNCTION__);
+    //LastStartedFn.assign(__FUNCTION__);
 
-    try {
-        ondemand::parser Parser; // A parser may have at most one document open at a time, since it holds allocated memory used for the parsing.
-        auto TgChannelContentsInJSON = padded_string::load("test/test-data/Haruhi的沙雕日常.json"); // Tg: telegram
-        auto TgChannelContents = Parser.iterate(TgChannelContentsInJSON); // position a pointer at the beginning of the JSON data
-        const string_view ret = TgChannelContents["name"].get_string().value_unsafe();
-        qDebug() << static_cast<string>(ret).c_str();
-    }
-    catch (const exception& e) {
-        qDebug() << "Exception thrown at WMMTest::Demo():";
-        qDebug() << e.what();
-    }
+    //try {
+    //    ondemand::parser Parser; // A parser may have at most one document open at a time, since it holds allocated memory used for the parsing.
+    //    auto TgChannelContentsInJSON = padded_string::load("test/test-data/Haruhi的沙雕日常.json"); // Tg: telegram
+    //    auto TgChannelContents = Parser.iterate(TgChannelContentsInJSON); // position a pointer at the beginning of the JSON data
+    //    const string_view ret = TgChannelContents["name"].get_string().value_unsafe();
+    //    qDebug() << static_cast<string>(ret).c_str();
+    //}
+    //catch (const exception& e) {
+    //    qDebug() << "Exception thrown at WMMTest::Demo():";
+    //    qDebug() << e.what();
+    //}
 
-    LastFinishedFn.assign(__FUNCTION__);
+    //LastFinishedFn.assign(__FUNCTION__);
 }
 
 void WMMTest::RapidJSON::Demo() {
