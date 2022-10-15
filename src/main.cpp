@@ -18,7 +18,7 @@
 #include "ExtraFunctionWindow.h"
 
 // tests of this project wmm
-#include "../test/Test.h"
+#include "../test/LegacyTest.h"
 
 // NOTE: Meta object features are NOT supported for nested classes.
 

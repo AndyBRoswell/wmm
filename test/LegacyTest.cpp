@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "LegacyTest.h"
 
 // standard libraries
 #include <chrono>
