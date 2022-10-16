@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
         QApplication::setPalette(p);
     }
 
-    int ret = Test::Start();
+    //int ret = Test::Start();
 
     auto DataSourceManagerWnd = new class DataSourceManagerWindow;
     DataSourceManagerWnd->showMaximized();
