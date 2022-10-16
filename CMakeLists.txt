@@ -42,6 +42,10 @@ message(STATUS "Binary Dir: ${CMAKE_BINARY_DIR}")
 # dependencies: Qt
 find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
 
+# set common variables
+set(wmm_root ${CMAKE_CURRENT_SOURCE_DIR})
+message(STATUS "WMM root: ${wmm_root}")
+
 add_subdirectory(src)
 add_subdirectory(test)
 

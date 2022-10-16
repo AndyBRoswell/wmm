@@ -60,7 +60,7 @@ list(APPEND mongo_libs ${bson})
 list(APPEND mongo_libs ${mongoc})
 list(APPEND mongo_libs ${bsoncxx})
 list(APPEND mongo_libs ${mongocxx})
-target_link_libraries(wmm LINK_PUBLIC ${mongo_libs})
+target_link_libraries(wmm PUBLIC ${mongo_libs})
 message(STATUS "Found MongoDB libraries: ${mongo_libs}")
 
 # dependency: JSON libs
