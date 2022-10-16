@@ -21,14 +21,14 @@ find_package(GTest CONFIG REQUIRED)
 
 enable_testing()
 
-add_executable(wmmtest
+qt_add_executable(wmmtest
     ${code_files}
 )
 set_target_properties(wmmtest PROPERTIES
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" # C/C++ > Code Generation > Runtime Library = /MTd instead of default /MDd
 )
 
-target_link_libraries(wmmtest GTest::gtest_main)
+target_link_libraries(wmmtest PUBLIC GTest::gtest_main Qt6::Core)
 
 include(GoogleTest)
 gtest_discover_tests(wmmtest)
