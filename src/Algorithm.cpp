@@ -5,7 +5,7 @@ namespace WritingMaterialsManager {
         return QCryptographicHash::hash(Str.toUpper(), DefaultSimpleHashAlgorithm).right(8).toULongLong();
     }
     size_t CaseInsensitiveHasher::operator()(const QString& Str) const {
-        return QCryptographicHash::hash(Str.toUpper().toUtf8(), DefaultSimpleHashAlgorithm).right(8).toULongLong();
+        return QCryptographicHash::hash(reinterpret_cast<const char* const>(Str.toUpper().constData()), DefaultSimpleHashAlgorithm).right(8).toULongLong();
     }
 
 /// ----------------------------------------------------------------
