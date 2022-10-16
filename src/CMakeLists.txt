@@ -23,11 +23,9 @@ set(dep_root "../3rd/install/${CMAKE_CXX_COMPILER_ID}")
 
 # dependencies: Qt
 set(Qt6_root "${Qt6_DIR}/../../..")
-
 qt_add_executable(wmm
     ${code_files}
 )
-
 set_target_properties(wmm PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -35,7 +33,6 @@ set_target_properties(wmm PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
-
 target_compile_definitions(wmm PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(wmm PUBLIC Qt6::Core Qt6::Widgets Qt6::Core5Compat Qt6::PdfWidgets)
 
@@ -70,14 +67,14 @@ target_include_directories(wmm PUBLIC ${JSON_inc_dir})
 
 # find_library(simdjson simdjson "${dep_root}/simdjson-1.0.2/${CMAKE_BUILD_TYPE}/lib")
 list(APPEND JSON_libs ${simdjson})
-target_link_libraries(wmm LINK_PUBLIC ${JSON_libs})
+target_link_libraries(wmm PUBLIC ${JSON_libs})
 message(STATUS "Found JSON libraries: ${JSON_libs}")
 
 # dependency: DuckX
 target_include_directories(wmm PUBLIC ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include)
 
 find_library(DuckX duckx "${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/lib")
-target_link_libraries(wmm LINK_PUBLIC ${DuckX})
+target_link_libraries(wmm PUBLIC ${DuckX})
 message(STATUS "Found DOCX libraries: ${DuckX}")
 
 # post-build

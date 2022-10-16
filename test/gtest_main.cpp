@@ -19,6 +19,6 @@ TEST(HelloTest, BasicAssertions) {
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
-    //const QByteArray s = "abcd";
-    //EXPECT_STREQ(s, "abcd");
+    const QByteArray s = "abcd";
+    EXPECT_STREQ(s, "abcd");
 }
