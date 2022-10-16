@@ -10,25 +10,24 @@ namespace TinyRandom {
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
     
     namespace Number {
-        // return a random integer between [0, UINTMAX_MAX]
-        template<class T> RanUInt() {
-            static_assert(std::is_unsigned_v<T>, "Only unsigned types are allowed.");
-            return max_uniform_uint_dist(default_random_engine);
-        }
-        
-        // return a random integer between [a, b]
-        template<class T> RanUInt(const T a, const T b) {
-            
+        template<class T> T RanInt() {
+            static_assert(std::is_arithmetic_v<T>, "Only built-in arithmetic types are allowed.");
+            if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(default_random_engine);
+            else return max_uniform_uint_dist(default_random_engine);
         }
 
-        template<class T> RanInt() {
-            static_assert(std::signed_v<T>, "Only signed types are allowed.");
-            return max_uniform_int_dist(default_random_engine);
-        }
-
-        // return a random integer between [a, b]
-        template<class T> RanInt(const T a, const T b) {
-
+        // return a random integer between [a, b], b - a <= max(T)
+        template<class T> T RanInt(const T a, const T b) {
+            static_assert(std::is_arithmetic_v<T>, "Only built-in arithmetic types are allowed.");
+            const T L = b - a;
+            if constexpr (std::is_signed_v<T>) {
+                const T x = max_uniform_int_dist(default_random_engine);
+                return a + (x % L - INTMAX_MIN % L) % L;
+            }
+            else {
+                const T x = max_uniform_int_dist(default_random_engine);
+                return a + x % L;
+            }
         }
     }
 
