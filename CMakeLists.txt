@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(wmm VERSION 0.1 LANGUAGES CXX) # Writing Materials Manager (WMM)
-
 # basic compilation options
 set(CMAKE_INCLUDE_CURRENT_DIR ON)   # Automatically add the current source and build directories to the include path (without subdirectories).
 set(CMAKE_AUTOMOC ON)               # CMake will handle the Qt Meta-Object Compiler (MOC) automatically, i.e. without having to use commands like QT4_WRAP_CPP(), QT5_WRAP_CPP(), etc.
@@ -15,6 +13,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# If language is enabled by project() or enable_language(), CMAKE_<LANG>_COMPILER_LOADED is 1.
+project(wmm VERSION 0.1 LANGUAGES CXX)		# Writing Materials Manager (WMM)
+project(wmmtest VERSION 0.1 LANGUAGES CXX)	# Tests for WMM
+
 # print system info (both host and target platform)
 message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_VERSION}")
 message(STATUS "Target System: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION}")
@@ -25,12 +27,14 @@ message(STATUS "C Compiler ABI: ${CMAKE_C_COMPILER_ABI}")
 message(STATUS "C Compiler Architecture ID: ${CMAKE_C_COMPILER_ARCHITECTURE_ID}")
 message(STATUS "C Compiler ID: ${CMAKE_C_COMPILER_ID}")
 message(STATUS "C Compiler Version: ${CMAKE_C_COMPILER_VERSION}")
+message(STATUS "C Compiler Version (Internal): ${CMAKE_C_COMPILER_VERSION_INTERNAL}")
 
 message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "C++ Compiler ABI: ${CMAKE_CXX_COMPILER_ABI}")
 message(STATUS "C++ Compiler Architecture ID: ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
 message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "C++ Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "C++ Compiler Version (Internal): ${CMAKE_CXX_COMPILER_VERSION_INTERNAL}")
 
 message(STATUS "Source Dir: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Binary Dir: ${CMAKE_BINARY_DIR}")

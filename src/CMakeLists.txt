@@ -15,7 +15,7 @@ set(code_files
     ${headers}
     ${Qt_Widgets_UIs}
 )
-# message(STATUS "Files to be compiled: ${code_files}")
+# message(STATUS "code_files in src: ${code_files}")
 set(Qt_ts_Files # Qt translation files
     ts/*.ts
 )
