@@ -1,15 +1,12 @@
 # list files to be compiled
 file(GLOB_RECURSE sources
     *.c*
-    ../test/*.c*
 )
 file(GLOB_RECURSE headers
     *.h*
-    ../test/*.h*
 )
 file(GLOB_RECURSE Qt_Widgets_UIs
     *.ui
-    ../test/*.ui
 )
 
 # set variables

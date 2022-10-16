@@ -18,7 +18,6 @@
 #include "ExtraFunctionWindow.h"
 
 // tests of this project wmm
-#include "../test/Legacy/Test.h"
 
 // NOTE: Meta object features are NOT supported for nested classes.
 
@@ -62,8 +61,6 @@ int main(int argc, char* argv[]) {
 
         QApplication::setPalette(p);
     }
-
-    //int ret = Test::Start();
 
     auto DataSourceManagerWnd = new class DataSourceManagerWindow;
     DataSourceManagerWnd->showMaximized();

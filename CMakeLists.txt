@@ -39,5 +39,6 @@ message(STATUS "Binary Dir: ${CMAKE_BINARY_DIR}")
 find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 message(STATUS "Note: Remember to run post-build script at the root directory of this software.")
