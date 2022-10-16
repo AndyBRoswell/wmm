@@ -25,7 +25,7 @@ namespace TinyRandom {
                 return a + (x % L - INTMAX_MIN % L) % L;
             }
             else {
-                const T x = max_uniform_int_dist(default_random_engine);
+                const T x = max_uniform_uint_dist(default_random_engine);
                 return a + x % L;
             }
         }
