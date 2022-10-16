@@ -42,13 +42,22 @@ namespace tiny_random {
             std::uniform_int_distribution<intmax_t> uniform_non_space_printable_ASCII_dist(0x21, 0x7E);
         }
 
-        template<class T> constexpr bool is_char_type_v
-            = std::is_same_v<T, char>
-            || std::is_same_v<signed char>
-            || std::is_same_v<unsigned char>;
+        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<signed char> || std::is_same_v<unsigned char>;
 
-        template<class T> typename std::enable_if_t<is_char_type_v<T>> printable_ASCII() {
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> printable_ASCII() {
             return uniform_printable_ASCII_dist(random_engine);
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> UCase_Latin() {
+            return uniform_UCase_Latin_dist(random_engine);
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> LCase_Latin() {
+            return uniform_LCase_Latin_dist(random_engine);
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> Dec_digit() {
+            return uniform_dec_digit_dist(random_engine);
         }
     }
 
