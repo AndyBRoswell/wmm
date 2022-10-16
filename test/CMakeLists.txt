@@ -21,7 +21,7 @@ find_package(GTest CONFIG REQUIRED)
 
 enable_testing()
 
-qt_add_executable(wmmtest
+add_executable(wmmtest
     ${code_files}
 )
 set_target_properties(wmmtest PROPERTIES

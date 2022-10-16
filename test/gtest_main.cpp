@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QString>
 
-const qsizetype default_string_length = 256;
+#include "tiny_random.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -19,5 +19,6 @@ TEST(HelloTest, BasicAssertions) {
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
-
+    //const QByteArray s = "abcd";
+    //EXPECT_STREQ(s, "abcd");
 }
