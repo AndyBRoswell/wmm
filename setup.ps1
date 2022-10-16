@@ -117,7 +117,7 @@ for ($i = 0; $i -lt $Lib.Count; ++$i) {
 
         mkdir $Lib[$i]['Name']
         cd $Lib[$i]['Name']
-        echo "Running cmake for $($Lib[$i]['Name']), using build type $($BuildType[$j]) ..."
+        echo "Running cmake for $($Lib[$i]['Name']), using build type $($BuildType[$j]), with flags $($Lib[$i]['Flags']) ..."
         cmake $dld/$($Lib[$i]['Name']) $CommonCFlags $CommonCPPFlags $($Lib[$i]['Flags']) -DCMAKE_BUILD_TYPE="$($BuildType[$j])" -DCMAKE_INSTALL_PREFIX="$InstallPrefix" $PrefixPathFlag `
             -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc /wd4996 /wd4244 /wd4267 /wd4146 /wd4018" # if using MSVC
             # -G "Visual Studio 17 2022" -A x64 `
