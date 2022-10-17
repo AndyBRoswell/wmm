@@ -2,6 +2,7 @@
 #define WRITING_MATERIALS_MANAGER_TESTS_TINY_RANDOM_H
 
 #include <chrono>
+#include <iostream>
 #include <random>
 #include <string>
 
@@ -9,7 +10,7 @@ namespace tiny_random {
     namespace {
         std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
         std::uniform_int_distribution<uintmax_t> max_uniform_uint_dist(0, UINTMAX_MAX);
-        std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
+        std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN + 1, INTMAX_MAX);
     }
 
     namespace number {
@@ -22,10 +23,10 @@ namespace tiny_random {
         // return a random integer between [a, b], b - a <= max(T)
         template<class T> T integer(const T a, const T b) {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
-            const T L = b - a;
+            const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
                 const T x = max_uniform_int_dist(random_engine);
-                return a + (x % L - INTMAX_MIN % L) % L;
+                return a + (x % L - (INTMAX_MIN + 1) % L) % L;
             }
             else {
                 const T x = max_uniform_uint_dist(random_engine);
@@ -70,7 +71,8 @@ namespace tiny_random {
 
         template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
             std::basic_string<T> s;
-            for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
+            for (size_t i = 0; i < length; ++i) { 
+                s.push_back(ASCII(type)); }
             return s;
         }
     }

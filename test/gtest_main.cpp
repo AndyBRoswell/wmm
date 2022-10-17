@@ -17,6 +17,19 @@ TEST(HelloTest, BasicAssertions) {
     EXPECT_EQ(7 * 6, 43);
 }
 
+TEST(Algorithm, Random) {
+    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN + 1, INTMAX_MAX);
+    constexpr int a = 1, b = 256;
+    constexpr auto L = b - a + 1;
+    for (size_t i = 0; i < 1e9; ++i) {
+        const auto x = max_uniform_int_dist(random_engine);
+        const auto r = a + (x % L - (INTMAX_MIN + 1) % L) % L;
+        EXPECT_GE(r, a);
+        EXPECT_LE(r, b);
+    }
+}
+
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
     auto next_int = [](const auto a, const auto b) -> auto {
@@ -26,6 +39,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         return tiny_random::chr::ASCII_string(l, t);
     };
     for (size_t i = 0; i < 10; ++i) {
-        const QByteArray s[2] = { QByteArray::fromStdString(next_str(next_int(1, 256))), s[0].toLower() };
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256)));
     }
 }
