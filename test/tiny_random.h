@@ -34,7 +34,7 @@ namespace tiny_random {
         }
     }
 
-    namespace string {
+    namespace chr {
         namespace {
             constexpr char hex[] = "0123456789ABCDEF";
             constexpr char lhex[] = "0123456789abcdef";

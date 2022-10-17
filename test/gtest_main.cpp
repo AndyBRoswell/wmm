@@ -19,6 +19,10 @@ TEST(HelloTest, BasicAssertions) {
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
-    const QByteArray s = "abcd";
-    EXPECT_STREQ(s, "abcd");
+    auto next_int = [](const auto a, const auto b) {
+        return tiny_random::number::integer(a, b);
+    };
+    for (size_t i = 0; i < 10; ++i) {
+        const QByteArray s;
+    }
 }
