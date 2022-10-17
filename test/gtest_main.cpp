@@ -22,7 +22,7 @@
 //}
 //
 
-//TEST(Algorithm, Mod) {
+//TEST(AlgorithmForTest, Mod) {
 //    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 //    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INT_MIN, INT_MAX);
 //    //std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
@@ -39,7 +39,7 @@
 //    }
 //}
 
-TEST(Algorithm, Random) {
+TEST(AlgorithmForTest, Random) {
     auto mod = [](const auto& N, const auto& D) constexpr {
         const auto r = N % D;
         if (D > 0) { return r >= 0 ? r : r + D; }
@@ -47,15 +47,16 @@ TEST(Algorithm, Random) {
     };
     std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
-    //constexpr int a = 0x20, b = 0x7E;
-    //constexpr int a = 1, b = 256;
-    constexpr int a = 1, b = 0x7E;
-    constexpr auto L = b - a + 1;
-    for (size_t i = 0; i < 1e9; ++i) {
-        const auto x = max_uniform_int_dist(random_engine);
-        const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
-        EXPECT_GE(r, a);
-        EXPECT_LE(r, b);
+    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 } };
+    for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
+        const auto a = B[h][0], b = B[h][1];
+        const auto L = b - a + 1;
+        for (size_t i = 0; i < 1 * 1e9; ++i) {
+            const auto x = max_uniform_int_dist(random_engine);
+            const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
+            EXPECT_GE(r, a);
+            EXPECT_LE(r, b);
+        }
     }
 }
 
