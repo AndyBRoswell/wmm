@@ -35,36 +35,41 @@ namespace tiny_random {
 
     namespace string {
         namespace {
-            const char dec_digit[] = "0123456789";
-            const char hex_digit[] = "0123456789ABCDEF";
-            const char upper_case_latin[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const char lower_case_latin[] = "abcdefghijklmnopqrstuvwxyz";
-            const char latin[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            const char digit_and_latin[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            const char punctuation[] = "!\"#$%&'()*+,-./;:<=>?@[\]^_`{|}~";
-            std::uniform_int_distribution<intmax_t> uniform_printable_ASCII_dist(0x20, 0x7E);
-            std::uniform_int_distribution<intmax_t> uniform_non_space_printable_ASCII_dist(0x21, 0x7E);
+            constexpr char hex_digit[] = "0123456789ABCDEF";
+            constexpr char latin[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            constexpr char punct[] = "!\"#$%&'()*+,-./;:<=>?@[\\]^_`{|}~";
         }
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<signed char> || std::is_same_v<unsigned char>;
 
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> dec_digit() {
+            return number::integer('0', '9');
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> hex_digit() {
+            return hex_digit[number::integer(0, 15)];
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> ucase_Latin() {
+            return number::integer('A', 'Z');
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> lcase_Latin() {
+            return number::integer('a', 'z');
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> Latin() {
+            return latin[number::integer(0, 26 + 26 - 1)];
+        }
+
+        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> digit_and_Latin() {
+            return alnum[number::integer(0, 10 + 26 + 26 - 1)];
+        }
+
         template<class T> typename std::enable_if_t<is_sbc_type_v<T>> printable_ASCII() {
-
+            return number::integer(0x20, 0x7E)
         }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> UCase_Latin() {
-
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> LCase_Latin() {
-
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> Dec_digit() {
-
-        }
-
-        
     }
 
     namespace Misc {
