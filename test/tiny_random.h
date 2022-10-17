@@ -49,9 +49,9 @@ namespace tiny_random {
             dec, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
-        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<signed char> || std::is_same_v<unsigned char>;
+        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char>;
 
-        template<class T = char> constexpr typename std::enable_if_t<is_sbc_type_v<T>> ASCII(const ASCII_char_type type) {
+        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>> ASCII(const ASCII_char_type type = ASCII_char_type::printable) {
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -68,7 +68,7 @@ namespace tiny_random {
             }
         }
 
-        template<class T> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> ASCII_string(const size_t length, const ASCII_char_type type) {
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
             std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> s;
             for (size_t i = 0; i < length; ++i) { s.append(ASCII(type)); }
             return s;
