@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <random>
+#include <string>
 
 namespace tiny_random {
     namespace {
@@ -36,39 +37,41 @@ namespace tiny_random {
     namespace string {
         namespace {
             constexpr char hex[] = "0123456789ABCDEF";
+            constexpr char lhex[] = "0123456789abcdef";
             constexpr char latin[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            constexpr char ualnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            constexpr char lalnum[] = "0123456789abcdefghijklmnopqrstuvwxyz";
             constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             constexpr char punct[] = "!\"#$%&'()*+,-./;:<=>?@[\\]^_`{|}~";
         }
 
+        enum class ASCII_char_type {
+            dec, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
+        };
+
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<signed char> || std::is_same_v<unsigned char>;
 
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> dec_digit() {
-            return number::integer('0', '9');
+        template<class T = char> constexpr typename std::enable_if_t<is_sbc_type_v<T>> ASCII(const ASCII_char_type type) {
+            using t = ASCII_char_type;
+            switch (type) {
+            case t::dec: return number::integer('0', '9');
+            case t::hex: return hex[number::integer(0, 15)];
+            case t::lhex: return lhex[number::integer(0, 15)];
+            case t::ucase: return number::integer('A', 'Z');
+            case t::lcase: return number::integer('a', 'z');
+            case t::alpha: return latin[number::integer(0, 26 - 1)];
+            case t::ualnum: return ualnum[number::integer(0, 10 + 26 - 1)];
+            case t::lalnum: return lalnum[number::integer(0, 10 + 26 - 1)];
+            case t::alnum: return alnum[number::integer(0, 10 + 26+26 - 1)];
+            case t::punct: return punct[number::integer(0, sizeof(punct) - 1)];
+            case t::printable: return number::integer(0x20, 0x7E);
+            }
         }
 
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> hex_digit() {
-            return hex[number::integer(0, 15)];
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> ucase_Latin() {
-            return number::integer('A', 'Z');
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> lcase_Latin() {
-            return number::integer('a', 'z');
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> Latin() {
-            return latin[number::integer(0, 26 + 26 - 1)];
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> digit_and_Latin() {
-            return alnum[number::integer(0, 10 + 26 + 26 - 1)];
-        }
-
-        template<class T> typename std::enable_if_t<is_sbc_type_v<T>> printable_ASCII() {
-            return number::integer(0x20, 0x7E);
+        template<class T> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> ASCII_string(const size_t length, const ASCII_char_type type) {
+            std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> s;
+            for (size_t i = 0; i < length; ++i) { s.append(ASCII(type)); }
+            return s;
         }
     }
 
