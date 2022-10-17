@@ -2,6 +2,7 @@
 #define WRITING_MATERIALS_MANAGER_TESTS_TINY_RANDOM_H
 
 #include <chrono>
+#include <cinttypes>
 #include <iostream>
 #include <random>
 #include <string>
@@ -10,10 +11,17 @@ namespace tiny_random {
     namespace {
         std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
         std::uniform_int_distribution<uintmax_t> max_uniform_uint_dist(0, UINTMAX_MAX);
-        std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN + 1, INTMAX_MAX);
+        std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
     }
 
     namespace number {
+        template<class T> constexpr T mod(const T& N, const T& D) {
+            static_assert(D != 0);
+            const T r = N % D;
+            if constexpr (D > 0) { return r >= 0 ? r : r + D; }
+            else { return r <= 0 ? r : r + D; }
+        }
+
         template<class T> T integer() {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(random_engine);
@@ -26,7 +34,7 @@ namespace tiny_random {
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
                 const T x = max_uniform_int_dist(random_engine);
-                return a + (x % L - (INTMAX_MIN + 1) % L) % L;
+                return a + mod(mod(x, L) - mod(INTMAX_MIN - L), L);
             }
             else {
                 const T x = max_uniform_uint_dist(random_engine);
