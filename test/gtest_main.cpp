@@ -41,13 +41,14 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     auto next_int = [](const auto a, const auto b) -> auto {
         return tiny_random::number::integer(a, b);
     };
-    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) {
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
         return tiny_random::chr::ASCII_string(l, t);
     };
 
     for (size_t i = 0; i < 10; ++i) {
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256))), t = s.toLower();
-        EXPECT_NE(std::hash<std::string>{}(s.toStdString()), std::hash<std::string>{}(t.toStdString()));
+        std::cout << s.toStdString() << std::endl;
+        std::cout << t.toStdString() << std::endl;
         const size_t h[2] = { wmm::CaseInsensitiveHasher{}(s), wmm::CaseInsensitiveHasher{}(t) };
         EXPECT_EQ(h[0], h[1]);
     }
