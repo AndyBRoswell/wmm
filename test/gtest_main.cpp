@@ -77,16 +77,25 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     // csae-insensitive hasher
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = s.toLower(); // 1ull -> 1uz since C++23
-        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = s.toLower();
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
+        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
         const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) }};
-        EXPECT_EQ(h[0][0], h[0][1]);
-        EXPECT_EQ(h[1][0], h[1][1]);
+        for (size_t j = 0; j < 2; ++j) { 
+            EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function
+            EXPECT_EQ(h[j][0], h[j][0]); EXPECT_EQ(h[j][1], h[j][1]);   // s -ceq t -> H(s) == H(t)
+        }
+        const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+        const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
+        if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
+        else { EXPECT_NE(hasher(w), hasher(x)); }
+        if (y == z) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
+        else { EXPECT_NE(hasher(y), hasher(z)); }
     }
 
     // case-insensitive comparator
     constexpr wmm::CaseInsensitiveStringComparator comparator;
     for (size_t i = 0; i < g; ++i) {
         const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = s.toLower();
+
     }
 }
