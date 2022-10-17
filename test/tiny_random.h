@@ -71,8 +71,7 @@ namespace tiny_random {
 
         template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
             std::basic_string<T> s;
-            for (size_t i = 0; i < length; ++i) { 
-                s.push_back(ASCII(type)); }
+            for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }
     }
