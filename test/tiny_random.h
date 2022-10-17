@@ -35,7 +35,7 @@ namespace tiny_random {
 
     namespace string {
         namespace {
-            constexpr char hex_digit[] = "0123456789ABCDEF";
+            constexpr char hex[] = "0123456789ABCDEF";
             constexpr char latin[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             constexpr char punct[] = "!\"#$%&'()*+,-./;:<=>?@[\\]^_`{|}~";
@@ -48,7 +48,7 @@ namespace tiny_random {
         }
 
         template<class T> typename std::enable_if_t<is_sbc_type_v<T>> hex_digit() {
-            return hex_digit[number::integer(0, 15)];
+            return hex[number::integer(0, 15)];
         }
 
         template<class T> typename std::enable_if_t<is_sbc_type_v<T>> ucase_Latin() {
@@ -68,7 +68,7 @@ namespace tiny_random {
         }
 
         template<class T> typename std::enable_if_t<is_sbc_type_v<T>> printable_ASCII() {
-            return number::integer(0x20, 0x7E)
+            return number::integer(0x20, 0x7E);
         }
     }
 
