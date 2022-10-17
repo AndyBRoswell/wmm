@@ -7,8 +7,8 @@
 namespace WritingMaterialsManager {
     struct CaseInsensitiveHasher {
         static const auto DefaultSimpleHashAlgorithm = QCryptographicHash::Blake2b_160;
-        size_t operator()(const QByteArray& Str) const;
-        size_t operator()(const QString& Str) const;
+        size_t operator()(const QByteArray& Str) const noexcept;
+        size_t operator()(const QString& Str) const noexcept;
     };
 
     struct CaseInsensitiveStringComparator {

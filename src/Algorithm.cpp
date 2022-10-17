@@ -1,10 +1,10 @@
 #include "Algorithm.h"
 
 namespace WritingMaterialsManager {
-    size_t CaseInsensitiveHasher::operator()(const QByteArray& Str) const {
+    size_t CaseInsensitiveHasher::operator()(const QByteArray& Str) const noexcept {
         return QCryptographicHash::hash(Str.toUpper(), DefaultSimpleHashAlgorithm).right(8).toULongLong();
     }
-    size_t CaseInsensitiveHasher::operator()(const QString& Str) const {
+    size_t CaseInsensitiveHasher::operator()(const QString& Str) const noexcept {
         return QCryptographicHash::hash(reinterpret_cast<const char* const>(Str.toUpper().constData()), DefaultSimpleHashAlgorithm).right(8).toULongLong();
     }
 
