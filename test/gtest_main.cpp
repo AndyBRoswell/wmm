@@ -71,12 +71,22 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         return tiny_random::chr::ASCII_string(l, t);
     };
 
-    wmm::CaseInsensitiveHasher hasher;
-    for (size_t i = 0; i < 10; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256))), t = s.toLower();
-        std::cout << s.toStdString() << std::endl;
-        std::cout << t.toStdString() << std::endl;
-        const size_t h[2] = { hasher(s), hasher(t) };
-        EXPECT_EQ(h[0], h[1]);
+    constexpr size_t g = 10;        // group count of test data
+    constexpr size_t lmax = 256;    // max length of test strings
+
+    // csae-insensitive hasher
+    constexpr wmm::CaseInsensitiveHasher hasher;
+    for (size_t i = 0; i < g; ++i) {
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = s.toLower(); // 1ull -> 1uz since C++23
+        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = s.toLower();
+        const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) }};
+        EXPECT_EQ(h[0][0], h[0][1]);
+        EXPECT_EQ(h[1][0], h[1][1]);
+    }
+
+    // case-insensitive comparator
+    constexpr wmm::CaseInsensitiveStringComparator comparator;
+    for (size_t i = 0; i < g; ++i) {
+        const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = s.toLower();
     }
 }
