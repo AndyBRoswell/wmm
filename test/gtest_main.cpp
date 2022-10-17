@@ -26,6 +26,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         return tiny_random::chr::ASCII_string(l, t);
     };
     for (size_t i = 0; i < 10; ++i) {
-        const QByteArray s[2] = { "", s[0].toLower() };
+        const QByteArray s[2] = { QByteArray::fromStdString(next_str(next_int(1, 256))), s[0].toLower() };
     }
 }

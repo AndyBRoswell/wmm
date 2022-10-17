@@ -51,7 +51,7 @@ namespace tiny_random {
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char>;
 
-        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>> ASCII(const ASCII_char_type type = ASCII_char_type::printable) {
+        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>, T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) {
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -63,14 +63,14 @@ namespace tiny_random {
             case t::ualnum: return ualnum[number::integer(0, 10 + 26 - 1)];
             case t::lalnum: return lalnum[number::integer(0, 10 + 26 - 1)];
             case t::alnum: return alnum[number::integer(0, 10 + 26+26 - 1)];
-            case t::punct: return punct[number::integer(0, sizeof(punct) - 1)];
-            case t::printable: return number::integer(0x20, 0x7E);
+            case t::punct: return punct[number::integer(0ull, sizeof(punct) - 1)]; // 0ull -> 0uz since C++23
+            default: return number::integer(0x20, 0x7E);
             }
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
-            std::basic_string<std::enable_if_t<is_sbc_type_v<T>>> s;
-            for (size_t i = 0; i < length; ++i) { s.append(ASCII(type)); }
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
+            std::basic_string<T> s;
+            for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }
     }
