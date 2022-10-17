@@ -2,6 +2,7 @@
 #include <random>
 
 #include <QByteArray>
+#include <QCryptographicHash>
 #include <QString>
 
 #include "tiny_random.h"
@@ -78,6 +79,9 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
+        std::cout << QCryptographicHash::hash(s, QCryptographicHash::Blake2b_160) << std::endl;
+        std::cout << QCryptographicHash::hash(s, QCryptographicHash::Blake2b_160).right(8) << std::endl;
+        std::cout << QCryptographicHash::hash(s, QCryptographicHash::Blake2b_160).right(8).toULongLong() << std::endl;
         const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
         const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) }};
         for (size_t j = 0; j < 2; ++j) { 
