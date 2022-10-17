@@ -95,7 +95,10 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     // case-insensitive comparator
     constexpr wmm::CaseInsensitiveStringComparator comparator;
     for (size_t i = 0; i < g; ++i) {
-        const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = s.toLower();
-
+        const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // haphazardly select tolower or toupper
+        EXPECT_TRUE(comparator(s, t)); EXPECT_TRUE(comparator(s, s)); EXPECT_TRUE(comparator(t, t));
+        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = QString::fromStdString(next_str(next_int(1ull, lmax)));
+        if (u == v) { EXPECT_TRUE(comparator(u, v)); }
+        else { EXPECT_FALSE(comparator(u, v)); }
     }
 }
