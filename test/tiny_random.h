@@ -16,9 +16,8 @@ namespace tiny_random {
 
     namespace number {
         template<class T> constexpr T mod(const T& N, const T& D) {
-            static_assert(D != 0);
             const T r = N % D;
-            if constexpr (D > 0) { return r >= 0 ? r : r + D; }
+            if (D > 0) { return r >= 0 ? r : r + D; }
             else { return r <= 0 ? r : r + D; }
         }
 
@@ -34,7 +33,7 @@ namespace tiny_random {
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
                 const T x = max_uniform_int_dist(random_engine);
-                return a + mod(mod(x, L) - mod(INTMAX_MIN - L), L);
+                return a + mod(static_cast<intmax_t>(mod(x, L)) - mod(INTMAX_MIN, static_cast<intmax_t>(L)), static_cast<intmax_t>(L));
             }
             else {
                 const T x = max_uniform_uint_dist(random_engine);

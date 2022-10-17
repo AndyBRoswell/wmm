@@ -22,7 +22,7 @@
 //}
 //
 
-//TEST(AlgorithmForTest, Mod) {
+//TEST(TestAlgorithm, Mod) {
 //    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 //    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INT_MIN, INT_MAX);
 //    //std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
@@ -39,44 +39,44 @@
 //    }
 //}
 
-TEST(AlgorithmForTest, Random) {
-    auto mod = [](const auto& N, const auto& D) constexpr {
-        const auto r = N % D;
-        if (D > 0) { return r >= 0 ? r : r + D; }
-        else { return r <= 0 ? r : r + D; }
-    };
-    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
-    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 } };
-    for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
-        const auto a = B[h][0], b = B[h][1];
-        const auto L = b - a + 1;
-        for (size_t i = 0; i < 1 * 1e9; ++i) {
-            const auto x = max_uniform_int_dist(random_engine);
-            const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
-            EXPECT_GE(r, a);
-            EXPECT_LE(r, b);
-        }
-    }
-}
-
-// Tests of WMM begin here.
-//TEST(Algorithm, StringIeq) { // ieq is from powershell
-//    namespace wmm = WritingMaterialsManager;
-//    
-//    auto next_int = [](const auto a, const auto b) -> auto {
-//        return tiny_random::number::integer(a, b);
+//TEST(TestAlgorithm, Random) {
+//    auto mod = [](const auto& N, const auto& D) constexpr {
+//        const auto r = N % D;
+//        if (D > 0) { return r >= 0 ? r : r + D; }
+//        else { return r <= 0 ? r : r + D; }
 //    };
-//    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) {
-//        return tiny_random::chr::ASCII_string(l, t);
-//    };
-//
-//    wmm::CaseInsensitiveHasher hasher;
-//    for (size_t i = 0; i < 10; ++i) {
-//        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256))), t = s.toLower();
-//        std::cout << s.toStdString() << std::endl;
-//        std::cout << t.toStdString() << std::endl;
-//        const size_t h[2] = { hasher(s), hasher(t) };
-//        EXPECT_EQ(h[0], h[1]);
+//    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+//    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
+//    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 } };
+//    for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
+//        const auto a = B[h][0], b = B[h][1];
+//        const auto L = b - a + 1;
+//        for (size_t i = 0; i < 1 * 1e9; ++i) {
+//            const auto x = max_uniform_int_dist(random_engine);
+//            const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
+//            EXPECT_GE(r, a);
+//            EXPECT_LE(r, b);
+//        }
 //    }
 //}
+
+// Tests of WMM begin here.
+TEST(Algorithm, StringIeq) { // ieq is from powershell
+    namespace wmm = WritingMaterialsManager;
+    
+    auto next_int = [](const auto a, const auto b) -> auto {
+        return tiny_random::number::integer(a, b);
+    };
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) {
+        return tiny_random::chr::ASCII_string(l, t);
+    };
+
+    wmm::CaseInsensitiveHasher hasher;
+    for (size_t i = 0; i < 10; ++i) {
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256))), t = s.toLower();
+        std::cout << s.toStdString() << std::endl;
+        std::cout << t.toStdString() << std::endl;
+        const size_t h[2] = { hasher(s), hasher(t) };
+        EXPECT_EQ(h[0], h[1]);
+    }
+}
