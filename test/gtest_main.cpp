@@ -49,6 +49,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1, 256))), t = s.toLower();
         EXPECT_NE(std::hash<std::string>{}(s.toStdString()), std::hash<std::string>{}(t.toStdString()));
         const size_t h[2] = { wmm::CaseInsensitiveHasher{}(s), wmm::CaseInsensitiveHasher{}(t) };
-        //EXPECT_EQ(h[0], h[1]);
+        EXPECT_EQ(h[0], h[1]);
     }
 }

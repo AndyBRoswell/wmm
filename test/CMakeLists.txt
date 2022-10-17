@@ -5,11 +5,15 @@ file(GLOB_RECURSE sources
 file(GLOB_RECURSE headers
     *.h*
 )
+file(GLOB modules_to_be_tested
+    ../src/Algorithm.cpp
+)
 
 # set variables
 set(code_files
     ${sources}
     ${headers}
+    ${modules_to_be_tested}
 )
 list(FILTER code_files EXCLUDE REGEX "/legacy/")
 # message(STATUS "code_files in test: ${code_files}")
