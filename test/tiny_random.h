@@ -21,14 +21,14 @@ namespace tiny_random {
             else { return r <= 0 ? r : r + D; }
         }
 
-        template<class T> T integer() {
+        template<class T = uintmax_t> T integer() {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(random_engine);
             else return max_uniform_uint_dist(random_engine);
         }
 
         // return a random integer between [a, b], b - a <= max(T)
-        template<class T> T integer(const T a, const T b) {
+        template<class T = uintmax_t> T integer(const T a, const T b) {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {

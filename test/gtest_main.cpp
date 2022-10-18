@@ -1,5 +1,6 @@
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <random>
 
 #include <QByteArray>
@@ -138,5 +139,16 @@ TEST(FileSystemAccessor, Read) {
     std::filesystem::create_directory("test");
     std::filesystem::create_directory(test_dir);
 
+    constexpr size_t N = 100; // number of test files
+    constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
 
+    const std::mt19937_64& r = tiny_random::random_engine;
+    std::exponential_distribution E(1.0);
+    for (size_t i = 0; i < N; ++i) {
+        std::ofstream f(std::to_string(i) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
+        const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(r))));
+        for (size_t j = 0; j < L; ++j) {
+            const uintmax_t n = tiny_random::number::integer();
+        }
+    }
 }
