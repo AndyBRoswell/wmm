@@ -2,7 +2,7 @@
 
 namespace WritingMaterialsManager {
     size_t CaseInsensitiveHasher::operator()(const QByteArray& Str) const noexcept {
-        return QCryptographicHash::hash(Str.toUpper(), DefaultHashAlgorithm).right(8).toULongLong();
+        return QCryptographicHash::hash(Str.toUpper(), DefaultHashAlgorithm).right(8).toULongLong(nullptr, 16);
     }
     size_t CaseInsensitiveHasher::operator()(const QString& Str) const noexcept {
         return QCryptographicHash::hash(reinterpret_cast<const char* const>(Str.toUpper().constData()), DefaultHashAlgorithm).right(8).toULongLong();
