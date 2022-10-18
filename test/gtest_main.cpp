@@ -48,7 +48,7 @@
 //    };
 //    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 //    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
-//    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 } };
+//    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 }, { 0, 10 + 26 + 26 - 1 } };
 //    for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
 //        const auto a = B[h][0], b = B[h][1];
 //        const auto L = b - a + 1;
@@ -61,6 +61,24 @@
 //    }
 //}
 
+TEST(TestAlgorithm, StringConversion) {
+    auto next_int = [](const auto a, const auto b) -> auto {
+        return tiny_random::number::integer(a, b);
+    };
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
+        return tiny_random::chr::ASCII_string(l, t);
+        //const std::string s = tiny_random::chr::ASCII_string(l, t);
+        //std::cout << s << std::endl;
+        //return s;
+    };
+
+    constexpr size_t lmax = 256;    // max length of test strings
+    for (size_t i = 0; i < 1e3; ++i) {
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+        std::cout << s.toStdString() << std::endl;
+    }
+}
+
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
     namespace wmm = WritingMaterialsManager;
@@ -70,6 +88,9 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     };
     auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
         return tiny_random::chr::ASCII_string(l, t);
+        //const std::string s = tiny_random::chr::ASCII_string(l, t);
+        //std::cout << s << std::endl;
+        //return s;
     };
 
     constexpr size_t g = 1e4;       // group count of test data
