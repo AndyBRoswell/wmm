@@ -61,24 +61,24 @@
 //    }
 //}
 
-TEST(TestAlgorithm, StringConversion) {
-    auto next_int = [](const auto a, const auto b) -> auto {
-        return tiny_random::number::integer(a, b);
-    };
-    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
-        return tiny_random::chr::ASCII_string(l, t);
-        //const std::string s = tiny_random::chr::ASCII_string(l, t);
-        //std::cout << s << std::endl;
-        //return s;
-    };
-
-    constexpr size_t lmax = 256;    // max length of test strings
-    for (size_t i = 0; i < 1e5; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
-        //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuoshfiuweshfiushiufhsofjsoifjisohgiuerhfiuwejrf983wyr7832yr8wjrfoiwtiu34yr78yurwiufniue3hf834y78y87rhiufj3oirwourw98oejfoiedjgtieyt98ekfofgoidiugrtiiepofdlk;gjiudotgueotipoemflgoiperuyt98eipoekt0p4ut983u5983urpewkt;sk;ptei9t309tw09";
-        std::cout << s.toStdString() << std::endl;
-    }
-}
+//TEST(TestAlgorithm, StringConversion) {
+//    auto next_int = [](const auto a, const auto b) -> auto {
+//        return tiny_random::number::integer(a, b);
+//    };
+//    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
+//        return tiny_random::chr::ASCII_string(l, t);
+//        //const std::string s = tiny_random::chr::ASCII_string(l, t);
+//        //std::cout << s << std::endl;
+//        //return s;
+//    };
+//
+//    constexpr size_t lmax = 256;    // max length of test strings
+//    for (size_t i = 0; i < 1e5; ++i) {
+//        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+//        //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuoshfiuweshfiushiufhsofjsoifjisohgiuerhfiuwejrf983wyr7832yr8wjrfoiwtiu34yr78yurwiufniue3hf834y78y87rhiufj3oirwourw98oejfoiedjgtieyt98ekfofgoidiugrtiiepofdlk;gjiudotgueotipoemflgoiperuyt98eipoekt0p4ut983u5983urpewkt;sk;ptei9t309tw09";
+//        std::cout << s.toStdString() << std::endl;
+//    }
+//}
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
@@ -94,7 +94,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         //return s;
     };
 
-    constexpr size_t g = 1e5;       // group count of test data
+    constexpr size_t g = 1e6;       // group count of test data
     constexpr size_t lmax = 256;    // max length of test strings
 
     // csae-insensitive hasher
