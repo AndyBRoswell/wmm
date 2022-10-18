@@ -109,10 +109,10 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
         const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
-        else { EXPECT_NE(hasher(w), hasher(x)); }
-        if (y.toUpper() == z.toUpper()) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
-        else { EXPECT_NE(hasher(y), hasher(z)); }
+        if (w.toUpper() != x.toUpper()) { EXPECT_NE(hasher(w), hasher(x)); } // s != t -> H(s) != H(t)
+        else { EXPECT_EQ(hasher(w), hasher(x)); }
+        if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
+        else { EXPECT_EQ(hasher(y), hasher(z)); }
     }
 
     // case-insensitive comparator
