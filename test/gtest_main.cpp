@@ -140,7 +140,7 @@ TEST(FileSystemAccessor, Read) {
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
     constexpr size_t N = 100; // number of test files
-    constexpr size_t Lmin = 8, Lmax = 8; // min/max length of test files
+    constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
 
     std::mt19937_64& r = tiny_random::random_engine;
     std::exponential_distribution E(0.001);
