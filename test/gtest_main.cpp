@@ -151,20 +151,21 @@ TEST(FileSystemAccessor, Read) {
     constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
 
     std::set<uintmax_t> basenames;
-    std::unordered_set<std::string> contents;
+    std::unordered_set<QByteArray> contents;
 
-    std::mt19937_64& r = tiny_random::random_engine;
+    std::mt19937_64& R = tiny_random::random_engine;
     std::exponential_distribution E(0.001);
     for (size_t i = 0; i < N; ++i) {
         const uintmax_t basename = tiny_random::number::integer();
         std::ofstream f(pwd + '/' + std::to_string(basename) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
         basenames.emplace(basename);
-        const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(r))));
-        std::string content;
+        const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(R)))); // most files are small and a few of them are big.
+        QByteArray content;
         for (size_t j = 0; j < L; j += sizeof(uintmax_t)) {
             const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
-            content.append(std::to_string(n[0]));
-            f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << reinterpret_cast<const char*>(n);
+            const char* const raw = reinterpret_cast<const char*>(n);
+            content.append(QByteArray::fromRawData(raw, sizeof(uintmax_t)));
+            f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << raw;
         }
         contents.emplace(content);
     }
@@ -174,6 +175,6 @@ TEST(FileSystemAccessor, Read) {
         const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(i) + ".txt"));
         const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
         EXPECT_TRUE(basenames.contains(std::stoull(fi->baseName().toStdString())));
-        EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f).toStdString()));
+        EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));
     }
 }
