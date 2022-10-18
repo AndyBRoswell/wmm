@@ -73,8 +73,9 @@ TEST(TestAlgorithm, StringConversion) {
     };
 
     constexpr size_t lmax = 256;    // max length of test strings
-    for (size_t i = 0; i < 1e3; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+    for (size_t i = 0; i < 1e0; ++i) {
+        //const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+        const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuoshfiuweshfiushiufhsofjsoifjisohgiuerhfiuwejrf983wyr7832yr8wjrfoiwtiu34yr78yurwiufniue3hf834y78y87rhiufj3oirwourw98oejfoiedjgtieyt98ekfofgoidiugrtiiepofdlk;gjiudotgueotipoemflgoiperuyt98eipoekt0p4ut983u5983urpewkt;sk;ptei9t309tw09";
         std::cout << s.toStdString() << std::endl;
     }
 }
@@ -108,16 +109,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
         const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        {
-            //constexpr auto default_hash_algo = QCryptographicHash::Blake2b_160;
-            //std::cout << w.toStdString() << std::endl;
-            //std::cout << x.toStdString() << std::endl;
-            //std::cout << y.toStdString() << std::endl;
-            //std::cout << z.toStdString() << std::endl;
-            //std::cout << QCryptographicHash::hash(w.toUpper(), default_hash_algo).right(sizeof(size_t)).toHex()/*.toULongLong(nullptr, 16)*/ << std::endl;
-            //std::cout << QCryptographicHash::hash(x.toUpper(), default_hash_algo).right(sizeof(size_t)).toHex()/*.toULongLong(nullptr, 16)*/ << std::endl;
-
-        }
         if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
         else { EXPECT_NE(hasher(w), hasher(x)); }
         if (y.toUpper() == z.toUpper()) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
