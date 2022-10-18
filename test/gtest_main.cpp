@@ -79,16 +79,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
-        {
-            constexpr auto default_hash_algo = QCryptographicHash::Blake2b_160;
-            bool ok;
-            std::cout << QCryptographicHash::hash(s, default_hash_algo) << std::endl;
-            std::cout << QCryptographicHash::hash(s, default_hash_algo).last(8) << std::endl;
-            std::cout << QCryptographicHash::hash(s, default_hash_algo).toULongLong(&ok, 16) << std::endl;
-            EXPECT_TRUE(ok);
-            std::cout << QCryptographicHash::hash(s, default_hash_algo).last(8).toULongLong(&ok, 16) << std::endl;
-            EXPECT_TRUE(ok);
-        }
         const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
         const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) }};
         for (size_t j = 0; j < 2; ++j) { 
@@ -97,6 +87,8 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
         const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
+        std::cout << y.toStdString() << std::endl;
+        std::cout << z.toStdString() << std::endl;
         if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
         else { EXPECT_NE(hasher(w), hasher(x)); }
         if (y == z) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
