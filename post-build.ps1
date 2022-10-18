@@ -68,7 +68,6 @@ cd $shsd
 cp -r py $bind/py
 cp -r src/thm $bind/thm
 cp -r src/ts $bind/ts
-cp -r test $bind/test
 
 # 3rd libraries
 cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/bson-1.0.dll $bind/bson-1.0.dll
