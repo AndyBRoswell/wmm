@@ -9,6 +9,7 @@
 #include "rapidjson/stream.h"
 
 namespace WritingMaterialsManager {
+    // The parameter Text has QString type, mainly for the direct interaction with Widgets classes such as QPlainTextEdit
     void JSONFormatter::Format(QString& Text) {
         using namespace std;
         using namespace rapidjson;

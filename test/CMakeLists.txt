@@ -15,7 +15,7 @@ set(code_files
     ${headers}
     ${modules_to_be_tested}
 )
-list(FILTER code_files EXCLUDE REGEX "/legacy/")
+list(FILTER code_files EXCLUDE REGEX "/\\$legacy/")
 # message(STATUS "code_files in test: ${code_files}")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
