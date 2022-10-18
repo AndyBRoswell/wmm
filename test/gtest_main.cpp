@@ -14,6 +14,7 @@
 // Modules tested
 
 #include "../src/Algorithm.h"
+#include "../src/FileSystemAccessor.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -134,6 +135,8 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
 }
 
 TEST(FileSystemAccessor, Read) {
+    using fsa = WritingMaterialsManager::FileSystemAccessor;
+
     // create test files
     std::filesystem::create_directory("test");
     std::filesystem::create_directory("test/FileSystemAccessor");
@@ -151,5 +154,12 @@ TEST(FileSystemAccessor, Read) {
             const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
             f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << reinterpret_cast<const char*>(n);
         }
+    }
+
+    // interface test
+    for (size_t i = 0; i < N; ++i) {
+        const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(i) + ".txt"));
+        const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
+        std::cout << fi->absoluteFilePath().toStdString() << std::endl;
     }
 }

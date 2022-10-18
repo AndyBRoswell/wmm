@@ -7,6 +7,7 @@ file(GLOB_RECURSE headers
 )
 file(GLOB modules_to_be_tested
     ../src/Algorithm.cpp
+    ../src/FileSystemAccessor.cpp
 )
 
 # set variables
