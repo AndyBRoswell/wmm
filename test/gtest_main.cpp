@@ -72,8 +72,8 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         return tiny_random::chr::ASCII_string(l, t);
     };
 
-    constexpr size_t g = 10;        // group count of test data
-    constexpr size_t lmax = 1;    // max length of test strings
+    constexpr size_t g = 1e3;       // group count of test data
+    constexpr size_t lmax = 256;    // max length of test strings
 
     // csae-insensitive hasher
     constexpr wmm::CaseInsensitiveHasher hasher;
@@ -87,14 +87,9 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
         const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        {
-            const std::string ys = y.toStdString(), zs = z.toStdString();
-            std::cout << ys << std::endl;
-            std::cout << zs << std::endl;
-        }
         if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
         else { EXPECT_NE(hasher(w), hasher(x)); }
-        if (y == z) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
+        if (y.toUpper() == z.toUpper()) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
         else { EXPECT_NE(hasher(y), hasher(z)); }
     }
 
