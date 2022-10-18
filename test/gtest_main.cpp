@@ -87,7 +87,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     auto next_int = [](const auto a, const auto b) -> auto {
         return tiny_random::number::integer(a, b);
     };
-    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) {
         return tiny_random::chr::ASCII_string(l, t);
         //const std::string s = tiny_random::chr::ASCII_string(l, t);
         //std::cout << s << std::endl;
