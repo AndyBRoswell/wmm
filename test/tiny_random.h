@@ -63,15 +63,15 @@ namespace tiny_random {
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
-            case t::hex: return hex[number::integer(0, 15)];
-            case t::lhex: return lhex[number::integer(0, 15)];
+            case t::hex: return hex[number::integer(0, 16 - 1)];
+            case t::lhex: return lhex[number::integer(0, 16 - 1)];
             case t::ucase: return number::integer('A', 'Z');
             case t::lcase: return number::integer('a', 'z');
             case t::alpha: return latin[number::integer(0, 26 - 1)];
             case t::ualnum: return ualnum[number::integer(0, 10 + 26 - 1)];
             case t::lalnum: return lalnum[number::integer(0, 10 + 26 - 1)];
-            case t::alnum: return alnum[number::integer(0, 10 + 26+26 - 1)];
-            case t::punct: return punct[number::integer(0ull, sizeof(punct) - 1)]; // 0ull -> 0uz since C++23
+            case t::alnum: return alnum[number::integer(0, 10 + 26 + 26 - 1)];
+            case t::punct: return punct[number::integer(0ull, sizeof(punct) - 1 - 1)]; // 0ull -> 0uz since C++23
             default: return number::integer(0x20, 0x7E);
             }
         }
