@@ -75,9 +75,9 @@ $Lib = @(
         PrefixPath = ""
     }
     @{
-        Name = 'googletest-release-1.12.1'
-        Link = 'https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip'
-        Flags = "-DGTEST_CREATE_SHARED_LIBRARY=1 -DGTEST_LINKED_AS_SHARED_LIBRARY=1"
+        Name = 'googletest-main'
+        Link = 'https://github.com/google/googletest/archive/refs/heads/main.zip'
+        Flags = "-DBUILD_SHARED_LIBS=ON -DGTEST_CREATE_SHARED_LIBRARY=1 -DGTEST_LINKED_AS_SHARED_LIBRARY=1"
         PrefixPath = ""
     }
 )

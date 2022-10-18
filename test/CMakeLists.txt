@@ -20,7 +20,7 @@ list(FILTER code_files EXCLUDE REGEX "/legacy/")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # dependency: GoogleTest
-list(APPEND CMAKE_PREFIX_PATH "../3rd/install/${CMAKE_CXX_COMPILER_ID}/googletest-release-1.12.1/${CMAKE_BUILD_TYPE}")
+list(APPEND CMAKE_PREFIX_PATH "../3rd/install/${CMAKE_CXX_COMPILER_ID}/googletest-main/${CMAKE_BUILD_TYPE}")
 find_package(GTest CONFIG REQUIRED)
 
 enable_testing()
@@ -29,7 +29,7 @@ qt_add_executable(wmmtest
     ${code_files}
 )
 set_target_properties(wmmtest PROPERTIES
-    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" # C/C++ > Code Generation > Runtime Library = /MTd instead of default /MDd
+    # MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" # C/C++ > Code Generation > Runtime Library = /MTd instead of default /MDd
     MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
