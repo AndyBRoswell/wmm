@@ -7,7 +7,7 @@
 namespace WritingMaterialsManager {
     class FileSystemAccessor {
     public:
-        static std::shared_ptr<QFile> Open(const QString& PathName, QIODeviceBase::OpenMode Mode = QIODevice::ReadOnly);
+        static std::shared_ptr<QFile> Open(const QString& PathName, const QIODeviceBase::OpenMode Mode = QIODevice::ReadOnly);
         static std::shared_ptr<QFileInfo> GetFileInfo(const std::shared_ptr<QFile>& File);
         static QByteArray GetAllRawContents(const std::shared_ptr<QFile>& File);
     };

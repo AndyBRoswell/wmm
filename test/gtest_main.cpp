@@ -94,34 +94,38 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         //return s;
     };
 
-    constexpr size_t g = 1e3;       // group count of test data
-    constexpr size_t lmax = 256;    // max length of test strings
+    { // csae-insensitive hasher
+        constexpr size_t g = 1e6;       // group count of test data
+        constexpr size_t lmax = 256;    // max length of test strings
 
-    // csae-insensitive hasher
-    constexpr wmm::CaseInsensitiveHasher hasher;
-    for (size_t i = 0; i < g; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
-        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
-        const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) }};
-        for (size_t j = 0; j < 2; ++j) { 
-            EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function
-            EXPECT_EQ(h[j][0], h[j][0]); EXPECT_EQ(h[j][1], h[j][1]);   // s -ceq t -> H(s) == H(t)
+        constexpr wmm::CaseInsensitiveHasher hasher;
+        for (size_t i = 0; i < g; ++i) {
+            const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
+            const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
+            const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) } };
+            for (size_t j = 0; j < 2; ++j) {
+                EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function
+                EXPECT_EQ(h[j][0], h[j][0]); EXPECT_EQ(h[j][1], h[j][1]);   // s -ceq t -> H(s) == H(t)
+            }
+            const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+            const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
+            if (w.toUpper() != x.toUpper()) { EXPECT_NE(hasher(w), hasher(x)); } // s != t -> H(s) != H(t)
+            else { EXPECT_EQ(hasher(w), hasher(x)); }
+            if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
+            else { EXPECT_EQ(hasher(y), hasher(z)); }
         }
-        const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
-        const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        if (w.toUpper() != x.toUpper()) { EXPECT_NE(hasher(w), hasher(x)); } // s != t -> H(s) != H(t)
-        else { EXPECT_EQ(hasher(w), hasher(x)); }
-        if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
-        else { EXPECT_EQ(hasher(y), hasher(z)); }
     }
+    { // case-insensitive comparator
+        constexpr size_t g = 1e3;       // group count of test data
+        constexpr size_t lmax = 256;    // max length of test strings
 
-    // case-insensitive comparator
-    constexpr wmm::CaseInsensitiveStringComparator comparator;
-    for (size_t i = 0; i < g; ++i) {
-        const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // haphazardly select tolower or toupper
-        EXPECT_TRUE(comparator(s, t)); EXPECT_TRUE(comparator(s, s)); EXPECT_TRUE(comparator(t, t));
-        const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        if (u.toUpper() != v.toUpper()) { EXPECT_FALSE(comparator(u, v)); }
-        else { EXPECT_FALSE(comparator(u, v)); }
+        constexpr wmm::CaseInsensitiveStringComparator comparator;
+        for (size_t i = 0; i < g; ++i) {
+            const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // haphazardly select tolower or toupper
+            EXPECT_TRUE(comparator(s, t)); EXPECT_TRUE(comparator(s, s)); EXPECT_TRUE(comparator(t, t));
+            const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = QString::fromStdString(next_str(next_int(1ull, lmax)));
+            if (u.toUpper() != v.toUpper()) { EXPECT_FALSE(comparator(u, v)); }
+            else { EXPECT_FALSE(comparator(u, v)); }
+        }
     }
 }

@@ -1,7 +1,7 @@
 #include "FileSystemAccessor.h"
 
 namespace WritingMaterialsManager {
-    std::shared_ptr<QFile> FileSystemAccessor::Open(const QString& PathName, QIODeviceBase::OpenMode Mode) {
+    std::shared_ptr<QFile> FileSystemAccessor::Open(const QString& PathName, const QIODeviceBase::OpenMode Mode) {
         std::shared_ptr<QFile> File = std::make_shared<QFile>(PathName);
         if (File->open(Mode) == false) {
             throw std::runtime_error(("Open file " + PathName + " failed.").toUtf8().constData());
