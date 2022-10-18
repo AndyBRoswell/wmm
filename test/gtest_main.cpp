@@ -1,18 +1,23 @@
+// std
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <random>
+#include <set>
+#include <unordered_set>
 
+// Qt
 #include <QByteArray>
 #include <QCryptographicHash>
 #include <QString>
 
-#include "tiny_random.h"
-
+// googletest
 #include <gtest/gtest.h>
 
-// Modules tested
+// this software
+#include "tiny_random.h"
 
+// Modules tested
 #include "../src/Algorithm.h"
 #include "../src/FileSystemAccessor.h"
 
@@ -142,24 +147,33 @@ TEST(FileSystemAccessor, Read) {
     std::filesystem::create_directory("test/FileSystemAccessor");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
-    constexpr size_t N = 100; // number of test files
+    constexpr size_t N = 1000; // number of test files
     constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
+
+    std::set<uintmax_t> basenames;
+    std::unordered_set<std::string> contents;
 
     std::mt19937_64& r = tiny_random::random_engine;
     std::exponential_distribution E(0.001);
     for (size_t i = 0; i < N; ++i) {
-        std::ofstream f(pwd + '/' + std::to_string(i) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
+        const uintmax_t basename = tiny_random::number::integer();
+        std::ofstream f(pwd + '/' + std::to_string(basename) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
+        basenames.emplace(basename);
         const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(r))));
+        std::string content;
         for (size_t j = 0; j < L; j += sizeof(uintmax_t)) {
             const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
+            content.append(std::to_string(n[0]));
             f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << reinterpret_cast<const char*>(n);
         }
+        contents.emplace(content);
     }
 
     // interface test
     for (size_t i = 0; i < N; ++i) {
         const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(i) + ".txt"));
         const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
-        std::cout << fi->absoluteFilePath().toStdString() << std::endl;
+        EXPECT_TRUE(basenames.contains(std::stoull(fi->baseName().toStdString())));
+        EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f).toStdString()));
     }
 }
