@@ -94,7 +94,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         //return s;
     };
 
-    constexpr size_t g = 1e6;       // group count of test data
+    constexpr size_t g = 1e3;       // group count of test data
     constexpr size_t lmax = 256;    // max length of test strings
 
     // csae-insensitive hasher
@@ -121,7 +121,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // haphazardly select tolower or toupper
         EXPECT_TRUE(comparator(s, t)); EXPECT_TRUE(comparator(s, s)); EXPECT_TRUE(comparator(t, t));
         const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        if (u == v) { EXPECT_TRUE(comparator(u, v)); }
+        if (u.toUpper() != v.toUpper()) { EXPECT_FALSE(comparator(u, v)); }
         else { EXPECT_FALSE(comparator(u, v)); }
     }
 }
