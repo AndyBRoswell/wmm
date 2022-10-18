@@ -135,5 +135,8 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
 TEST(FileSystemAccessor, Read) {
     // create test files
     constexpr const char* const test_dir = "test/FileSystemAccessor";
+    std::filesystem::create_directory("test");
     std::filesystem::create_directory(test_dir);
+
+
 }

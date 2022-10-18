@@ -57,7 +57,7 @@ namespace tiny_random {
             dec, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
-        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char>;
+        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
 
         template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>, T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) {
             using t = ASCII_char_type;
