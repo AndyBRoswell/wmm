@@ -135,20 +135,21 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
 
 TEST(FileSystemAccessor, Read) {
     // create test files
-    constexpr const char* const test_dir = "test/FileSystemAccessor";
     std::filesystem::create_directory("test");
-    std::filesystem::create_directory(test_dir);
+    std::filesystem::create_directory("test/FileSystemAccessor");
+    const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
     constexpr size_t N = 100; // number of test files
-    constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
+    constexpr size_t Lmin = 8, Lmax = 8; // min/max length of test files
 
-    const std::mt19937_64& r = tiny_random::random_engine;
-    std::exponential_distribution E(1.0);
+    std::mt19937_64& r = tiny_random::random_engine;
+    std::exponential_distribution E(0.001);
     for (size_t i = 0; i < N; ++i) {
-        std::ofstream f(std::to_string(i) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
+        std::ofstream f(pwd + '/' + std::to_string(i) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
         const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(r))));
-        for (size_t j = 0; j < L; ++j) {
-            const uintmax_t n = tiny_random::number::integer();
+        for (size_t j = 0; j < L; j += sizeof(uintmax_t)) {
+            const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
+            f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << reinterpret_cast<const char*>(n);
         }
     }
 }
