@@ -87,8 +87,11 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
         const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-        std::cout << y.toStdString() << std::endl;
-        std::cout << z.toStdString() << std::endl;
+        {
+            const std::string ys = y.toStdString(), zs = z.toStdString();
+            std::cout << ys << std::endl;
+            std::cout << zs << std::endl;
+        }
         if (w == x) { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
         else { EXPECT_NE(hasher(w), hasher(x)); }
         if (y == z) { EXPECT_EQ(hasher(y), hasher(z)); } // s != t -> H(s) != H(t)
