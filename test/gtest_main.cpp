@@ -73,7 +73,7 @@ TEST(TestAlgorithm, StringConversion) {
     };
 
     constexpr size_t lmax = 256;    // max length of test strings
-    for (size_t i = 0; i < 1e4; ++i) {
+    for (size_t i = 0; i < 1e5; ++i) {
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuoshfiuweshfiushiufhsofjsoifjisohgiuerhfiuwejrf983wyr7832yr8wjrfoiwtiu34yr78yurwiufniue3hf834y78y87rhiufj3oirwourw98oejfoiedjgtieyt98ekfofgoidiugrtiiepofdlk;gjiudotgueotipoemflgoiperuyt98eipoekt0p4ut983u5983urpewkt;sk;ptei9t309tw09";
         std::cout << s.toStdString() << std::endl;
@@ -94,7 +94,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         //return s;
     };
 
-    constexpr size_t g = 1e4;       // group count of test data
+    constexpr size_t g = 1e5;       // group count of test data
     constexpr size_t lmax = 256;    // max length of test strings
 
     // csae-insensitive hasher
