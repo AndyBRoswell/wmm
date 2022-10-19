@@ -163,10 +163,22 @@ namespace tiny_random {
                     const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
-                case state::space:
-                case state::horizontal_tab:
-                case state::CR:
-                case state::LF: break;
+                case state::space: {
+                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
+                    for (size_t i = 0; i < n; ++i) R.push_back(' ');
+                } break;
+                case state::horizontal_tab: {
+                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
+                    for (size_t i = 0; i < n; ++i) R.push_back('\t');
+                } break;
+                case state::CR: {
+                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
+                    for (size_t i = 0; i < n; ++i) R.push_back('\r');
+                } break;
+                case state::LF: {
+                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
+                    for (size_t i = 0; i < n; ++i) R.push_back('\n');
+                } break;
                 }
             }
             return R;
