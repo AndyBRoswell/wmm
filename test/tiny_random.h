@@ -117,9 +117,9 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 16;
-            const size_t min_obj_size = 1, max_obj_size = 16;
-            const size_t min_str_len = 1, max_str_len = 16;
+            const size_t min_arr_size = 1, max_arr_size = 8;
+            const size_t min_obj_size = 1, max_obj_size = 8;
+            const size_t min_str_len = 1, max_str_len = 8;
             const double p_escape = 0.05;
             const size_t min_single_ws_len = 0, max_single_ws_len = 4;
             const size_t min_ws_count = 0, max_ws_count = 2;
@@ -180,7 +180,7 @@ namespace tiny_random {
                             R.append(e);
                             if (e[1] == 'u') {
                                 const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
-                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
+                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { R.push_back(hex[h / d % 16]); } // convert to hex
                             }
                         }
                         else { R.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
