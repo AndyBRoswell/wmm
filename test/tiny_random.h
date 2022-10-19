@@ -5,6 +5,7 @@
 #include <cinttypes>
 #include <iostream>
 #include <random>
+#include <stack>
 #include <string>
 
 namespace tiny_random {
@@ -82,7 +83,15 @@ namespace tiny_random {
         }
 
         template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() {
-
+            enum class state : char { 
+                object, array,                                                          // recursive structures
+                string, number,                                                         // literals
+                True, False, Null,                                                      // keywords
+                comma, lsquarebracket, rsquarebracket, lcurlybrace, rcurlybrace, colon, // punctuations
+                space, htab, CR, LF,                                                    // whitespaces
+            };
+            std::stack<state, std::vector<state>> s;
+            s.emplace(number::integer(0, state::Null + 1));
         }
     }
 
