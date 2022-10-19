@@ -104,41 +104,14 @@ namespace tiny_random {
             };
             static std::exponential_distribution<double> EXP(1);
 
-            //constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::uniform) {
-            //    if constexpr (std::is_enum_v<decltype(m)>) {
-
-            //    }
-            //    else {
-            //        switch (D) {
-            //        case distribution::uniform: return number::integer(m, M);
-            //        case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
-            //        }
-            //    }
-            //    //return m;
-            //};
-            constexpr auto next_int = []<class T>(const T & m, const T & M, const distribution D = distribution::uniform) {
-                if constexpr (std::is_enum_v<T>) {
-                    switch (D) {
-                    //case distribution::uniform:
-                        //return number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M));
-                    //case distribution::exponential:
-                    //    return std::min(
-                    //        std::max(static_cast<std::underlying_type_t<T>>(M),
-                    //            std::min(static_cast<std::underlying_type_t<T>>(m),
-                    //                static_cast<T>(
-                    //                    number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)) * EXP(random_engine))
-                    //            )
-                    //        )
-                    //    );
-                    }
+            constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
+                switch (D) {
+                case distribution::uniform: return number::integer(m, M);
+                case distribution::exponential: return std::min(M, static_cast<T>(number::integer(m, M) * EXP(random_engine)));
                 }
-                else {
-                    switch (D) {
-                    case distribution::uniform: return number::integer(m, M);
-                    //case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))));
-                    }
-                }
-                return m;
+            };
+            constexpr auto next_enum = []<class T>(const T & m, const T & M) {
+                return static_cast<T>(number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)));
             };
 
             // parameters
@@ -157,7 +130,7 @@ namespace tiny_random {
             // workspace
             std::stack<state, std::vector<state>> S;
             std::basic_string<T> R;
-            S.emplace(next_int(state::object, state::array));
+            S.emplace(next_enum(state::object, state::array));
             while (S.empty() == false) { // non-recursive
                 const state s = S.top();
                 S.pop();
@@ -187,12 +160,12 @@ namespace tiny_random {
                 } break;
                 case state::value: {
                     S.emplace(state::whitespace);
-                    S.emplace(next_int(state::object, state::Null));
+                    S.emplace(next_enum(state::object, state::Null));
                     S.emplace(state::whitespace);
                 } break;
                 case state::whitespace: {
                     const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
-                    for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
+                    for (size_t i = 0; i < n; ++i) { S.emplace(next_enum(state::space, state::LF)); }
                 } break;
                 case state::string: {
                     static std::uniform_real_distribution<double> U(0, 1);
