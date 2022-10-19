@@ -114,13 +114,15 @@ namespace tiny_random {
             // parameters
             const size_t min_arr_size = 1, max_arr_size = 256;
             const size_t min_obj_size = 1, max_obj_size = 256;
+            const size_t min_str_len = 1, max_str_len = 256;
+            const double p_escape = 0.05;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 8;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
+            const distribution str_len_dist = distribution::exponential;
             const distribution single_ws_len_dist = distribution::exponential;
             const distribution ws_count_dist = distribution::exponential;
-            const double p_escape = 0.05;
 
             // workspace
             std::stack<state, std::vector<state>> S;
@@ -163,9 +165,18 @@ namespace tiny_random {
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
                 case state::string: {
-                    S.emplace(state::quote);
+                    static std::uniform_real_distribution U(0, 1);
+                    R.push_back('\"');
+                    const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
+                    for (size_t i = 0; i < n; ++i) {
+                        if (U(random_engine) <= p) { // generate an escape character
 
-                    S.emplace(state::quote);
+                        }
+                        else { // generate normal character;
+
+                        }
+                    }
+                    R.push_back('\"');
                 } break;
                 case state::number: {
                     const bool negative = next_int(0, 1);
