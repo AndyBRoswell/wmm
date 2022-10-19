@@ -51,7 +51,9 @@ namespace tiny_random {
             constexpr char ualnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             constexpr char lalnum[] = "0123456789abcdefghijklmnopqrstuvwxyz";
             constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            constexpr char punct[] = "!\"#$%&'()*+,-./;:<=>?@[\\]^_`{|}~";
+            constexpr char punct[] = "!\"#$%&'()*+,-./"";:<=>?@""[\\]^_`{|}~";
+            constexpr char JSON_non_esc[] = "!#$%&'()*+,-./;0123456789;:<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+            constexpr char JSON_esc[] = R"("\/bfnrtu)";
         }
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
@@ -98,7 +100,7 @@ namespace tiny_random {
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
             static const std::map<state, std::basic_string<T>> direct_input = {
-                { state::True, "True" }, { state::False, "False" }, { state::Null, "null" },
+                { state::True, "true" }, { state::False, "false" }, { state::Null, "null" },
                 { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
                 { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
@@ -107,7 +109,7 @@ namespace tiny_random {
             constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
                 switch (D) {
                 case distribution::uniform: return number::integer(m, M);
-                case distribution::exponential: return std::min(M, static_cast<T>(number::integer(m, M) * EXP(random_engine)));
+                case distribution::exponential: return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine))));
                 }
             };
             constexpr auto next_enum = []<class T>(const T & m, const T & M) {
@@ -119,8 +121,8 @@ namespace tiny_random {
             const size_t min_obj_size = 1, max_obj_size = 16;
             const size_t min_str_len = 1, max_str_len = 16;
             const double p_escape = 0.05;
-            const size_t min_single_ws_len = 0, max_single_ws_len = 8;
-            const size_t min_ws_count = 0, max_ws_count = 8;
+            const size_t min_single_ws_len = 0, max_single_ws_len = 4;
+            const size_t min_ws_count = 0, max_ws_count = 2;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -170,19 +172,18 @@ namespace tiny_random {
                 } break;
                 case state::string: {
                     static std::uniform_real_distribution<double> U(0, 1);
-                    static constexpr char esc[] = R"("\/bfnrtu)";
                     R.push_back('\"');
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
                         if (U(random_engine) <= p_escape) { // generate an escape character
-                            const char e[] = { '\\', esc[next_int(0ui64, sizeof(esc) - 1 - 1)], '\0' };
+                            const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
                             R.append(e);
                             if (e[1] == 'u') {
-                                const uint16_t h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
-                                for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
+                                const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
+                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
                         }
-                        else { R.push_back(ASCII()); } // generate normal character;
+                        else { R.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
                     }
                     R.push_back('\"');
                 } break;
