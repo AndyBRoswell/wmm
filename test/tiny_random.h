@@ -95,10 +95,10 @@ namespace tiny_random {
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::exponential) { 
-                static std::exponential_distribution<double> EXP(1);
+                static std::exponential_distribution<double> E(1);
                 switch (distribution) {
-                case distribution::uniform: return next_int(m, M);
-                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(next_int(m, M) * EXP(random_engine)))));
+                case distribution::uniform: return number::integer(m, M);
+                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * E(random_engine)))));
                 }
             };
 
@@ -133,7 +133,9 @@ namespace tiny_random {
                     }
                     S.emplace(state::left_curly);
                 } break;
-                case state::array:
+                case state::array: {
+
+                } break;
                 case state::string:
                 case state::number:
                 case state::True:
