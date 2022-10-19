@@ -103,18 +103,20 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 128;
-            const size_t min_obj_size = 1, max_obj_size = 128;
-            const size_t min_ws_len = 0, max_ws_len = 8;
+            const size_t min_arr_size = 1, max_arr_size = 256;
+            const size_t min_obj_size = 1, max_obj_size = 256;
+            const size_t min_single_ws_len = 0, max_single_ws_len = 8;
+            const size_t min_ws_count = 0, max_ws_count = 8;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
+            const distribution single_ws_len_dist = distribution::exponential;
             const distribution ws_count_dist = distribution::exponential;
 
             // workspace
             std::stack<state, std::vector<state>> S;
             std::basic_string<T> R;
             S.emplace(next_int(state::object, state::array));
-            while (S.empty() == false) {
+            while (S.empty() == false) { // non-recursive
                 const state s = S.top();
                 S.pop();
                 switch (s) {
@@ -147,7 +149,9 @@ namespace tiny_random {
                 case state::False:
                 case state::Null:
                 case state::value: {
-
+                    S.emplace(state::whitespace);
+                    S.emplace(next_int(state::object, state::Null));
+                    S.emplace(state::whitespace);
                 } break;
                 case state::comma:
                 case state::left_square:
@@ -156,7 +160,8 @@ namespace tiny_random {
                 case state::right_curly:
                 case state::colon:
                 case state::whitespace: {
-
+                    const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
+                    for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
                 case state::space:
                 case state::horizontal_tab:
