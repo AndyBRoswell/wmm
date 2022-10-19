@@ -165,17 +165,17 @@ namespace tiny_random {
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
                 case state::string: {
-                    static std::uniform_real_distribution U(0, 1);
+                    static std::uniform_real_distribution<double> U(0, 1);
                     static constexpr char esc[] = R"("\/bfnrtu)";
                     R.push_back('\"');
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
-                        if (U(random_engine) <= p) { // generate an escape character
-                            const std::string e = esc[number(0, sizeof(esc) - 1 - 1)];
+                        if (U(random_engine) <= p_escape) { // generate an escape character
+                            const std::string e = esc[next_int(0, sizeof(esc) - 1 - 1)];
                             R.append("\\" + e);
                             if (e == 'u') {
-                                const h = next_int(0, UINT16_MAX);
-                                for (size_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
+                                const uint16_t h = next_int(0, UINT16_MAX);
+                                for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
                         }
                         else { // generate normal character;
@@ -193,11 +193,11 @@ namespace tiny_random {
                         switch (next_int(0, 1)) {
                         default: { // no scientific notation
                             static std::uniform_real_distribution U(0, 999999999999999);
-                            R.append(std::to_string(U(random_engine)* EXP(random_engine));
+                            R.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
                         case 1: { // maybe has scientific notation
                             static std::uniform_real_distribution U(0, DBL_MAX);
-                            R.append(std::to_string(U(random_engine)* EXP(random_engine));
+                            R.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
                         }
                     } break;
