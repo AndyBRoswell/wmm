@@ -106,9 +106,10 @@ namespace tiny_random {
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::uniform) { 
                 switch (D) {
-                case distribution::uniform: return number::integer(m, M);
-                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
+                //case distribution::uniform: return number::integer(m, M);
+                //case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
                 }
+                return m;
             };
 
             // parameters
