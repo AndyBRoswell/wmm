@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cinttypes>
 #include <iostream>
+#include <map>
 #include <random>
 #include <stack>
 #include <string>
@@ -93,6 +94,9 @@ namespace tiny_random {
                 space, horizontal_tab, CR, LF,                                      // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
+            constexpr std::map<state, std::basic_string<T>> direct_input = {
+
+            };
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::exponential) { 
                 static std::exponential_distribution<double> E(1);
@@ -145,15 +149,15 @@ namespace tiny_random {
                 } break;
                 case state::string:
                 case state::number:
-                case state::True:
-                case state::False:
-                case state::Null:
+                case state::True: { R.append("true"); } break;
+                case state::False: { R.append("false"); } break;
+                case state::Null: { R.append("null"); } break;
                 case state::value: {
                     S.emplace(state::whitespace);
                     S.emplace(next_int(state::object, state::Null));
                     S.emplace(state::whitespace);
                 } break;
-                case state::comma:
+                case state::comma: { R.push_back(','); } break;
                 case state::left_square:
                 case state::right_square:
                 case state::left_curly:
