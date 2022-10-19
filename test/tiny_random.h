@@ -84,12 +84,12 @@ namespace tiny_random {
 
         template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // generate a JSON string which strictly comply the ECMA-262 3ed (Dec 1999)
             enum class state : char {
-                object, array,                                                          // recursive structures
-                string, number,                                                         // literals
-                True, False, Null,                                                      // keywords
-                value,                                                                  // value (specially processed)
-                comma, lsquarebracket, rsquarebracket, lcurlybrace, rcurlybrace, colon, // punctuations
-                space, htab, CR, LF,                                                    // whitespaces
+                object, array,                                                      // recursive structures
+                string, number,                                                     // literals
+                True, False, Null,                                                  // keywords
+                value,                                                              // value (specially processed)
+                comma, left_square, right_square, left_curly, right_curly, colon,   // punctuations
+                space, htab, CR, LF,                                                // whitespaces
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
 
@@ -132,10 +132,10 @@ namespace tiny_random {
                 case state::Null:
                 case state::value:
                 case state::comma:
-                case state::lsquarebracket:
-                case state::rsquarebracket:
-                case state::lcurlybrace:
-                case state::rcurlybrace:
+                case state::left_square:
+                case state::right_square:
+                case state::left_curly:
+                case state::right_curly:
                 case state::colon:
                 case state::space:
                 case state::htab:
