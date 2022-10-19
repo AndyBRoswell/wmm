@@ -148,7 +148,7 @@ TEST(FileSystemAccessor, Read) {
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
     constexpr size_t N = 1024;                      // number of test files
-    constexpr size_t Lu = 32;                       // u means unit
+    constexpr size_t Lu = 16;                       // u means unit
     constexpr size_t Lmin = Lu, Lmax = 8ull << 20;  // min/max length of test files
 
     std::set<uintmax_t> basenames;
