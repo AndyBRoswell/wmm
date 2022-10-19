@@ -171,10 +171,10 @@ namespace tiny_random {
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
                         if (U(random_engine) <= p_escape) { // generate an escape character
-                            const std::string e = esc[next_int(0, sizeof(esc) - 1 - 1)];
+                            const std::string e = esc[next_int(0ui64, sizeof(esc) - 1 - 1)];
                             R.append("\\" + e);
                             if (e == "u") {
-                                const uint16_t h = next_int(0, UINT16_MAX);
+                                const uint16_t h = next_int(0ui16, UINT16_MAX);
                                 for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
                         }
@@ -186,7 +186,7 @@ namespace tiny_random {
                     const bool negative = next_int(0, 1);
                     if (negative) R.push_back('-');
                     switch (next_int(0, 1)) {
-                    default: R.append(std::to_string(next_int(0, INT64_MAX, distribution::exponential))); break; // int
+                    default: R.append(std::to_string(next_int(0i64, INT64_MAX, distribution::exponential))); break; // int
                     case 1: { // float
                         switch (next_int(0, 1)) {
                         default: { // no scientific notation
