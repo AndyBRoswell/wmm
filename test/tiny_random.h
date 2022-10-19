@@ -82,14 +82,15 @@ namespace tiny_random {
             return s;
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // generate a JSON string which strictly comply the ECMA-262 3ed (Dec 1999)
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
             enum class state : char {
+                value,                                                              // value
                 object, array,                                                      // recursive structures
                 string, number,                                                     // literals
                 True, False, Null,                                                  // keywords
-                value,                                                              // value (specially processed)
                 comma, left_square, right_square, left_curly, right_curly, colon,   // punctuations
-                space, htab, CR, LF,                                                // whitespaces
+                whitespace,                                                         // whitespace
+                space, htab, CR, LF,                                                // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
 
@@ -102,14 +103,10 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_array_length = 1;
-            const size_t max_array_length = 128;
-            const size_t min_object_size = 1;
-            const size_t max_object_size = 128;
-            const size_t min_space_length = 0;
-            const size_t max_space_length = 8;
-            const size_t min_tab_count = 0;
-            const size_t max_tab_count = 4;
+            const size_t min_array_length = 1, max_array_length = 128;
+            const size_t min_object_size = 1, max_object_size = 128;
+            const size_t min_space_length = 0, max_space_length = 8;
+            const size_t min_tab_count = 0, max_tab_count = 4;
             const distribution array_length_dist = distribution::exponential;
             const distribution object_size_dist = distribution::exponential;
             const distribution whitespace_count_dist = distribution::exponential;
@@ -124,9 +121,17 @@ namespace tiny_random {
                 switch (s) {
                 case state::object: {
                     const size_t n = next_int(min_object_size, max_object_size, object_size_dist);
+                    S.emplace(state::right_curly); S.emplace(state::whitespace);
+                    S.emplace(state::value); S.emplace(state::whitespace);
+                    S.emplace(state::colon); S.emplace(state::whitespace);
+                    S.emplace(state::string); S.emplace(state::whitespace);
                     for (size_t i = 1; i < n; ++i) {
-                        
+                        S.emplace(state::comma); S.emplace(state::whitespace);
+                        S.emplace(state::value); S.emplace(state::whitespace);
+                        S.emplace(state::colon); S.emplace(state::whitespace);
+                        S.emplace(state::string); S.emplace(state::whitespace);
                     }
+                    S.emplace(state::left_curly);
                 } break;
                 case state::array:
                 case state::string:
