@@ -154,6 +154,7 @@ TEST(FileSystemAccessor, Read) {
     std::set<uintmax_t> basenames;
     std::unordered_set<QByteArray> contents;
 
+    // regular file
     std::mt19937_64& R = tiny_random::random_engine;
     std::exponential_distribution E(0.001);
     for (size_t i = 0; i < N; ++i) {
@@ -172,10 +173,19 @@ TEST(FileSystemAccessor, Read) {
     }
 
     // interface test: read
-    for (const auto& basename: basenames) {
+    for (const auto& basename: basenames) { // regular files
         const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(basename) + ".txt"));
         const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
         EXPECT_TRUE(basenames.contains(fi->baseName().toULongLong()));
         EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));
     }
+    bool has_open_exception = false; // open exception test
+    try {
+        fsa::Open(QString::fromLocal8Bit(pwd+"/open-exception-test.t"));
+    }
+    catch (const std::runtime_error& e) {
+        has_open_exception = true;
+        EXPECT_EQ(std::string(e.what()).substr(0, 10), std::string("Open file "));
+    }
+    EXPECT_TRUE(has_open_exception);
 }
