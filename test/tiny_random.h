@@ -102,12 +102,12 @@ namespace tiny_random {
                 { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
                 { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "LF" },
             };
+            static std::exponential_distribution<double> EXP(1);
 
-            constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::exponential) { 
-                static std::exponential_distribution<double> E(1);
+            constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::uniform) { 
                 switch (distribution) {
                 case distribution::uniform: return number::integer(m, M);
-                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * E(random_engine)))));
+                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
                 }
             };
 
@@ -168,7 +168,21 @@ namespace tiny_random {
                     S.emplace(state::quote);
                 } break;
                 case state::number: {
-
+                    const bool negative = next_int(0, 1);
+                    if (negative) R.push_back('-');
+                    switch (next(0, 1)) {
+                    default: R.append(std::to_string(next_int(0, INT64_MAX, distribution::exponential))); break; // int
+                    case 1: { // float
+                        switch (next(0, 1)) {
+                        default: { // no scientific notation
+                            static std::uniform_real_distribution(0, 999999999999999);
+                        } break;
+                        case 1: { // scientific notation
+                            static std::uniform_real_distribution(0, DBL_MAX);
+                        } break;
+                        }
+                    } break;
+                    }
                 } break;
                 case state::space: case state::horizontal_tab: case state::CR: case state::LF: {
                     const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
