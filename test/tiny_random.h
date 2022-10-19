@@ -103,13 +103,12 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_array_length = 1, max_array_length = 128;
-            const size_t min_object_size = 1, max_object_size = 128;
-            const size_t min_space_length = 0, max_space_length = 8;
-            const size_t min_tab_count = 0, max_tab_count = 4;
-            const distribution array_length_dist = distribution::exponential;
-            const distribution object_size_dist = distribution::exponential;
-            const distribution whitespace_count_dist = distribution::exponential;
+            const size_t min_arr_size = 1, max_arr_size = 128;
+            const size_t min_obj_size = 1, max_obj_size = 128;
+            const size_t min_ws_len = 0, max_ws_len = 8;
+            const distribution arr_len_dist = distribution::exponential;
+            const distribution obj_size_dist = distribution::exponential;
+            const distribution ws_count_dist = distribution::exponential;
 
             // workspace
             std::stack<state, std::vector<state>> S;
@@ -120,7 +119,7 @@ namespace tiny_random {
                 S.pop();
                 switch (s) {
                 case state::object: {
-                    const size_t n = next_int(min_object_size, max_object_size, object_size_dist);
+                    const size_t n = next_int(min_obj_size, max_obj_size, obj_size_dist);
                     S.emplace(state::right_curly); S.emplace(state::whitespace);
                     S.emplace(state::value); S.emplace(state::whitespace);
                     S.emplace(state::colon); S.emplace(state::whitespace);
@@ -134,7 +133,7 @@ namespace tiny_random {
                     S.emplace(state::left_curly);
                 } break;
                 case state::array: {
-                    const size_t n = next_int(min_array_size, max_array_size, array_size_dist);
+                    const size_t n = next_int(min_arr_size, max_arr_size, arr_len_dist);
                     S.emplace(state::right_square); S.emplace(state::whitespace);
                     for (size_t i = 1; i < n; ++i) {
                         S.emplace(state::comma); S.emplace(state::whitespace);
@@ -147,13 +146,18 @@ namespace tiny_random {
                 case state::True:
                 case state::False:
                 case state::Null:
-                case state::value:
+                case state::value: {
+
+                } break;
                 case state::comma:
                 case state::left_square:
                 case state::right_square:
                 case state::left_curly:
                 case state::right_curly:
                 case state::colon:
+                case state::whitespace: {
+
+                } break;
                 case state::space:
                 case state::horizontal_tab:
                 case state::CR:
