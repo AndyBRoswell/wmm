@@ -91,7 +91,9 @@ namespace tiny_random {
                 comma, lsquarebracket, rsquarebracket, lcurlybrace, rcurlybrace, colon, // punctuations
                 space, htab, CR, LF,                                                    // whitespaces
             };
-            enum class distribution { uniform, exponential };
+            enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
+
+            constexpr auto next_int = [](const auto& m, const auto& M) {return number::integer(m, M); };
 
             // parameters
             const size_t min_array_length = 1;
@@ -105,16 +107,22 @@ namespace tiny_random {
             const distribution array_length_dist = distribution::exponential;
             const distribution object_size_dist = distribution::exponential;
 
+            std::exponential_distribution<double> EXP(1);
+
             // workspace
             std::stack<state, std::vector<state>> S;
             std::basic_string<T> R;
-            S.emplace(number::integer(0, state::array + 1));
+            S.emplace(next_int(0, state::array + 1));
             while (S.empty() == false) {
                 const state s = S.top();
                 S.pop();
                 switch (s) {
                 case state::object: {
-                    const size_t n = number::integer();
+                    size_t n;
+                    switch (object_size_dist) {
+                    case distribution::uniform: n = next_int(min_object_size, max_object_size); break;
+                    case distribution::exponential: n = std::min(std::max(max_object_size, std::min(min_object_size, static_cast<size_t>(next_int(min_object_size, max_object_size) * EXP(random_engine)))));
+                    }
                 } break;
                 case state::array:
                 case state::string:
@@ -132,7 +140,7 @@ namespace tiny_random {
                 case state::space:
                 case state::htab:
                 case state::CR:
-                case state::LF:
+                case state::LF: break;
                 }
             }
             return R;
