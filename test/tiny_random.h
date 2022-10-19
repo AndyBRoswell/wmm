@@ -17,6 +17,8 @@ namespace tiny_random {
     }
 
     namespace number {
+        template<class T> constexpr bool is_integral_or_enum_v = std::is_integral_v<T> || std::is_enum_v<T>;
+
         template<class T> constexpr T mod(const T& N, const T& D) { // N mod D. Note: mod is different from rem (%).
             const T r = N % D;
             if (D > 0) { return r >= 0 ? r : r + D; }
@@ -24,13 +26,13 @@ namespace tiny_random {
         }
 
         template<class T = uintmax_t> T integer() { // return a random integer between [INTMAX_MIN, INTMAX_MAX] or [0, UINTMAX_MAX]
-            static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
+            static_assert(is_integral_or_enum_v<T>, "Only built-in integral or enum types are allowed.");
             if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(random_engine);
             else return max_uniform_uint_dist(random_engine);
         }
 
         template<class T = uintmax_t> T integer(const T a, const T b) { // return a random integer between [a, b], b - a <= max(T)
-            static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
+            static_assert(is_integral_or_enum_v<T>, "Only built-in integral or enum types are allowed.");
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
                 const T x = max_uniform_int_dist(random_engine);
@@ -106,7 +108,7 @@ namespace tiny_random {
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::uniform) { 
                 switch (D) {
-                //case distribution::uniform: return number::integer(m, M);
+                case distribution::uniform: return number::integer(m, M);
                 //case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
                 }
                 return m;
