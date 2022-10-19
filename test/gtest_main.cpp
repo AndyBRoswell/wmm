@@ -171,10 +171,11 @@ TEST(FileSystemAccessor, Read) {
         contents.emplace(content);
     }
 
-    // interface test
+    // interface test: read
     for (const auto& basename: basenames) {
         const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(basename) + ".txt"));
         const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
+        EXPECT_TRUE(basenames.contains(fi->baseName().toULongLong()));
         EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));
     }
 }
