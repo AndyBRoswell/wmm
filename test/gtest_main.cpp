@@ -188,6 +188,16 @@ TEST(FileSystemAccessor, Read) {
     EXPECT_TRUE(has_open_exception);
 }
 
-TEST(JSONFormatter, JSON) {
+TEST(JSON, JSON) {
+    // create test files
+    std::filesystem::create_directory("test");
+    std::filesystem::create_directory("test/JSON");
+    const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSON")).string();
 
+    constexpr size_t N = 1024; // number of test files
+    
+    for (size_t i = 0; i < N; ++i) {
+        std::ofstream f(pwd + '/' + std::to_string(tiny_random::number::integer()) + ".json", std::ios::out | std::ios::trunc);
+        f << tiny_random::chr::JSON();
+    }
 }

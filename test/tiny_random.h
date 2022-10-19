@@ -97,15 +97,15 @@ namespace tiny_random {
                 space, horizontal_tab, CR, LF,                                              // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
-            constexpr std::map<state, std::basic_string<T>> direct_input = {
+            static constexpr std::map<state, std::basic_string<T>> direct_input = {
                 { state::True, "True" }, { state::False, "False" }, { state::Null, "null" },
                 { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
-                { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "LF" },
+                { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
             static std::exponential_distribution<double> EXP(1);
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::uniform) { 
-                switch (distribution) {
+                switch (D) {
                 case distribution::uniform: return number::integer(m, M);
                 case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(number::integer(m, M) * EXP(random_engine)))));
                 }
