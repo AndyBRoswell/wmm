@@ -171,9 +171,9 @@ namespace tiny_random {
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
                         if (U(random_engine) <= p_escape) { // generate an escape character
-                            const std::string e = esc[next_int(0ui64, sizeof(esc) - 1 - 1)];
-                            R.append("\\" + e);
-                            if (e == "u") {
+                            const char e[] = { '\\', esc[next_int(0ui64, sizeof(esc) - 1 - 1)], '\0' };
+                            R.append(e);
+                            if (e[1] == 'u') {
                                 const uint16_t h = next_int(0ui16, UINT16_MAX);
                                 for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
