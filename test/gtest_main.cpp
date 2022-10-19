@@ -147,19 +147,20 @@ TEST(FileSystemAccessor, Read) {
     std::filesystem::create_directory("test/FileSystemAccessor");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
-    constexpr size_t N = 1000; // number of test files
-    constexpr size_t Lmin = 8, Lmax = 65536; // min/max length of test files
+    constexpr size_t N = 1024; // number of test files
+    constexpr size_t Lmin = 256ull, Lmax = 8ull << 20; // min/max length of test files
+    constexpr size_t Lu = 16; // u means unit
 
     std::set<uintmax_t> basenames;
     std::unordered_set<QByteArray> contents;
 
     std::mt19937_64& R = tiny_random::random_engine;
-    std::exponential_distribution E(0.001);
+    std::exponential_distribution E(0.0001);
     for (size_t i = 0; i < N; ++i) {
         const uintmax_t basename = tiny_random::number::integer();
         std::ofstream f(pwd + '/' + std::to_string(basename) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
         basenames.emplace(basename);
-        const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(sizeof(uintmax_t) * E(R)))); // most files are small and a few of them are big.
+        const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(Lu * E(R)))); // most files are small and a few of them are big.
         QByteArray content;
         for (size_t j = 0; j < L; j += sizeof(uintmax_t)) {
             const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
