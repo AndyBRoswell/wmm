@@ -29,7 +29,7 @@ namespace tiny_random {
             else return max_uniform_uint_dist(random_engine);
         }
 
-        template<class T = uintmax_t> T integer(const T a, const T b) { // return a random integer between [a, b], b - a <= max(T)
+        template<class T = uintmax_t> T integer(const T a, const T b) { // return a random integer between [a, b], b - a < max(T)
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
@@ -177,7 +177,7 @@ namespace tiny_random {
                             const char e[] = { '\\', esc[next_int(0ui64, sizeof(esc) - 1 - 1)], '\0' };
                             R.append(e);
                             if (e[1] == 'u') {
-                                const uint16_t h = next_int(0ui16, UINT16_MAX);
+                                const uint16_t h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
                                 for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
                         }
