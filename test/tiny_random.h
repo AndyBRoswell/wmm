@@ -90,7 +90,7 @@ namespace tiny_random {
                 True, False, Null,                                                  // keywords
                 comma, left_square, right_square, left_curly, right_curly, colon,   // punctuations
                 whitespace,                                                         // whitespace
-                space, htab, CR, LF,                                                // whitespace
+                space, horizontal_tab, CR, LF,                                      // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
 
@@ -134,7 +134,13 @@ namespace tiny_random {
                     S.emplace(state::left_curly);
                 } break;
                 case state::array: {
-
+                    const size_t n = next_int(min_array_size, max_array_size, array_size_dist);
+                    S.emplace(state::right_square); S.emplace(state::whitespace);
+                    for (size_t i = 1; i < n; ++i) {
+                        S.emplace(state::comma); S.emplace(state::whitespace);
+                        S.emplace(state::value); S.emplace(state::whitespace);
+                    }
+                    S.emplace(state::left_square);
                 } break;
                 case state::string:
                 case state::number:
@@ -149,7 +155,7 @@ namespace tiny_random {
                 case state::right_curly:
                 case state::colon:
                 case state::space:
-                case state::htab:
+                case state::horizontal_tab:
                 case state::CR:
                 case state::LF: break;
                 }
