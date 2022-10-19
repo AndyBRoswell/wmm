@@ -97,7 +97,7 @@ namespace tiny_random {
                 space, horizontal_tab, CR, LF,                                              // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
-            static constexpr std::map<state, std::basic_string<T>> direct_input = {
+            static const std::map<state, std::basic_string<T>> direct_input = {
                 { state::True, "True" }, { state::False, "False" }, { state::Null, "null" },
                 { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
                 { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
@@ -173,14 +173,12 @@ namespace tiny_random {
                         if (U(random_engine) <= p_escape) { // generate an escape character
                             const std::string e = esc[next_int(0, sizeof(esc) - 1 - 1)];
                             R.append("\\" + e);
-                            if (e == 'u') {
+                            if (e == "u") {
                                 const uint16_t h = next_int(0, UINT16_MAX);
                                 for (uint16_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
                             }
                         }
-                        else { // generate normal character;
-                            R.push_back(ASCII());
-                        }
+                        else { R.push_back(ASCII()); } // generate normal character;
                     }
                     R.push_back('\"');
                 } break;
@@ -192,11 +190,11 @@ namespace tiny_random {
                     case 1: { // float
                         switch (next_int(0, 1)) {
                         default: { // no scientific notation
-                            static std::uniform_real_distribution U(0, 999999999999999);
+                            static std::uniform_real_distribution<double> U(0, 999999999999999);
                             R.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
                         case 1: { // maybe has scientific notation
-                            static std::uniform_real_distribution U(0, DBL_MAX);
+                            static std::uniform_real_distribution<double> U(0, DBL_MAX);
                             R.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
                         }
@@ -205,9 +203,9 @@ namespace tiny_random {
                 } break;
                 case state::space: case state::horizontal_tab: case state::CR: case state::LF: {
                     const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) { R.append(direct_input[s]); }
+                    for (size_t i = 0; i < n; ++i) { R.append(direct_input.at(s)); }
                 } break;
-                default: { R.append(direct_input[s]); } break;
+                default: { R.append(direct_input.at(s)); } break;
                 }
             }
             return R;
