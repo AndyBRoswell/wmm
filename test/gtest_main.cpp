@@ -165,8 +165,8 @@ TEST(FileSystemAccessor, Read) {
             const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
             const char* const raw = reinterpret_cast<const char*>(n);
             content.append(QByteArray::fromRawData(raw, sizeof(uintmax_t)));
-            f << std::setfill('\0') << std::setw(sizeof(uintmax_t)) << raw;
         }
+        f.write(content.constData(), content.size());
         contents.emplace(content);
     }
 
