@@ -170,15 +170,17 @@ namespace tiny_random {
                 case state::number: {
                     const bool negative = next_int(0, 1);
                     if (negative) R.push_back('-');
-                    switch (next(0, 1)) {
+                    switch (next_int(0, 1)) {
                     default: R.append(std::to_string(next_int(0, INT64_MAX, distribution::exponential))); break; // int
                     case 1: { // float
-                        switch (next(0, 1)) {
+                        switch (next_int(0, 1)) {
                         default: { // no scientific notation
-                            static std::uniform_real_distribution(0, 999999999999999);
+                            static std::uniform_real_distribution U(0, 999999999999999);
+                            R.append(std::to_string(U(random_engine)* EXP(random_engine));
                         } break;
-                        case 1: { // scientific notation
-                            static std::uniform_real_distribution(0, DBL_MAX);
+                        case 1: { // maybe has scientific notation
+                            static std::uniform_real_distribution U(0, DBL_MAX);
+                            R.append(std::to_string(U(random_engine)* EXP(random_engine));
                         } break;
                         }
                     } break;
