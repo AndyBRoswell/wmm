@@ -57,7 +57,7 @@ namespace tiny_random {
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
 
         template<class T> using enable_if_sbc = std::enable_if_t<is_sbc_type_v<T>, T>;  // sbc -> single-byte character
-        template<class T> using enable_if_sbs = std::basic_string<enable_if_sbc<T>>;       // sbs -> single-byte string
+        template<class T> using enable_if_sbs = std::basic_string<enable_if_sbc<T>>;    // sbs -> single-byte string
 
         enum class ASCII_char_type {
             dec = 1, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
@@ -120,6 +120,7 @@ namespace tiny_random {
             const distribution obj_size_dist = distribution::exponential;
             const distribution single_ws_len_dist = distribution::exponential;
             const distribution ws_count_dist = distribution::exponential;
+            const double p_escape = 0.05;
 
             // workspace
             std::stack<state, std::vector<state>> S;
@@ -162,7 +163,9 @@ namespace tiny_random {
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
                 case state::string: {
-                    
+                    S.emplace(state::quote);
+
+                    S.emplace(state::quote);
                 } break;
                 case state::number: {
 
