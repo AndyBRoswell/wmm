@@ -27,8 +27,7 @@ namespace tiny_random {
             else return max_uniform_uint_dist(random_engine);
         }
 
-        // return a random integer between [a, b], b - a <= max(T)
-        template<class T = uintmax_t> T integer(const T a, const T b) {
+        template<class T = uintmax_t> T integer(const T a, const T b) { // return a random integer between [a, b], b - a <= max(T)
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
@@ -54,7 +53,7 @@ namespace tiny_random {
         }
 
         enum class ASCII_char_type {
-            dec, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
+            dec = 1, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;

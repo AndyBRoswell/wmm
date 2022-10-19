@@ -180,12 +180,14 @@ TEST(FileSystemAccessor, Read) {
         EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));
     }
     bool has_open_exception = false; // open exception test
-    try {
-        fsa::Open(QString::fromLocal8Bit(pwd+"/open-exception-test.t"));
-    }
+    try { fsa::Open(QString::fromLocal8Bit(pwd+"/open-exception-test.t")); } // deliberately open a non-existing file
     catch (const std::runtime_error& e) {
         has_open_exception = true;
         EXPECT_EQ(std::string(e.what()).substr(0, 10), std::string("Open file "));
     }
     EXPECT_TRUE(has_open_exception);
+}
+
+TEST(JSONFormatter, JSON) {
+
 }
