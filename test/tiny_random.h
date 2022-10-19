@@ -90,8 +90,48 @@ namespace tiny_random {
                 comma, lsquarebracket, rsquarebracket, lcurlybrace, rcurlybrace, colon, // punctuations
                 space, htab, CR, LF,                                                    // whitespaces
             };
-            std::stack<state, std::vector<state>> s;
-            s.emplace(number::integer(0, state::Null + 1));
+            std::stack<state, std::vector<state>> S;
+            S.emplace(number::integer(0, state::array + 1));
+            while (S.empty() == false) {
+                const state s = S.top();
+                S.pop();
+                switch (s) {
+                case state::object:
+                    break;
+                case state::array:
+                    break;
+                case state::string:
+                    break;
+                case state::number:
+                    break;
+                case state::True:
+                    break;
+                case state::False:
+                    break;
+                case state::Null:
+                    break;
+                case state::comma:
+                    break;
+                case state::lsquarebracket:
+                    break;
+                case state::rsquarebracket:
+                    break;
+                case state::lcurlybrace:
+                    break;
+                case state::rcurlybrace:
+                    break;
+                case state::colon:
+                    break;
+                case state::space:
+                    break;
+                case state::htab:
+                    break;
+                case state::CR:
+                    break;
+                case state::LF:
+                    break;
+                }
+            }
         }
     }
 
