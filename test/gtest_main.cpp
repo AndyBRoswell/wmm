@@ -148,14 +148,14 @@ TEST(FileSystemAccessor, Read) {
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
     constexpr size_t N = 1024;                      // number of test files
-    constexpr size_t Lu = 8;                        // u means unit
+    constexpr size_t Lu = 32;                       // u means unit
     constexpr size_t Lmin = Lu, Lmax = 8ull << 20;  // min/max length of test files
 
     std::set<uintmax_t> basenames;
     std::unordered_set<QByteArray> contents;
 
     std::mt19937_64& R = tiny_random::random_engine;
-    std::exponential_distribution E(0.0001);
+    std::exponential_distribution E(0.001);
     for (size_t i = 0; i < N; ++i) {
         const uintmax_t basename = tiny_random::number::integer();
         std::ofstream f(pwd + '/' + std::to_string(basename) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
