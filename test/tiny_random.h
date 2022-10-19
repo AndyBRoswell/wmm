@@ -93,35 +93,39 @@ namespace tiny_random {
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
 
-            constexpr auto next_int = [](const auto& m, const auto& M) {return number::integer(m, M); };
+            constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::exponential) { 
+                static std::exponential_distribution<double> EXP(1);
+                switch (distribution) {
+                case distribution::uniform: return next_int(m, M);
+                case distribution::exponential: return std::min(std::max(M, std::min(m, static_cast<decltype(M)>(next_int(m, M) * EXP(random_engine)))));
+                }
+            };
 
             // parameters
             const size_t min_array_length = 1;
             const size_t max_array_length = 128;
             const size_t min_object_size = 1;
             const size_t max_object_size = 128;
-            const size_t min_space_length = 1;
+            const size_t min_space_length = 0;
             const size_t max_space_length = 8;
-            const size_t min_tab_count = 1;
+            const size_t min_tab_count = 0;
             const size_t max_tab_count = 4;
             const distribution array_length_dist = distribution::exponential;
             const distribution object_size_dist = distribution::exponential;
-
-            std::exponential_distribution<double> EXP(1);
+            const distribution whitespace_count_dist = distribution::exponential;
 
             // workspace
             std::stack<state, std::vector<state>> S;
             std::basic_string<T> R;
-            S.emplace(next_int(0, state::array + 1));
+            S.emplace(next_int(state::object, state::array));
             while (S.empty() == false) {
                 const state s = S.top();
                 S.pop();
                 switch (s) {
                 case state::object: {
-                    size_t n;
-                    switch (object_size_dist) {
-                    case distribution::uniform: n = next_int(min_object_size, max_object_size); break;
-                    case distribution::exponential: n = std::min(std::max(max_object_size, std::min(min_object_size, static_cast<size_t>(next_int(min_object_size, max_object_size) * EXP(random_engine)))));
+                    const size_t n = next_int(min_object_size, max_object_size, object_size_dist);
+                    for (size_t i = 1; i < n; ++i) {
+                        
                     }
                 } break;
                 case state::array:
