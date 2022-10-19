@@ -166,14 +166,20 @@ namespace tiny_random {
                 } break;
                 case state::string: {
                     static std::uniform_real_distribution U(0, 1);
+                    static constexpr char esc[] = R"("\/bfnrtu)";
                     R.push_back('\"');
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
                         if (U(random_engine) <= p) { // generate an escape character
-
+                            const std::string e = esc[number(0, sizeof(esc) - 1 - 1)];
+                            R.append("\\" + e);
+                            if (e == 'u') {
+                                const h = next_int(0, UINT16_MAX);
+                                for (size_t i = 0, d = 1; i < 4; ++i, d *= 16) { R.push_back(h / d % 16 + '0'); } // convert to hex
+                            }
                         }
                         else { // generate normal character;
-
+                            R.push_back(ASCII());
                         }
                     }
                     R.push_back('\"');
