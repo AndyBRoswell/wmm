@@ -82,56 +82,60 @@ namespace tiny_random {
             return s;
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() {
-            enum class state : char { 
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // generate a JSON string which strictly comply the ECMA-262 3ed (Dec 1999)
+            enum class state : char {
                 object, array,                                                          // recursive structures
                 string, number,                                                         // literals
                 True, False, Null,                                                      // keywords
+                value,                                                                  // value (specially processed)
                 comma, lsquarebracket, rsquarebracket, lcurlybrace, rcurlybrace, colon, // punctuations
                 space, htab, CR, LF,                                                    // whitespaces
             };
+            enum class distribution { uniform, exponential };
+
+            // parameters
+            const size_t min_array_length = 1;
+            const size_t max_array_length = 128;
+            const size_t min_object_size = 1;
+            const size_t max_object_size = 128;
+            const size_t min_space_length = 1;
+            const size_t max_space_length = 8;
+            const size_t min_tab_count = 1;
+            const size_t max_tab_count = 4;
+            const distribution array_length_dist = distribution::exponential;
+            const distribution object_size_dist = distribution::exponential;
+
+            // workspace
             std::stack<state, std::vector<state>> S;
+            std::basic_string<T> R;
             S.emplace(number::integer(0, state::array + 1));
             while (S.empty() == false) {
                 const state s = S.top();
                 S.pop();
                 switch (s) {
-                case state::object:
-                    break;
+                case state::object: {
+                    const size_t n = number::integer();
+                } break;
                 case state::array:
-                    break;
                 case state::string:
-                    break;
                 case state::number:
-                    break;
                 case state::True:
-                    break;
                 case state::False:
-                    break;
                 case state::Null:
-                    break;
+                case state::value:
                 case state::comma:
-                    break;
                 case state::lsquarebracket:
-                    break;
                 case state::rsquarebracket:
-                    break;
                 case state::lcurlybrace:
-                    break;
                 case state::rcurlybrace:
-                    break;
                 case state::colon:
-                    break;
                 case state::space:
-                    break;
                 case state::htab:
-                    break;
                 case state::CR:
-                    break;
                 case state::LF:
-                    break;
                 }
             }
+            return R;
         }
     }
 
