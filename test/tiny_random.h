@@ -15,13 +15,13 @@ namespace tiny_random {
     }
 
     namespace number {
-        template<class T> constexpr T mod(const T& N, const T& D) {
+        template<class T> constexpr T mod(const T& N, const T& D) { // N mod D. Note: mod is different from rem (%).
             const T r = N % D;
             if (D > 0) { return r >= 0 ? r : r + D; }
             else { return r <= 0 ? r : r + D; }
         }
 
-        template<class T = uintmax_t> T integer() {
+        template<class T = uintmax_t> T integer() { // return a random integer between [INTMAX_MIN, INTMAX_MAX] or [0, UINTMAX_MAX]
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(random_engine);
             else return max_uniform_uint_dist(random_engine);
@@ -58,7 +58,7 @@ namespace tiny_random {
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
 
-        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>, T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) {
+        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>, T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII character
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -75,10 +75,14 @@ namespace tiny_random {
             }
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) {
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII string
             std::basic_string<T> s;
             for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
+        }
+
+        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() {
+
         }
     }
 
