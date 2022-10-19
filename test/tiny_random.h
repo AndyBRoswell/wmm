@@ -85,13 +85,13 @@ namespace tiny_random {
 
         template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
             enum class state : char {
-                value,                                                              // value
-                object, array,                                                      // recursive structures
-                string, number,                                                     // literals
-                True, False, Null,                                                  // keywords
-                comma, left_square, right_square, left_curly, right_curly, colon,   // punctuations
-                whitespace,                                                         // whitespace
-                space, horizontal_tab, CR, LF,                                      // whitespace
+                value,                                                                      // value
+                object, array,                                                              // recursive structures
+                string, number,                                                             // literals
+                True, False, Null,                                                          // keywords
+                comma, left_square, right_square, left_curly, right_curly, colon, quote,    // punctuations
+                whitespace,                                                                 // whitespace
+                space, horizontal_tab, CR, LF,                                              // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
             constexpr std::map<state, std::basic_string<T>> direct_input = {
@@ -158,15 +158,17 @@ namespace tiny_random {
                     const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
-                case state::string:
-                case state::number:
-                case state::True: case state::False: case state::Null: case state::comma: case state::left_square: case state::right_square: case state::left_curly: case state::right_curly: case state::colon: {
-                    R.append(direct_input[s]);
+                case state::string: {
+                    
+                } break;
+                case state::number: {
+
                 } break;
                 case state::space: case state::horizontal_tab: case state::CR: case state::LF: {
                     const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
                     for (size_t i = 0; i < n; ++i) { R.append(direct_input[s]); }
                 } break;
+                default: { R.append(direct_input[s]); } break;
                 }
             }
             return R;
