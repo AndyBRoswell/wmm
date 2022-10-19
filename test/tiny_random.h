@@ -195,13 +195,13 @@ namespace tiny_random {
                     case 1: { // float
                         switch (next_int(0, 1)) {
                         default: { // no scientific notation
-                            static std::uniform_real_distribution<double> U(0, 999999999999999);
+                            static std::uniform_real_distribution<double> U(0, 10);
                             R.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
-                        case 1: { // maybe has scientific notation
-                            static std::uniform_real_distribution<double> U(0, DBL_MAX);
-                            R.append(std::to_string(U(random_engine)* EXP(random_engine)));
-                        } break;
+                        //case 1: { // maybe has scientific notation
+                        //    static std::uniform_real_distribution<double> U(0, DBL_MAX);
+                        //    R.append(std::to_string(U(random_engine)* EXP(random_engine)));
+                        //} break;
                         }
                     } break;
                     }
