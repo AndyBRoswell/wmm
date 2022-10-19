@@ -199,5 +199,6 @@ TEST(JSON, JSON) {
     for (size_t i = 0; i < N; ++i) {
         std::ofstream f(pwd + '/' + std::to_string(tiny_random::number::integer()) + ".json", std::ios::out | std::ios::trunc);
         f << tiny_random::chr::JSON();
+        f.flush();
     }
 }

@@ -115,12 +115,12 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 256;
-            const size_t min_obj_size = 1, max_obj_size = 256;
-            const size_t min_str_len = 1, max_str_len = 256;
+            const size_t min_arr_size = 1, max_arr_size = 16;
+            const size_t min_obj_size = 1, max_obj_size = 16;
+            const size_t min_str_len = 1, max_str_len = 16;
             const double p_escape = 0.05;
-            const size_t min_single_ws_len = 0, max_single_ws_len = 16;
-            const size_t min_ws_count = 0, max_ws_count = 16;
+            const size_t min_single_ws_len = 0, max_single_ws_len = 8;
+            const size_t min_ws_count = 0, max_ws_count = 8;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -152,6 +152,7 @@ namespace tiny_random {
                 case state::array: {
                     const size_t n = next_int(min_arr_size, max_arr_size, arr_len_dist);
                     S.emplace(state::right_square); S.emplace(state::whitespace);
+                    S.emplace(state::value); S.emplace(state::whitespace);
                     for (size_t i = 1; i < n; ++i) {
                         S.emplace(state::comma); S.emplace(state::whitespace);
                         S.emplace(state::value); S.emplace(state::whitespace);
