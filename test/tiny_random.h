@@ -54,13 +54,16 @@ namespace tiny_random {
             constexpr char punct[] = "!\"#$%&'()*+,-./;:<=>?@[\\]^_`{|}~";
         }
 
+        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
+
+        template<class T> using enable_if_sbc = std::enable_if_t<is_sbc_type_v<T>, T>;  // sbc -> single-byte character
+        template<class T> using enable_if_sbs = std::basic_string<enable_if_sbc<T>>;       // sbs -> single-byte string
+
         enum class ASCII_char_type {
             dec = 1, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
-        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
-
-        template<class T = char> typename std::enable_if_t<is_sbc_type_v<T>, T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII character
+        template<class T = char> typename enable_if_sbc<T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII character
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -77,13 +80,13 @@ namespace tiny_random {
             }
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII string
+        template<class T = char> typename enable_if_sbs<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII string
             std::basic_string<T> s;
             for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }
 
-        template<class T = char> typename std::basic_string<std::enable_if_t<is_sbc_type_v<T>, T>> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
+        template<class T = char> typename enable_if_sbs<T> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
             enum class state : char {
                 value,                                                                      // value
                 object, array,                                                              // recursive structures
