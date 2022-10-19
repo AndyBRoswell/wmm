@@ -95,7 +95,9 @@ namespace tiny_random {
             };
             enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
             constexpr std::map<state, std::basic_string<T>> direct_input = {
-
+                { state::True, "True" }, { state::False, "False" }, { state::Null, "null" },
+                { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
+                { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "LF" },
             };
 
             constexpr auto next_int = [](const auto& m, const auto& M, const distribution D = distribution::exponential) { 
@@ -147,41 +149,23 @@ namespace tiny_random {
                     }
                     S.emplace(state::left_square);
                 } break;
-                case state::string:
-                case state::number:
-                case state::True: { R.append("true"); } break;
-                case state::False: { R.append("false"); } break;
-                case state::Null: { R.append("null"); } break;
                 case state::value: {
                     S.emplace(state::whitespace);
                     S.emplace(next_int(state::object, state::Null));
                     S.emplace(state::whitespace);
                 } break;
-                case state::comma: { R.push_back(','); } break;
-                case state::left_square:
-                case state::right_square:
-                case state::left_curly:
-                case state::right_curly:
-                case state::colon:
                 case state::whitespace: {
                     const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
                     for (size_t i = 0; i < n; ++i) { S.emplace(next_int(state::space, state::LF)); }
                 } break;
-                case state::space: {
-                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) R.push_back(' ');
+                case state::string:
+                case state::number:
+                case state::True: case state::False: case state::Null: case state::comma: case state::left_square: case state::right_square: case state::left_curly: case state::right_curly: case state::colon: {
+                    R.append(direct_input[s]);
                 } break;
-                case state::horizontal_tab: {
+                case state::space: case state::horizontal_tab: case state::CR: case state::LF: {
                     const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) R.push_back('\t');
-                } break;
-                case state::CR: {
-                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) R.push_back('\r');
-                } break;
-                case state::LF: {
-                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) R.push_back('\n');
+                    for (size_t i = 0; i < n; ++i) { R.append(direct_input[s]); }
                 } break;
                 }
             }
