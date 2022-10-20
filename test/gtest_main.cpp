@@ -97,7 +97,7 @@ TEST(TestAlgorithm, Exp) {
     constexpr size_t nsp = 1e6;
     constexpr size_t B[][2] = { { 1, 8 }, { 1, 16 }, { 1, 32 }, { 1, 64 }, { 1, 128 } , { 1, 256 } };
     std::exponential_distribution<double> E(2);
-    std::cout << "P(x) = " << E.lambda() << "e^(" << E.lambda() << "x), x >= 0" << std::endl;
+    std::cout << "P(x) = " << E.lambda() << "e^(-" << E.lambda() << "x), x >= 0" << std::endl;
     for (size_t i = 0; i < sizeof(B) / (2 * sizeof(size_t)); ++i) {
         const size_t m = B[i][0], M = B[i][1];
         std::vector<size_t> c(M + 1, 0);
