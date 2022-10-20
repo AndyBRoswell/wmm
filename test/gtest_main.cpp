@@ -10,6 +10,7 @@
 // Qt
 #include <QByteArray>
 #include <QCryptographicHash>
+#include <QJsonDocument>
 #include <QString>
 
 // googletest
@@ -222,27 +223,31 @@ TEST(JSONFormatter, Default) {
     std::filesystem::create_directory("test/JSON");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSON")).string();
 
-    constexpr size_t N = 10; // number of test files
+    constexpr size_t N = 20; // number of test files
     
     std::set<uintmax_t> basenames;
     for (size_t i = 0; i < N; ++i) {
-        const uintmax_t basename = tiny_random::number::integer();
+        const auto basename = tiny_random::number::integer();
         std::ofstream f(pwd + '/' + std::to_string(basename) + ".json", std::ios::out | std::ios::trunc);
         basenames.emplace(basename);
-        f << tiny_random::chr::JSON();
+        const auto json = tiny_random::chr::JSON();
+        QJsonParseError error;
+        const QJsonDocument d = QJsonDocument::fromJson(QByteArray::fromStdString(json), &error);
+        EXPECT_EQ(error.error, QJsonParseError::ParseError::NoError); // prove that the generated JSON has NO lexical/syntax error
+        f << json;
         f.flush();
     }
 
     // format
     for (const auto& basename : basenames) {
-        const std::shared_ptr<QFile> f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
+        const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
         auto content = fsa::GetAllRawContents(f);
         auto json = QString::fromUtf8(content);
         WritingMaterialsManager::JSONFormatter formatter;
         formatter.Format(json);
-        const std::shared_ptr<QFile> g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
+        const auto g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
         g->write(json.toStdString().c_str());
-        const std::shared_ptr<QFile> h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
+        const auto h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
         EXPECT_EQ(content, fsa::GetAllRawContents(h));
     }
 }

@@ -126,7 +126,7 @@ namespace tiny_random {
             const double p_escape = 0.01;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t max_recursive_depth = 4;
+            const size_t max_recursive_depth = 6;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
