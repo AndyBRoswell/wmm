@@ -10,7 +10,9 @@
 // Qt
 #include <QByteArray>
 #include <QCryptographicHash>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QString>
 
 // googletest
@@ -144,8 +146,7 @@ TEST(JSONFormatter, Default) {
         f.flush();
     }
 
-    // format
-    for (const auto& basename : basenames) {
+    for (const auto& basename : basenames) { // format
         const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
         auto content = fsa::GetAllRawContents(f);
         auto json = QString::fromUtf8(content);
@@ -159,10 +160,19 @@ TEST(JSONFormatter, Default) {
 }
 
 TEST(MongoDBAccessor, BasicInfo) {
-    WritingMaterialsManager::MongoDBAccessor a;
-    std::cout << a.GetDatabasesInformation().toStdString() << "\n" << std::endl
-        << a.GetCollectionsInformation(QByteArray("admin")).toStdString() << "\n" << std::endl
-        << a.GetCollectionsInformation("config").toStdString() << "\n" << std::endl
-        << a.GetCollectionsInformation("local").toStdString() << "\n" << std::endl
-        << a.GetDBsAndCollsInfo().toStdString() << std::endl;
+    WritingMaterialsManager::MongoDBAccessor mongoa;
+    const QByteArray information[] = {
+        mongoa.GetDatabasesInformation(),
+        mongoa.GetCollectionsInformation("admin"),
+        mongoa.GetCollectionsInformation("config"),
+        mongoa.GetCollectionsInformation("local"),
+        mongoa.GetDBsAndCollsInfo(),
+    };
+    for (const auto& i : information) {
+        QJsonParseError e;
+        const auto d = QJsonDocument::fromJson(i, &e);
+        EXPECT_EQ(e.error, QJsonParseError::ParseError::NoError);   // prove that the returned JSON exactly has NO lexical/syntax error
+        EXPECT_TRUE(d.array()[0].toObject().contains("name"));      // and the expected basic information
+        //std::cout << i.toStdString() << "\n" << std::endl;
+    }
 }
