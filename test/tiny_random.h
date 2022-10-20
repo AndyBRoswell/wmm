@@ -101,15 +101,18 @@ namespace tiny_random {
             enum class distribution { uniform, exponential }; // TODO: add "interval linear distribution"
             static const std::map<state, std::basic_string<T>> direct_input = {
                 { state::True, "true" }, { state::False, "false" }, { state::Null, "null" },
-                { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
-                { state::space, " " }, { state::horizontal_tab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
+                { state::comma, "," }, { state::lsquare, "[" }, { state::rsquare, "]" }, { state::lcurly, "{" }, { state::rcurly, "}" }, { state::colon, ":" },
+                { state::space, " " }, { state::htab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
             static std::exponential_distribution<double> EXP(1);
 
             constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
                 switch (D) {
                 case distribution::uniform: return number::integer(m, M);
-                case distribution::exponential: return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine))));
+                case distribution::exponential:
+                    if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>(number::integer(0, 1) == 0 ? 1 : -1 * number::integer(m, M) * EXP(random_engine)))); }
+                    else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
+                    
                 }
             };
             constexpr auto next_enum = []<class T>(const T & m, const T & M) {
@@ -202,8 +205,15 @@ namespace tiny_random {
                             ret.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
                         case 1: { // scientific notation
-                            static std::uniform_real_distribution<double> US(1, 10);
-
+                            static std::uniform_real_distribution<double> U(1, 10);
+                            const double coef = U(random_engine);
+                            const int exp = next_int(-308, 308, distribution::exponential);
+                            if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(negative ? -DBL_MAX : DBL_MAX)); }
+                            else {
+                                ret.append(std::to_string(coef) + (next_int(0, 1) == 0 ? "E" : "e"));
+                                if (exp < 0) { ret.append(std::to_string(exp)); }
+                                else { ret.append((next_int(0, 1) == 0 ? "" : "+") + std::to_string(exp)); }
+                            }
                         } break;
                         }
                     } break;
