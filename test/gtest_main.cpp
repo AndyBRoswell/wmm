@@ -222,7 +222,7 @@ TEST(JSONFormatter, Default) {
     std::filesystem::create_directory("test/JSON");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSON")).string();
 
-    constexpr size_t N = 20; // number of test files
+    constexpr size_t N = 10; // number of test files
     
     std::set<uintmax_t> basenames;
     for (size_t i = 0; i < N; ++i) {
@@ -235,10 +235,14 @@ TEST(JSONFormatter, Default) {
 
     // format
     for (const auto& basename : basenames) {
-        const std::shared_ptr<QFile> f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadWrite);
-        auto json = QString::fromUtf8(fsa::GetAllRawContents(f));
+        const std::shared_ptr<QFile> f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
+        auto content = fsa::GetAllRawContents(f);
+        auto json = QString::fromUtf8(content);
         WritingMaterialsManager::JSONFormatter formatter;
         formatter.Format(json);
-        f->write(json.toStdString().c_str());
+        const std::shared_ptr<QFile> g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
+        g->write(json.toStdString().c_str());
+        const std::shared_ptr<QFile> h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
+        EXPECT_EQ(content, fsa::GetAllRawContents(h));
     }
 }
