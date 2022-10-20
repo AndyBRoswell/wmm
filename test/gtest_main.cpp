@@ -163,5 +163,8 @@ TEST(MongoDBAccessor, BasicInfo) {
 
     mongoa a;
     std::cout << a.GetDatabasesInformation().toStdString() << "\n" << std::endl
+        << a.GetCollectionsInformation(QByteArray("admin")).toStdString() << "\n" << std::endl
+        << a.GetCollectionsInformation("config").toStdString() << "\n" << std::endl
+        << a.GetCollectionsInformation("local").toStdString() << "\n" << std::endl
         << a.GetDBsAndCollsInfo().toStdString() << std::endl;
 }

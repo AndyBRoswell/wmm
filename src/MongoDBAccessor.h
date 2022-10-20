@@ -17,12 +17,14 @@ namespace WritingMaterialsManager {
         MongoDBAccessor(const char* const MongoDBURI = LocalMongoDBURI);
         // return string 'cause different document DBs use different internal data structures.
         QByteArray GetDatabasesInformation();
-        QByteArray GetCollectionsInformation(mongocxx::database& Database);
+        QByteArray GetCollectionsInformation(const QByteArray& DatabaseName);
         QByteArray GetDBsAndCollsInfo();
     private:
         inline static const mongocxx::instance mongocxxDriver{}; // This represents the mongocxx driver instance hence should be done only once.
         mongocxx::uri DBURI;
         mongocxx::client Client;
+
+        QByteArray GetCollectionsInformation(mongocxx::database& Database);
     };
 }
 
