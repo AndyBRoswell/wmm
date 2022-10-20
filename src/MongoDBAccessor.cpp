@@ -12,9 +12,9 @@ namespace WritingMaterialsManager {
         mongocxx::cursor DBInfoCur = Client.list_databases();
         QByteArray Result = "[";
         for (auto&& DBInfoDoc: DBInfoCur) {
-            Result.append(bsoncxx::to_json(DBInfoDoc).c_str()).append(',');
+            Result.append(bsoncxx::to_json(DBInfoDoc).c_str()).append(", ");
         }
-        Result.replace(Result.length() - 2, 1, "]");
+        Result.replace(Result.length() - 2, 2, "]");
         return Result;
     }
 

@@ -132,109 +132,111 @@ namespace tiny_random {
             const distribution str_len_dist = distribution::exponential;
             const distribution single_ws_len_dist = distribution::exponential;
             const distribution ws_count_dist = distribution::exponential;
+            { // workspace
+                using enum state;
 
-            // workspace
-            std::stack<state, std::vector<state>> S;
-            std::basic_string<T> ret;
-            size_t recursive_depth = 0;
-            S.emplace(next_enum(state::object, state::array));
-            while (S.empty() == false) { // non-recursive
-                const state s = S.top();
-                S.pop();
-                switch (s) {
-                case state::object: {
-                    const size_t n = next_int(min_obj_size, max_obj_size, obj_size_dist);
-                    S.emplace(state::rcurly); S.emplace(state::whitespace);
-                    S.emplace(state::value); S.emplace(state::whitespace);
-                    S.emplace(state::colon); S.emplace(state::whitespace);
-                    S.emplace(state::string); S.emplace(state::whitespace);
-                    for (size_t i = 1; i < n; ++i) {
-                        S.emplace(state::comma); S.emplace(state::whitespace);
-                        S.emplace(state::value); S.emplace(state::whitespace);
-                        S.emplace(state::colon); S.emplace(state::whitespace);
-                        S.emplace(state::string); S.emplace(state::whitespace);
-                    }
-                    S.emplace(state::lcurly);
-                } break;
-                case state::array: {
-                    const size_t n = next_int(min_arr_size, max_arr_size, arr_len_dist);
-                    S.emplace(state::rsquare); S.emplace(state::whitespace);
-                    S.emplace(state::value); S.emplace(state::whitespace);
-                    for (size_t i = 1; i < n; ++i) {
-                        S.emplace(state::comma); S.emplace(state::whitespace);
-                        S.emplace(state::value); S.emplace(state::whitespace);
-                    }
-                    S.emplace(state::lsquare);
-                } break;
-                case state::value: {
-                    S.emplace(state::whitespace);
-                    if (recursive_depth < max_recursive_depth) { S.emplace(next_enum(state::object, state::Null)); }
-                    else { S.emplace(next_enum(state::string, state::Null)); }
-                    S.emplace(state::whitespace);
-                } break;
-                case state::whitespace: {
-                    const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
-                    for (size_t i = 0; i < n; ++i) { S.emplace(next_enum(state::space, state::LF)); }
-                } break;
-                case state::string: {
-                    static std::uniform_real_distribution<double> U(0, 1);
-                    ret.push_back('\"');
-                    const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
-                    for (size_t i = 0; i < n; ++i) {
-                        if (U(random_engine) <= p_escape) { // generate an escape character
-                            const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
-                            ret.append(e);
-                            if (e[1] == 'u') {
-                                const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
-                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
-                            }
+                std::stack<state, std::vector<state>> S;
+                std::basic_string<T> ret;
+                size_t recursive_depth = 0;
+                S.emplace(next_enum(object, array));
+                while (S.empty() == false) { // non-recursive
+                    const state s = S.top();
+                    S.pop();
+                    switch (s) {
+                    case object: {
+                        const size_t n = next_int(min_obj_size, max_obj_size, obj_size_dist);
+                        S.emplace(rcurly); S.emplace(whitespace);
+                        S.emplace(value); S.emplace(whitespace);
+                        S.emplace(colon); S.emplace(whitespace);
+                        S.emplace(string); S.emplace(whitespace);
+                        for (size_t i = 1; i < n; ++i) {
+                            S.emplace(comma); S.emplace(whitespace);
+                            S.emplace(value); S.emplace(whitespace);
+                            S.emplace(colon); S.emplace(whitespace);
+                            S.emplace(string); S.emplace(whitespace);
                         }
-                        else { ret.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
-                    }
-                    ret.push_back('\"');
-                } break;
-                case state::number: {
-                    const bool negative = next_int(0, 1);
-                    if (negative) ret.push_back('-');
-                    switch (next_int(0, 1)) {
-                    default: ret.append(std::to_string(next_int(0i64, INT64_MAX, distribution::exponential))); break; // int
-                    case 1: { // float
+                        S.emplace(lcurly);
+                    } break;
+                    case array: {
+                        const size_t n = next_int(min_arr_size, max_arr_size, arr_len_dist);
+                        S.emplace(rsquare); S.emplace(whitespace);
+                        S.emplace(value); S.emplace(whitespace);
+                        for (size_t i = 1; i < n; ++i) {
+                            S.emplace(comma); S.emplace(whitespace);
+                            S.emplace(value); S.emplace(whitespace);
+                        }
+                        S.emplace(lsquare);
+                    } break;
+                    case value: {
+                        S.emplace(whitespace);
+                        if (recursive_depth < max_recursive_depth) { S.emplace(next_enum(object, Null)); }
+                        else { S.emplace(next_enum(string, Null)); }
+                        S.emplace(whitespace);
+                    } break;
+                    case whitespace: {
+                        const size_t n = next_int(min_ws_count, max_ws_count, ws_count_dist);
+                        for (size_t i = 0; i < n; ++i) { S.emplace(next_enum(space, LF)); }
+                    } break;
+                    case string: {
+                        static std::uniform_real_distribution<double> U(0, 1);
+                        ret.push_back('\"');
+                        const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
+                        for (size_t i = 0; i < n; ++i) {
+                            if (U(random_engine) <= p_escape) { // generate an escape character
+                                const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
+                                ret.append(e);
+                                if (e[1] == 'u') {
+                                    const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
+                                    for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
+                                }
+                            }
+                            else { ret.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
+                        }
+                        ret.push_back('\"');
+                    } break;
+                    case number: {
+                        const bool negative = next_int(0, 1);
+                        if (negative) ret.push_back('-');
                         switch (next_int(0, 1)) {
-                        default: { // no scientific notation
-                            static std::uniform_real_distribution<double> U(0, 10);
-                            ret.append(std::to_string(U(random_engine)* EXP(random_engine)));
-                        } break;
-                        case 1: { // scientific notation
-                            static std::uniform_real_distribution<double> U(1, 10);
-                            const double coef = U(random_engine);
-                            const int exp = next_int(-308, 308, distribution::exponential);
-                            if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(DBL_MAX)); }
-                            else {
-                                ret.append(std::to_string(coef) + (next_int(0, 1) == 0 ? "E" : "e"));
-                                if (exp < 0) { ret.append(std::to_string(exp)); }
-                                else { ret.append((next_int(0, 1) == 0 ? "" : "+") + std::to_string(exp)); }
+                        default: ret.append(std::to_string(next_int(0i64, INT64_MAX, distribution::exponential))); break; // int
+                        case 1: { // float
+                            switch (next_int(0, 1)) {
+                            default: { // no scientific notation
+                                static std::uniform_real_distribution<double> U(0, 10);
+                                ret.append(std::to_string(U(random_engine) * EXP(random_engine)));
+                            } break;
+                            case 1: { // scientific notation
+                                static std::uniform_real_distribution<double> U(1, 10);
+                                const double coef = U(random_engine);
+                                const int exp = next_int(-308, 308, distribution::exponential);
+                                if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(DBL_MAX)); }
+                                else {
+                                    ret.append(std::to_string(coef) + (next_int(0, 1) == 0 ? "E" : "e"));
+                                    if (exp < 0) { ret.append(std::to_string(exp)); }
+                                    else { ret.append((next_int(0, 1) == 0 ? "" : "+") + std::to_string(exp)); }
+                                }
+                            } break;
                             }
                         } break;
                         }
                     } break;
+                    case space: case htab: case CR: case LF: {
+                        const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
+                        for (size_t i = 0; i < n; ++i) { ret.append(direct_input.at(s)); }
+                    } break;
+                    case lcurly: case lsquare: {
+                        ++recursive_depth;
+                        ret.append(direct_input.at(s));
+                    } break;
+                    case rcurly: case rsquare: {
+                        --recursive_depth;
+                        ret.append(direct_input.at(s));
+                    } break;
+                    default: { ret.append(direct_input.at(s)); } break;
                     }
-                } break;
-                case state::space: case state::htab: case state::CR: case state::LF: {
-                    const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) { ret.append(direct_input.at(s)); }
-                } break;
-                case state::lcurly: case state::lsquare: {
-                    ++recursive_depth;
-                    ret.append(direct_input.at(s));
-                } break;
-                case state::rcurly: case state::rsquare: {
-                    --recursive_depth;
-                    ret.append(direct_input.at(s));
-                } break;
-                default: { ret.append(direct_input.at(s)); } break;
                 }
+                return ret;
             }
-            return ret;
         }
     }
 

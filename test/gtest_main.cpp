@@ -23,6 +23,7 @@
 #include "../src/Algorithm.h"
 #include "../src/FileSystemAccessor.h"
 #include "../src/JSONFormatter.h"
+#include "../src/MongoDBAccessor.h"
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell
@@ -158,5 +159,9 @@ TEST(JSONFormatter, Default) {
 }
 
 TEST(MongoDBAccessor, BasicInfo) {
-    EXPECT_EQ(1, 2);
+    using mongoa = WritingMaterialsManager::MongoDBAccessor;
+
+    mongoa a;
+    std::cout << a.GetDatabasesInformation().toStdString() << "\n" << std::endl
+        << a.GetDBsAndCollsInfo().toStdString() << std::endl;
 }
