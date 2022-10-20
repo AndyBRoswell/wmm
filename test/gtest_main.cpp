@@ -21,6 +21,7 @@
 // Modules tested
 #include "../src/Algorithm.h"
 #include "../src/FileSystemAccessor.h"
+#include "../src/JSONFormatter.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -213,7 +214,9 @@ TEST(FileSystemAccessor, Read) {
     EXPECT_TRUE(has_open_exception);
 }
 
-TEST(JSON, JSON) {
+TEST(JSONFormatter, Default) {
+    using fsa = WritingMaterialsManager::FileSystemAccessor;
+
     // create test files
     std::filesystem::create_directory("test");
     std::filesystem::create_directory("test/JSON");
@@ -221,9 +224,21 @@ TEST(JSON, JSON) {
 
     constexpr size_t N = 20; // number of test files
     
+    std::set<uintmax_t> basenames;
     for (size_t i = 0; i < N; ++i) {
-        std::ofstream f(pwd + '/' + std::to_string(tiny_random::number::integer()) + ".json", std::ios::out | std::ios::trunc);
+        const uintmax_t basename = tiny_random::number::integer();
+        std::ofstream f(pwd + '/' + std::to_string(basename) + ".json", std::ios::out | std::ios::trunc);
+        basenames.emplace(basename);
         f << tiny_random::chr::JSON();
         f.flush();
+    }
+
+    // format
+    for (const auto& basename : basenames) {
+        const std::shared_ptr<QFile> f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadWrite);
+        auto json = QString::fromUtf8(fsa::GetAllRawContents(f));
+        WritingMaterialsManager::JSONFormatter formatter;
+        formatter.Format(json);
+        f->write(json.toStdString().c_str());
     }
 }

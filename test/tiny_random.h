@@ -120,13 +120,13 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 96;
-            const size_t min_obj_size = 1, max_obj_size = 96;
+            const size_t min_arr_size = 1, max_arr_size = 128;
+            const size_t min_obj_size = 1, max_obj_size = 128;
             const size_t min_str_len = 1, max_str_len = 64; 
             const double p_escape = 0.01;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t max_recursive_depth = 7;
+            const size_t max_recursive_depth = 6;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;

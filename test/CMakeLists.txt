@@ -8,6 +8,7 @@ file(GLOB_RECURSE headers
 file(GLOB modules_to_be_tested
     ../src/Algorithm.cpp
     ../src/FileSystemAccessor.cpp
+    ../src/JSONFormatter.cpp
 )
 
 # set variables
@@ -29,6 +30,7 @@ enable_testing()
 qt_add_executable(wmmtest
     ${code_files}
 )
+
 set_target_properties(wmmtest PROPERTIES
     # MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" # C/C++ > Code Generation > Runtime Library = /MTd instead of default /MDd
     MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
@@ -38,6 +40,13 @@ set_target_properties(wmmtest PROPERTIES
     # WIN32_EXECUTABLE TRUE
 )
 target_compile_definitions(wmmtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+
+# dependency: JSON libs
+list(APPEND JSON_inc_dir "${dep_root}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")
+target_include_directories(wmmtest PUBLIC ${JSON_inc_dir})
+message(STATUS "dep root of test: ${dep_root}")
+message(STATUS "json inc dir of test: ${json_inc_dir}")
+
 target_link_libraries(wmmtest PUBLIC GTest::gtest_main Qt6::Core)
 
 include(GoogleTest)

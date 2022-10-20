@@ -44,7 +44,7 @@ find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED
 
 # set common variables
 set(wmm_root ${CMAKE_CURRENT_SOURCE_DIR})
-message(STATUS "WMM root: ${wmm_root}")
+set(dep_root "${wmm_root}/3rd/install/${CMAKE_CXX_COMPILER_ID}")
 
 add_subdirectory(src)
 add_subdirectory(test)

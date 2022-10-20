@@ -19,7 +19,6 @@ set(code_files
 set(Qt_ts_Files # Qt translation files
     ts/*.ts
 )
-set(dep_root "../3rd/install/${CMAKE_CXX_COMPILER_ID}")
 
 # dependencies: Qt
 set(Qt6_root "${Qt6_DIR}/../../..")
