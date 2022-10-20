@@ -70,10 +70,10 @@ cp -r src/thm $bind/thm
 cp -r src/ts $bind/ts
 
 # 3rd libraries
-cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/bson-1.0.dll $bind/bson-1.0.dll
-cp $3rdd/mongo-c-driver-1.22.1/$BuildType/bin/mongoc-1.0.dll $bind/mongoc-1.0.dll
-cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/bsoncxx.dll $bind/bsoncxx.dll
-cp $3rdd/mongo-cxx-driver-r3.6.7/$BuildType/bin/mongocxx.dll $bind/mongocxx.dll
+cp $3rdd/mongo-c-driver-1.22.2/$BuildType/bin/bson-1.0.dll $bind/bson-1.0.dll
+cp $3rdd/mongo-c-driver-1.22.2/$BuildType/bin/mongoc-1.0.dll $bind/mongoc-1.0.dll
+cp $3rdd/mongo-cxx-driver-r3.7.0/$BuildType/bin/bsoncxx.dll $bind/bsoncxx.dll
+cp $3rdd/mongo-cxx-driver-r3.7.0/$BuildType/bin/mongocxx.dll $bind/mongocxx.dll
 cp $3rdd/googletest-main/$BuildType/bin/gtest_main.dll $bind/gtest_main.dll
 cp $3rdd/googletest-main/$BuildType/bin/gtest.dll $bind/gtest.dll
 # Windeployqt doesn't support RelWithDebInfo and MinSizeRel yet. Use Release provisionally.

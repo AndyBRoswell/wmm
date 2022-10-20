@@ -39,23 +39,23 @@ cd 3rd
 
 $Lib = @(
     @{
-        Name = 'mongo-c-driver-1.22.1'
-        Link = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.22.1.zip'
-        Flags = "-DBUILD_VERSION='1.22.1'"
+        Name = 'mongo-c-driver-1.22.2'
+        Link = 'https://github.com/mongodb/mongo-c-driver/archive/refs/tags/1.22.2.zip'
+        Flags = "-DBUILD_VERSION='1.22.2'"
         PrefixPath = ""
     }
     @{
-        Name = 'mongo-cxx-driver-r3.6.7'
-        Link = 'https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r3.6.7.zip'
-        Flags = "-DBUILD_VERSION='3.6.7'"
-        PrefixPath = "$instd/mongo-c-driver-1.22.1"
+        Name = 'mongo-cxx-driver-r3.7.0'
+        Link = 'https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r3.7.0.zip'
+        Flags = "-DBUILD_VERSION='3.7.0'"
+        PrefixPath = "$instd/mongo-c-driver-1.22.2"
     }
-    @{
-        Name = 'simdjson-1.0.2'
-        Link = 'https://github.com/simdjson/simdjson/archive/refs/tags/v1.0.2.zip'
-        Flags = ""
-        PrefixPath = ""
-    }
+    # @{
+    #     Name = 'simdjson-1.0.2'
+    #     Link = 'https://github.com/simdjson/simdjson/archive/refs/tags/v1.0.2.zip'
+    #     Flags = ""
+    #     PrefixPath = ""
+    # }
     # @{
     #     Name = 'yyjson-0.4.0'
     #     Link = 'https://github.com/ibireme/yyjson/archive/refs/tags/0.4.0.zip'

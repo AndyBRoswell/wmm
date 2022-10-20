@@ -50,12 +50,12 @@ find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED
 list(APPEND JSON_inc_dir "${dep_root}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")
 
 # common dependency: mongocxx
-list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/include/bsoncxx/v_noabi")
-list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/include/mongocxx/v_noabi")
-list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.1/${CMAKE_BUILD_TYPE}/bin")
-list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.1/${CMAKE_BUILD_TYPE}/lib")
-list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/bin")
-list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/lib")
+list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.7.0/${CMAKE_BUILD_TYPE}/include/bsoncxx/v_noabi")
+list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.7.0/${CMAKE_BUILD_TYPE}/include/mongocxx/v_noabi")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.2/${CMAKE_BUILD_TYPE}/bin")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.2/${CMAKE_BUILD_TYPE}/lib")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.7.0/${CMAKE_BUILD_TYPE}/bin")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.7.0/${CMAKE_BUILD_TYPE}/lib")
 find_library(bson bson-1.0 ${mongo_lib_dir})
 find_library(mongoc mongoc-1.0 ${mongo_lib_dir})
 find_library(bsoncxx bsoncxx ${mongo_lib_dir})
