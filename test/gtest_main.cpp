@@ -159,9 +159,7 @@ TEST(JSONFormatter, Default) {
 }
 
 TEST(MongoDBAccessor, BasicInfo) {
-    using mongoa = WritingMaterialsManager::MongoDBAccessor;
-
-    mongoa a;
+    WritingMaterialsManager::MongoDBAccessor a;
     std::cout << a.GetDatabasesInformation().toStdString() << "\n" << std::endl
         << a.GetCollectionsInformation(QByteArray("admin")).toStdString() << "\n" << std::endl
         << a.GetCollectionsInformation("config").toStdString() << "\n" << std::endl
