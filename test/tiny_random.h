@@ -98,7 +98,7 @@ namespace tiny_random {
                 whitespace,                                                                 // whitespace
                 space, horizontal_tab, CR, LF,                                              // whitespace
             };
-            enum class distribution { uniform, exponential }; // TODO: add "linear distribution"
+            enum class distribution { uniform, exponential }; // TODO: add "interval linear distribution"
             static const std::map<state, std::basic_string<T>> direct_input = {
                 { state::True, "true" }, { state::False, "false" }, { state::Null, "null" },
                 { state::comma, "," }, { state::left_square, "[" }, { state::right_square, "]" }, { state::left_curly, "{" }, { state::right_curly, "}" }, { state::colon, ":" },
