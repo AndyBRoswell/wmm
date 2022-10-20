@@ -39,12 +39,31 @@ message(STATUS "C++ Compiler Version (Internal): ${CMAKE_CXX_COMPILER_VERSION_IN
 message(STATUS "Source Dir: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Binary Dir: ${CMAKE_BINARY_DIR}")
 
-# dependencies: Qt
-find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
-
 # set common variables
 set(wmm_root ${CMAKE_CURRENT_SOURCE_DIR})
 set(dep_root "${wmm_root}/3rd/install/${CMAKE_CXX_COMPILER_ID}")
+
+# common dependency: Qt
+find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
+
+# common dependency: JSON libs
+list(APPEND JSON_inc_dir "${dep_root}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")
+
+# common dependency: mongocxx
+list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/include/bsoncxx/v_noabi")
+list(APPEND mongo_inc_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/include/mongocxx/v_noabi")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.1/${CMAKE_BUILD_TYPE}/bin")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-c-driver-1.22.1/${CMAKE_BUILD_TYPE}/lib")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/bin")
+list(APPEND mongo_lib_dir "${dep_root}/mongo-cxx-driver-r3.6.7/${CMAKE_BUILD_TYPE}/lib")
+find_library(bson bson-1.0 ${mongo_lib_dir})
+find_library(mongoc mongoc-1.0 ${mongo_lib_dir})
+find_library(bsoncxx bsoncxx ${mongo_lib_dir})
+find_library(mongocxx mongocxx ${mongo_lib_dir})
+list(APPEND mongo_libs ${bson})
+list(APPEND mongo_libs ${mongoc})
+list(APPEND mongo_libs ${bsoncxx})
+list(APPEND mongo_libs ${mongocxx})
 
 add_subdirectory(src)
 add_subdirectory(test)

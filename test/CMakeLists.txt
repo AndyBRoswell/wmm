@@ -9,6 +9,7 @@ file(GLOB modules_to_be_tested
     ../src/Algorithm.cpp
     ../src/FileSystemAccessor.cpp
     ../src/JSONFormatter.cpp
+    ../src/MongoDBAccessor.cpp
 )
 
 # set variables
@@ -18,11 +19,10 @@ set(code_files
     ${modules_to_be_tested}
 )
 list(FILTER code_files EXCLUDE REGEX "/\\$legacy/")
-# message(STATUS "code_files in test: ${code_files}")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 # dependency: GoogleTest
-list(APPEND CMAKE_PREFIX_PATH "../3rd/install/${CMAKE_CXX_COMPILER_ID}/googletest-main/${CMAKE_BUILD_TYPE}")
+list(APPEND CMAKE_PREFIX_PATH "${dep_root}/googletest-main/${CMAKE_BUILD_TYPE}")
 find_package(GTest CONFIG REQUIRED)
 
 enable_testing()
@@ -41,13 +41,16 @@ set_target_properties(wmmtest PROPERTIES
 )
 target_compile_definitions(wmmtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-# dependency: JSON libs
-list(APPEND JSON_inc_dir "${dep_root}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")
-target_include_directories(wmmtest PUBLIC ${JSON_inc_dir})
-message(STATUS "dep root of test: ${dep_root}")
-message(STATUS "json inc dir of test: ${json_inc_dir}")
-
-target_link_libraries(wmmtest PUBLIC GTest::gtest_main Qt6::Core)
+# dependency: mongo_libs
+target_include_directories(wmmtest PUBLIC
+    ${JSON_inc_dir}
+    ${mongo_inc_dir}
+)
+target_link_libraries(wmmtest PUBLIC
+    ${mongo_libs}
+    GTest::gtest_main
+    Qt6::Core
+)
 
 include(GoogleTest)
 # gtest_discover_tests(wmmtest)

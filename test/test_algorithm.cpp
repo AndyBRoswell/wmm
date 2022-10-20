@@ -13,15 +13,13 @@
 
 // Tests for tests begins here
 TEST(TestAlgorithm, Mod) {
+    GTEST_SKIP();
     std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INT_MIN, INT_MAX);
-    //std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
-    const auto m = INT_MIN;
-    //const auto m = INTMAX_MIN;
-    //const auto a = 1, b = 256;
-    const auto a = 0x20, b = 0x7E;
-    const auto L = b - a + 1;
-    for (size_t i = 0; i < 1e9; ++i) {
+    constexpr auto m = INT_MIN;
+    constexpr auto a = 0x20, b = 0x7E;
+    constexpr auto L = b - a + 1;
+    for (size_t i = 0; i < 1e3; ++i) {
         const intmax_t x = max_uniform_int_dist(random_engine);
         const intmax_t A = (x - m) % L;
         const intmax_t B = (x % L - m % L) % L;
@@ -41,7 +39,7 @@ TEST(TestAlgorithm, Random) {
     for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
         const auto a = B[h][0], b = B[h][1];
         const auto L = b - a + 1;
-        for (size_t i = 0; i < 1 * 1e9; ++i) {
+        for (size_t i = 0; i < 1 * 1e6; ++i) {
             const auto x = max_uniform_int_dist(random_engine);
             const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
             EXPECT_GE(r, a);
@@ -51,14 +49,12 @@ TEST(TestAlgorithm, Random) {
 }
 
 TEST(TestAlgorithm, StringConversion) {
+    GTEST_SKIP();
     auto next_int = [](const auto a, const auto b) -> auto {
         return tiny_random::number::integer(a, b);
     };
     auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
         return tiny_random::chr::ASCII_string(l, t);
-        //const std::string s = tiny_random::chr::ASCII_string(l, t);
-        //std::cout << s << std::endl;
-        //return s;
     };
 
     constexpr size_t lmax = 256;    // max length of test strings
@@ -90,5 +86,4 @@ TEST(TestAlgorithm, Exp) {
         }
         std::cout << std::endl;
     }
-
 }

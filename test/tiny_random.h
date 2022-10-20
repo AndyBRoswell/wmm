@@ -110,7 +110,7 @@ namespace tiny_random {
                 switch (D) {
                 case distribution::uniform: return number::integer(m, M);
                 case distribution::exponential:
-                    if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>(number::integer(0, 1) == 0 ? 1 : -1 * number::integer(m, M) * EXP(random_engine)))); }
+                    if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>((number::integer(0, 1) == 0 ? 1 : -1) * number::integer(m, M) * EXP(random_engine)))); }
                     else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
                     
                 }
