@@ -120,9 +120,9 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 64;
-            const size_t min_obj_size = 1, max_obj_size = 64;
-            const size_t min_str_len = 1, max_str_len = 64; 
+            const size_t min_arr_size = 1, max_arr_size = 128;
+            const size_t min_obj_size = 1, max_obj_size = 128;
+            const size_t min_str_len = 1, max_str_len = 128; 
             const double p_escape = 0.01;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;

@@ -106,8 +106,11 @@ TEST(TestAlgorithm, Exp) {
         for (size_t j = 0; j < nsp; ++j) {
             ++c[std::min(M, std::max(m, static_cast<size_t>(E(tiny_random::random_engine) * tiny_random::number::integer(m, M))))];
         }
+        double P = 0;
         for (size_t j = 0; j <= M; ++j) {
-            std::cout << "c[" << j << "] = " << c[j] * 100.0 / nsp << " %" << std::endl;
+            const double p = c[j] * 100.0 / nsp;
+            P += p;
+            std::cout << "c[" << j << "] = <" << p << " %, " << P << " %>" << std::endl;
         }
         std::cout << std::endl;
     }
