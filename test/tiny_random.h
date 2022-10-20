@@ -90,13 +90,13 @@ namespace tiny_random {
 
         template<class T = char> typename enable_if_sbs<T> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
             enum class state : char {
-                value,                                                                      // value
-                object, array,                                                              // recursive structures
-                string, number,                                                             // literals
-                True, False, Null,                                                          // keywords
-                comma, left_square, right_square, left_curly, right_curly, colon, quote,    // punctuations
-                whitespace,                                                                 // whitespace
-                space, horizontal_tab, CR, LF,                                              // whitespace
+                value,                                                  // value
+                object, array,                                          // recursive structures
+                string, number,                                         // literals
+                True, False, Null,                                      // keywords
+                comma, lsquare, rsquare, lcurly, rcurly, colon, quote,  // punctuations
+                whitespace,                                             // whitespace
+                space, htab, CR, LF,                                    // whitespace
             };
             enum class distribution { uniform, exponential }; // TODO: add "interval linear distribution"
             static const std::map<state, std::basic_string<T>> direct_input = {
@@ -117,12 +117,13 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 8;
-            const size_t min_obj_size = 1, max_obj_size = 8;
-            const size_t min_str_len = 1, max_str_len = 32;
+            const size_t min_arr_size = 1, max_arr_size = 64;
+            const size_t min_obj_size = 1, max_obj_size = 64;
+            const size_t min_str_len = 1, max_str_len = 32; 
             const double p_escape = 0.05;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
+            const size_t max_recursive_depth = 10;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -131,7 +132,8 @@ namespace tiny_random {
 
             // workspace
             std::stack<state, std::vector<state>> S;
-            std::basic_string<T> R;
+            std::basic_string<T> ret;
+            size_t recursive_depth = 0;
             S.emplace(next_enum(state::object, state::array));
             while (S.empty() == false) { // non-recursive
                 const state s = S.top();
@@ -139,7 +141,7 @@ namespace tiny_random {
                 switch (s) {
                 case state::object: {
                     const size_t n = next_int(min_obj_size, max_obj_size, obj_size_dist);
-                    S.emplace(state::right_curly); S.emplace(state::whitespace);
+                    S.emplace(state::rcurly); S.emplace(state::whitespace);
                     S.emplace(state::value); S.emplace(state::whitespace);
                     S.emplace(state::colon); S.emplace(state::whitespace);
                     S.emplace(state::string); S.emplace(state::whitespace);
@@ -149,21 +151,22 @@ namespace tiny_random {
                         S.emplace(state::colon); S.emplace(state::whitespace);
                         S.emplace(state::string); S.emplace(state::whitespace);
                     }
-                    S.emplace(state::left_curly);
+                    S.emplace(state::lcurly);
                 } break;
                 case state::array: {
                     const size_t n = next_int(min_arr_size, max_arr_size, arr_len_dist);
-                    S.emplace(state::right_square); S.emplace(state::whitespace);
+                    S.emplace(state::rsquare); S.emplace(state::whitespace);
                     S.emplace(state::value); S.emplace(state::whitespace);
                     for (size_t i = 1; i < n; ++i) {
                         S.emplace(state::comma); S.emplace(state::whitespace);
                         S.emplace(state::value); S.emplace(state::whitespace);
                     }
-                    S.emplace(state::left_square);
+                    S.emplace(state::lsquare);
                 } break;
                 case state::value: {
                     S.emplace(state::whitespace);
-                    S.emplace(next_enum(state::object, state::Null));
+                    if (recursive_depth < max_recursive_depth) { S.emplace(next_enum(state::object, state::Null)); }
+                    else { S.emplace(next_enum(state::string, state::Null)); }
                     S.emplace(state::whitespace);
                 } break;
                 case state::whitespace: {
@@ -172,48 +175,56 @@ namespace tiny_random {
                 } break;
                 case state::string: {
                     static std::uniform_real_distribution<double> U(0, 1);
-                    R.push_back('\"');
+                    ret.push_back('\"');
                     const size_t n = next_int(min_str_len, max_str_len, str_len_dist);
                     for (size_t i = 0; i < n; ++i) {
                         if (U(random_engine) <= p_escape) { // generate an escape character
                             const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
-                            R.append(e);
+                            ret.append(e);
                             if (e[1] == 'u') {
                                 const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
-                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { R.push_back(hex[h / d % 16]); } // convert to hex
+                                for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
                             }
                         }
-                        else { R.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
+                        else { ret.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
                     }
-                    R.push_back('\"');
+                    ret.push_back('\"');
                 } break;
                 case state::number: {
                     const bool negative = next_int(0, 1);
-                    if (negative) R.push_back('-');
+                    if (negative) ret.push_back('-');
                     switch (next_int(0, 1)) {
-                    default: R.append(std::to_string(next_int(0i64, INT64_MAX, distribution::exponential))); break; // int
+                    default: ret.append(std::to_string(next_int(0i64, INT64_MAX, distribution::exponential))); break; // int
                     case 1: { // float
                         switch (next_int(0, 1)) {
                         default: { // no scientific notation
                             static std::uniform_real_distribution<double> U(0, 10);
-                            R.append(std::to_string(U(random_engine)* EXP(random_engine)));
+                            ret.append(std::to_string(U(random_engine)* EXP(random_engine)));
                         } break;
-                        //case 1: { // maybe has scientific notation
-                        //    static std::uniform_real_distribution<double> U(0, DBL_MAX);
-                        //    R.append(std::to_string(U(random_engine)* EXP(random_engine)));
-                        //} break;
+                        case 1: { // scientific notation
+                            static std::uniform_real_distribution<double> US(1, 10);
+
+                        } break;
                         }
                     } break;
                     }
                 } break;
-                case state::space: case state::horizontal_tab: case state::CR: case state::LF: {
+                case state::space: case state::htab: case state::CR: case state::LF: {
                     const size_t n = next_int(min_single_ws_len, max_single_ws_len, single_ws_len_dist);
-                    for (size_t i = 0; i < n; ++i) { R.append(direct_input.at(s)); }
+                    for (size_t i = 0; i < n; ++i) { ret.append(direct_input.at(s)); }
                 } break;
-                default: { R.append(direct_input.at(s)); } break;
+                case state::lcurly: case state::lsquare: {
+                    ++recursive_depth;
+                    ret.append(direct_input.at(s));
+                } break;
+                case state::rcurly: case state::rsquare: {
+                    --recursive_depth;
+                    ret.append(direct_input.at(s));
+                } break;
+                default: { ret.append(direct_input.at(s)); } break;
                 }
             }
-            return R;
+            return ret;
         }
     }
 
