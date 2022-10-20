@@ -12,7 +12,7 @@
 #include "tiny_random.h"
 
 // Tests for tests begins here
-TEST(TestAlgorithm, Mod) {
+TEST(TestAlgorithm, Rem) {
     GTEST_SKIP();
     std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INT_MIN, INT_MAX);
