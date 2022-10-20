@@ -23,7 +23,7 @@ TEST(TestAlgorithm, Rem) {
         const intmax_t x = max_uniform_int_dist(random_engine);
         const intmax_t A = (x - m) % L;
         const intmax_t B = (x % L - m % L) % L;
-        EXPECT_EQ(A, B);
+        EXPECT_EQ(A, B); // operator% doesn't comply this property
     }
 }
 

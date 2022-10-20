@@ -15,7 +15,9 @@ namespace WritingMaterialsManager {
         static constexpr char LocalMongoDBURI[] = "mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000";
 
         MongoDBAccessor(const char* const MongoDBURI = LocalMongoDBURI);
+        
         // return string 'cause different document DBs use different internal data structures.
+
         QByteArray GetDatabasesInformation();
         QByteArray GetCollectionsInformation(const QByteArray& DatabaseName);
         QByteArray GetDBsAndCollsInfo();
