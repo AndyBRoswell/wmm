@@ -144,17 +144,17 @@ TEST(JSONFormatter, Default) {
     }
 
     // format
-    //for (const auto& basename : basenames) {
-    //    const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
-    //    auto content = fsa::GetAllRawContents(f);
-    //    auto json = QString::fromUtf8(content);
-    //    WritingMaterialsManager::JSONFormatter formatter;
-    //    formatter.Format(json);
-    //    const auto g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
-    //    g->write(json.toStdString().c_str());
-    //    const auto h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
-    //    EXPECT_EQ(content, fsa::GetAllRawContents(h));
-    //}
+    for (const auto& basename : basenames) {
+        const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
+        auto content = fsa::GetAllRawContents(f);
+        auto json = QString::fromUtf8(content);
+        WritingMaterialsManager::JSONFormatter formatter;
+        formatter.Format(json);
+        const auto g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
+        g->write(json.toStdString().c_str());
+        const auto h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
+        EXPECT_EQ(content, fsa::GetAllRawContents(h));
+    }
 }
 
 TEST(MongoDBAccessor, BasicInfo) {
