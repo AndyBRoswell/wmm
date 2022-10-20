@@ -104,7 +104,7 @@ namespace tiny_random {
                 { state::comma, "," }, { state::lsquare, "[" }, { state::rsquare, "]" }, { state::lcurly, "{" }, { state::rcurly, "}" }, { state::colon, ":" },
                 { state::space, " " }, { state::htab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
-            static std::exponential_distribution<double> EXP(1);
+            static std::exponential_distribution<double> EXP(2);
 
             constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
                 switch (D) {
@@ -120,9 +120,9 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 1, max_arr_size = 64;
-            const size_t min_obj_size = 1, max_obj_size = 64;
-            const size_t min_str_len = 1, max_str_len = 32; 
+            const size_t min_arr_size = 1, max_arr_size = 32;
+            const size_t min_obj_size = 1, max_obj_size = 32;
+            const size_t min_str_len = 1, max_str_len = 64; 
             const double p_escape = 0.05;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;

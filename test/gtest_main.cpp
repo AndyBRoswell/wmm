@@ -2,6 +2,7 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <numbers>
 #include <random>
 #include <set>
 #include <unordered_set>
@@ -89,6 +90,20 @@ TEST(TestAlgorithm, StringConversion) {
         const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
         //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuofsoijfsojfosjfosfsdi0";
         std::cout << s.toStdString() << std::endl;
+    }
+}
+
+TEST(TestAlgorithm, Exp) {
+    constexpr size_t nsp = 1e6;
+    constexpr size_t m = 1, M = 32;
+    std::exponential_distribution<double> E(2);
+    size_t c[M + 1];
+    std::fill(c, c + M + 1, 0);
+    for (size_t i = 0; i < nsp; ++i) {
+        ++c[std::min(M, std::max(m, static_cast<size_t>(E(tiny_random::random_engine) * tiny_random::number::integer(m, M))))];
+    }
+    for (size_t i = 0; i <= M; ++i) {
+        std::cout << "c[" << i << "] = " << c[i] << std::endl;
     }
 }
 
