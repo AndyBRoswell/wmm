@@ -126,7 +126,7 @@ namespace tiny_random {
             const double p_escape = 0.05;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t max_recursive_depth = 10;
+            const size_t max_recursive_depth = 8;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -208,7 +208,7 @@ namespace tiny_random {
                             static std::uniform_real_distribution<double> U(1, 10);
                             const double coef = U(random_engine);
                             const int exp = next_int(-308, 308, distribution::exponential);
-                            if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(negative ? -DBL_MAX : DBL_MAX)); }
+                            if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(DBL_MAX)); }
                             else {
                                 ret.append(std::to_string(coef) + (next_int(0, 1) == 0 ? "E" : "e"));
                                 if (exp < 0) { ret.append(std::to_string(exp)); }
