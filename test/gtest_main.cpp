@@ -95,7 +95,7 @@ TEST(TestAlgorithm, StringConversion) {
 
 TEST(TestAlgorithm, Exp) {
     constexpr size_t nsp = 1e6;
-    constexpr size_t m = 1, M = 32;
+    constexpr size_t m = 1, M = 64;
     std::exponential_distribution<double> E(2);
     size_t c[M + 1];
     std::fill(c, c + M + 1, 0);
