@@ -57,6 +57,22 @@ TEST(TestAlgorithm, Mod) {
 }
 
 TEST(TestAlgorithm, Integer) {
+    using tiny_random::number::integer;
+
+    constexpr size_t n = 1e6; // test count    
+
+    { // integer()
+        std::vector<intmax_t> u{ INTMAX_MIN }; std::vector<uintmax_t> v{ 0 };
+        for (size_t i = 0; i < n; ++i) {
+            u.emplace_back(integer<intmax_t>());
+            v.emplace_back(integer());
+        }
+        for (size_t i = 1; i < n; ++i) {
+
+        }
+    }
+
+    // <class T> integer(const T, const T)
 
 }
 
