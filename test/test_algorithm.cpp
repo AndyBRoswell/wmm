@@ -56,8 +56,48 @@ TEST(TestAlgorithm, Mod) {
     }
 }
 
+TEST(TestAlgorithm, Integer) {
+    using tiny_random::number::integer;
+
+    constexpr size_t n = 1e6; // test count    
+
+    { // integer()
+        
+    }
+    { // <class T> integer(const T, const T)
+
+    }
+    { // ASCII
+
+    }
+    { // ASCII_string
+
+    }
+}
+
+TEST(TestAlgorithm, JSON) {
+
+}
+
+TEST(TestAlgorithm, StringConversion) {
+    GTEST_SKIP();
+    auto next_int = [](const auto a, const auto b) -> auto {
+        return tiny_random::number::integer(a, b);
+    };
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
+        return tiny_random::chr::ASCII_string(l, t);
+    };
+
+    constexpr size_t lmax = 256;    // max length of test strings
+    for (size_t i = 0; i < 1e5; ++i) {
+        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
+        //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuofsoijfsojfosjfosfsdi0";
+        std::cout << s.toStdString() << std::endl;
+    }
+}
+
 TEST(TestAlgorithm, Deviation) {
-    //GTEST_SKIP();
+    GTEST_SKIP();
     using tiny_random::number::integer;
 
     constexpr size_t n = 1e8; // test count    
@@ -98,67 +138,6 @@ TEST(TestAlgorithm, Deviation) {
     const auto q = std::minmax_element(dt.cbegin(), dt.cend());
     std::cout << *p.first << "\t\t\t\t" << *p.second << std::endl;
     std::cout << *q.first << "\t\t\t\t" << *q.second << std::endl;
-}
-
-TEST(TestAlgorithm, Integer) {
-    using tiny_random::number::integer;
-
-    constexpr size_t n = 1e6; // test count    
-
-    { // integer()
-        
-    }
-    { // <class T> integer(const T, const T)
-
-    }
-    { // ASCII
-
-    }
-    { // ASCII_string
-
-    }
-}
-
-TEST(TestAlgorithm, JSON) {
-
-}
-
-TEST(TestAlgorithm, Random) {
-    auto mod = [](const auto& N, const auto& D) constexpr {
-        const auto r = N % D;
-        if (D > 0) { return r >= 0 ? r : r + D; }
-        else { return r <= 0 ? r : r + D; }
-    };
-    std::mt19937_64& random_engine = tiny_random::random_engine;
-    std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
-    constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 }, { 0, 10 + 26 + 26 - 1 } };
-    for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
-        const auto a = B[h][0], b = B[h][1];
-        const auto L = b - a + 1;
-        for (size_t i = 0; i < 1 * 1e6; ++i) {
-            const auto x = max_uniform_int_dist(random_engine);
-            const auto r = a + mod(mod(x, L) - mod(INTMAX_MIN, L), static_cast<intmax_t>(L));
-            EXPECT_GE(r, a);
-            EXPECT_LE(r, b);
-        }
-    }
-}
-
-TEST(TestAlgorithm, StringConversion) {
-    GTEST_SKIP();
-    auto next_int = [](const auto a, const auto b) -> auto {
-        return tiny_random::number::integer(a, b);
-    };
-    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
-        return tiny_random::chr::ASCII_string(l, t);
-    };
-
-    constexpr size_t lmax = 256;    // max length of test strings
-    for (size_t i = 0; i < 1e5; ++i) {
-        const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
-        //const QByteArray s = "deuhf8uehfiueh8t98tu3489tue98jeoifgoidjgieyt894utioemfodgoieti84eutsfiuofsoijfsojfosjfosfsdi0";
-        std::cout << s.toStdString() << std::endl;
-    }
 }
 
 TEST(TestAlgorithm, Exp) {
