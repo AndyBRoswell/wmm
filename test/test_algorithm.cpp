@@ -68,23 +68,26 @@ TEST(TestAlgorithm, Integer) {
         }
         s.emplace_back(INTMAX_MAX); t.emplace_back(UINTMAX_MAX);
         std::sort(s.begin(), s.end()); std::sort(t.begin(), t.end());
-        for (size_t i = 0; i <= n + 1; ++i) {
-            std::cout << s[i] << "\t\t\t\t" << t[i] << std::endl;
-        }
-        std::cout << std::endl;
 
         std::vector<intmax_t> ds; std::vector<uintmax_t> dt;
         double Eds = 0, Edt = 0; // E = expectation
+        double EDds = 0, EDdt = 0;
         for (size_t i = 1; i <= n + 1; ++i) {
             const auto d0 = s[i] - s[i - 1]; const auto d1 = t[i] - t[i - 1]; // >= 0
             Eds += d0; Edt += d1;
             ds.emplace_back(d0); dt.emplace_back(d1);
         }
+        Eds /= n + 1; Edt /= n + 1;
+
+        for (size_t i = 0; i <= n + 1; ++i) {
+            std::cout << s[i] << "\t\t\t\t" << t[i] << std::endl;
+        }
+        std::cout << std::endl;
         for (size_t i = 0; i <= n; ++i) {
             std::cout << ds[i] << "\t\t\t\t" << dt[i] << std::endl;
         }
         std::cout << std::endl;
-        Eds /= n + 1; Edt /= n + 1; 
+
         const double EE = pow(2, 64) / (n + 1);
         const auto w = std::minmax_element(s.cbegin(), s.cend());
         const auto x = std::minmax_element(t.cbegin(), t.cend());
