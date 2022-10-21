@@ -34,17 +34,17 @@ TEST(TestAlgorithm, Mod) {
     std::mt19937_64& R = tiny_random::random_engine;
     std::uniform_int_distribution<intmax_t> U(INTMAX_MIN / 2, INTMAX_MAX / 2); // limit the range of random numbers to avert overflow
     std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
-    constexpr size_t n = 1e9; // test count
-    { // a simple demo of overflow
-        constexpr intmax_t x[][3] = { { 10, -20, -1e10 }, { -1e6, -2e6, -1e10 }, { 1e9, 2e9, -5e9 }, { 1e9, 2e9, -1e10 } };
+    { // a very simple demo of overflow
+        constexpr intmax_t x[][3] = { { 10, -20, -1e10 }, { -1e6, -2e6, -1e10 }, { 1e9, 2e9, -5e9 }, { 1e9, 2e9, -1e10 }, };
+        constexpr bool expect_eq[] = { true, true, false, false, };
         for (size_t i = 0; i < sizeof(x) / (3 * sizeof(intmax_t)); ++i) {
             const auto a = x[i][0], b = x[i][1], c = x[i][2];
-            const intmax_t A = mod(a * b, c), beta[] = { mod(a, c), mod(b, c) }, B = mod(beta[0] * beta[1], c);
-            constexpr intmax_t m = INT_MIN, M = INT_MAX;
-            if ((a >= m and a <= M) and ((b >= m and b <= M)) and ((c >= m and c <= M)) and ((beta[0] >= m and beta[0] <= M)) and ((beta[1] >= m and beta[1] <= M))) { EXPECT_EQ(A, B); }
+            const intmax_t A = mod(a * b, c), B = mod(mod(a, c) * mod(b, c), c);
+            if (expect_eq[i]) { EXPECT_EQ(A, B); }
             else { EXPECT_NE(A, B); }
         }
     }
+    constexpr size_t n = 1e9; // test count
     for (size_t i = 0; i < n; ++i) {
         auto a = U(R), b = U(R), c = U(R);
         EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
