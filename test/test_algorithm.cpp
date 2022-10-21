@@ -81,16 +81,20 @@ TEST(TestAlgorithm, Integer) {
             EDs += ds; EDt += dt;
             u.emplace_back(ds); v.emplace_back(dt);
         }
+        for (size_t i = 0; i <= n; ++i) {
+            std::cout << u[i] << "\t\t\t\t" << v[i] << std::endl;
+        }
+        std::cout << std::endl;
         EDs /= n + 1; EDt /= n + 1; 
         const double EE = pow(2, 64) / (n + 1);
         for (size_t i = 0; i <= n; ++i) {
             EDu += abs(u[i] - EDs); EDv += abs(v[i] - EDt);
         }
         EDu /= n + 1; EDv /= n + 1;
-        const auto w = std::minmax(s.cbegin(), s.cend());
-        const auto x = std::minmax(t.cbegin(), t.cend());
-        const auto y = std::minmax(u.cbegin(), u.cend());
-        const auto z = std::minmax(v.cbegin(), v.cend());
+        const auto w = std::minmax_element(s.cbegin(), s.cend());
+        const auto x = std::minmax_element(t.cbegin(), t.cend());
+        const auto y = std::minmax_element(u.cbegin(), u.cend());
+        const auto z = std::minmax_element(v.cbegin(), v.cend());
         std::cout << (EDs - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << EDu << std::endl;
