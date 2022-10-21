@@ -65,11 +65,13 @@ TEST(TestAlgorithm, Integer) {
         std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
         for (size_t i = 0; i < n; ++i) {
             s.emplace_back(integer<intmax_t>()); t.emplace_back(integer());
-            std::cout << *s.crbegin() << "  " << *t.crbegin() << std::endl;
         }
         s.emplace_back(INTMAX_MAX); t.emplace_back(UINTMAX_MAX);
-        std::cout << *s.crbegin() << "  " << *t.crbegin() << "\n" << std::endl;
         std::sort(s.begin(), s.end()); std::sort(t.begin(), t.end());
+        for (size_t i = 0; i <= n + 1; ++i) {
+            std::cout << s[i] << "\t\t\t\t" << t[i] << std::endl;
+        }
+        std::cout << std::endl;
 
         std::vector<intmax_t> u, v;
         double EDs = 0, EDt = 0; // E = expectation
@@ -93,10 +95,10 @@ TEST(TestAlgorithm, Integer) {
         std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << EDu << std::endl;
         std::cout << EDv << std::endl;
-        std::cout << *w.first << "  " << *w.second << std::endl;
-        std::cout << *x.first << "  " << *x.second << std::endl;
-        std::cout << *y.first << "  " << *y.second << std::endl;
-        std::cout << *z.first << "  " << *z.second << std::endl;
+        std::cout << *w.first << "\t\t\t\t" << *w.second << std::endl;
+        std::cout << *x.first << "\t\t\t\t" << *x.second << std::endl;
+        std::cout << *y.first << "\t\t\t\t" << *y.second << std::endl;
+        std::cout << *z.first << "\t\t\t\t" << *z.second << std::endl;
     }
 
     // <class T> integer(const T, const T)
