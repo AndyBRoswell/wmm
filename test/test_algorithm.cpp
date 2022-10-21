@@ -4,6 +4,7 @@
 
 // Qt
 #include <QByteArray>
+#include <QJsonDocument>
 
 // googletest
 #include <gtest/gtest.h>
@@ -35,11 +36,12 @@ TEST(TestAlgorithm, Mod) {
     std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
     constexpr size_t C = 1e9; // test count
     for (size_t i = 0; i < C; ++i) {
-        auto a = U(R), b = U(R); const auto c = U(R);
+        auto a = U(R), b = U(R), c = U(R);
         EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
         EXPECT_EQ(mod(a - b, c), mod(mod(a, c) - mod(b, c), c));
-        //a = u(R), b = u(R);
-        //EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
+        a = u(R), b = u(R), c = u(R);
+        //std::cout << "<" << a << ", " << b << ", " << c << ">" << std::endl;
+        EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
     }
 }
 
