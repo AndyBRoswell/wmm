@@ -92,15 +92,27 @@ TEST(TestAlgorithm, Integer) {
             }
         }
         { // special cases
-            constexpr intmax_t B[][2] = { { INTMAX_MIN / 2, INTMAX_MAX / 2 } };
-            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(intmax_t)); ++i) {
-
+            constexpr intmax_t b[][2] = {
+                { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
+                { INTMAX_MIN / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }
+            };
+            constexpr uintmax_t B[][2] = {
+                { 0, 0 }, { 1, 1 },
+                { 0, UINTMAX_MAX }, { UINTMAX_MAX, UINTMAX_MAX },
+            };
+            for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) {
+                for (size_t j = 0; j < n; ++j) {
+                    const auto m = b[i][0], M = b[i][1];
+                    const auto x = integer(m, M);
+                    EXPECT_GE(x, m); EXPECT_LE(x, M);
+                }
             }
-        }
-        {
-            constexpr uintmax_t B[][2] = { { 0, UINTMAX_MAX } };
             for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) {
-
+                for (size_t j = 0; j < n; ++j) {
+                    const auto mu = b[i][0], Mu = b[i][1];
+                    const auto x = integer(mu, Mu);
+                    EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
+                }
             }
         }
     }
