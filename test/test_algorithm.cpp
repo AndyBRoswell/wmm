@@ -59,13 +59,36 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t n = 1e6; // test count    
+    constexpr size_t N = 1e4; // test count
+    constexpr size_t n = 1e4; // sub-test count
 
     { // integer()
-        
+        size_t nonneg = 0, neg = 0;
+        while (nonneg < N || neg < N) {
+            const auto x = integer<intmax_t>();
+            x >= 0 ? ++nonneg : ++neg;
+        }
+        const auto x = integer();
+        static_assert(std::is_same_v<std::remove_const_t<decltype(x)>, uintmax_t>);
     }
     { // <class T> integer(const T, const T)
-
+        std::mt19937_64& RE = tiny_random::random_engine;
+        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN, INTMAX_MAX);
+        std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
+        for (size_t i = 0; i < N; ++i) {
+            const auto p = std::minmax(US(RE), US(RE));
+            const auto m = p.first, M = p.second;
+            for (size_t j = 0; j < n; ++j) {
+                const auto x = integer(m, M);
+                EXPECT_GE(x, m); EXPECT_LE(x, M);
+            }
+            const auto q = std::minmax(UU(RE), UU(RE));
+            const auto mu = q.first, Mu = q.second;
+            for (size_t j = 0; j < n; ++j) {
+                const auto x = integer(mu, Mu);
+                EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
+            }
+        }
     }
     { // ASCII
 
