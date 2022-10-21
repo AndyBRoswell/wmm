@@ -59,8 +59,8 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t N = 1e4; // test count
-    constexpr size_t n = 1e4; // sub-test count
+    constexpr size_t N = 1e3; // test count
+    constexpr size_t n = 1e6; // sub-test count
 
     { // integer()
         size_t nonneg = 0, neg = 0;
@@ -73,7 +73,7 @@ TEST(TestAlgorithm, Integer) {
     }
     { // <class T> integer(const T, const T)
         std::mt19937_64& RE = tiny_random::random_engine;
-        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN, INTMAX_MAX);
+        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
         std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
         for (size_t i = 0; i < N; ++i) {
             const auto p = std::minmax(US(RE), US(RE));
