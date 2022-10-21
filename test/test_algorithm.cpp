@@ -73,32 +73,32 @@ TEST(TestAlgorithm, Integer) {
         }
         std::cout << std::endl;
 
-        std::vector<intmax_t> u, v;
-        double EDs = 0, EDt = 0; // E = expectation
-        double EDu = 0, EDv = 0;
+        std::vector<intmax_t> ds; std::vector<uintmax_t> dt;
+        double Es = 0, Et = 0; // E = expectation
+        double Eds = 0, Edt = 0;
         for (size_t i = 1; i <= n + 1; ++i) {
-            const auto ds = s[i] - s[i - 1]; const auto dt = t[i] - t[i - 1]; // >= 0
-            EDs += ds; EDt += dt;
-            u.emplace_back(ds); v.emplace_back(dt);
+            const auto d0 = s[i] - s[i - 1]; const auto d1 = t[i] - t[i - 1]; // >= 0
+            Es += d0; Et += d1;
+            ds.emplace_back(d0); dt.emplace_back(d1);
         }
         for (size_t i = 0; i <= n; ++i) {
-            std::cout << u[i] << "\t\t\t\t" << v[i] << std::endl;
+            std::cout << ds[i] << "\t\t\t\t" << dt[i] << std::endl;
         }
         std::cout << std::endl;
-        EDs /= n + 1; EDt /= n + 1; 
+        Es /= n + 1; Et /= n + 1; 
         const double EE = pow(2, 64) / (n + 1);
         for (size_t i = 0; i <= n; ++i) {
-            EDu += abs(u[i] - EDs); EDv += abs(v[i] - EDt);
+            Eds += abs(ds[i] - Es); Edt += abs(dt[i] - Et);
         }
-        EDu /= n + 1; EDv /= n + 1;
+        Eds /= n + 1; Edt /= n + 1;
         const auto w = std::minmax_element(s.cbegin(), s.cend());
         const auto x = std::minmax_element(t.cbegin(), t.cend());
-        const auto y = std::minmax_element(u.cbegin(), u.cend());
-        const auto z = std::minmax_element(v.cbegin(), v.cend());
-        std::cout << (EDs - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << EDu << std::endl;
-        std::cout << EDv << std::endl;
+        const auto y = std::minmax_element(ds.cbegin(), ds.cend());
+        const auto z = std::minmax_element(dt.cbegin(), dt.cend());
+        std::cout << (Es - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (Et - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << Eds << std::endl;
+        std::cout << Edt << std::endl;
         std::cout << *w.first << "\t\t\t\t" << *w.second << std::endl;
         std::cout << *x.first << "\t\t\t\t" << *x.second << std::endl;
         std::cout << *y.first << "\t\t\t\t" << *y.second << std::endl;
