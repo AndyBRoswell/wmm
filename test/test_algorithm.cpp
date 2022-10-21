@@ -62,26 +62,26 @@ TEST(TestAlgorithm, Integer) {
     constexpr size_t n = 1e6; // test count    
 
     { // integer()
-        std::vector<intmax_t> u{ INTMAX_MIN }; std::vector<uintmax_t> v{ 0 };
+        std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
         for (size_t i = 0; i < n; ++i) {
-            u.emplace_back(integer<intmax_t>());
-            v.emplace_back(integer());
+            s.emplace_back(integer<intmax_t>()); t.emplace_back(integer());
         }
-        std::sort(u.begin(), u.end());
-        std::sort(v.begin(), v.end());
-        double EDu = 0, VDu = 0; // E = expectation
-        double EDv = 0, VDv = 0; // V = variance
-        for (size_t i = 1; i < n; ++i) {
-            const auto du = u[i] - u[i - 1]; const auto dv = v[i] - v[i - 1]; // >= 0
-            EDu += du; EDv += dv; VDu += du * du; VDv += dv * dv;
+        s.emplace_back(INTMAX_MAX); t.emplace_back(UINTMAX_MAX);
+        std::sort(s.begin(), s.end()); std::sort(t.begin(), t.end());
+
+        std::vector<intmax_t> u, v;
+        double EDs = 0, EDt = 0; // E = expectation
+        double EDu = 0, EDv = 0;
+        for (size_t i = 1; i <= n + 1; ++i) {
+            const auto ds = s[i] - s[i - 1]; const auto dt = t[i] - t[i - 1]; // >= 0
+            EDs += ds; EDt += dt;
+            u.emplace_back(ds); v.emplace_back(dt);
         }
-        EDu /= n + 1; EDv /= n + 1; 
-        VDu /= n + 1; VDv /= n + 1; VDu -= EDu * EDu; VDv -= EDv * EDv;
+        EDs /= n + 1; EDt /= n + 1; 
         const double EE = pow(2, 64) / (n + 1);
-        std::cout << (EDu - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << (EDv - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << VDu * 1e6 << " ppm" << std::endl;
-        std::cout << VDv * 1e6 << " ppm" << std::endl;
+        
+        std::cout << (EDs - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
     }
 
     // <class T> integer(const T, const T)
