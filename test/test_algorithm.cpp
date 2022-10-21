@@ -69,18 +69,19 @@ TEST(TestAlgorithm, Integer) {
         }
         std::sort(u.begin(), u.end());
         std::sort(v.begin(), v.end());
-        double EX = 0, VX = 0; // E = expectation
-        double EY = 0, VY = 0; // V = variance
+        double EDu = 0, VDu = 0; // E = expectation
+        double EDv = 0, VDv = 0; // V = variance
         for (size_t i = 1; i < n; ++i) {
-            EX += u[i] - u[i - 1]; EY += v[i] - v[i - 1]; // >= 0
+            const auto du = u[i] - u[i - 1]; const auto dv = v[i] - v[i - 1]; // >= 0
+            EDu += du; EDv += dv; VDu += du * du; VDv += dv * dv;
         }
-        EX /= n + 1; EY /= n + 1;
+        EDu /= n + 1; EDv /= n + 1; 
+        VDu /= n + 1; VDv /= n + 1; VDu -= EDu * EDu; VDv -= EDv * EDv;
         const double EE = pow(2, 64) / (n + 1);
-        for (size_t i = 1; i < n; ++i) {
-
-        }
-        std::cout << (EX - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << (EY - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (EDu - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (EDv - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << VDu * 1e6 << " ppm" << std::endl;
+        std::cout << VDv * 1e6 << " ppm" << std::endl;
     }
 
     // <class T> integer(const T, const T)
