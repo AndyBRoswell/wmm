@@ -59,12 +59,11 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t N = 1e3; // test count
-    constexpr size_t n = 1e6; // sub-test count
-
     { // integer()
+        constexpr size_t n = 1e3; // test count
+
         size_t nonneg = 0, neg = 0;
-        while (nonneg < N || neg < N) {
+        while (nonneg < n || neg < n) {
             const auto x = integer<intmax_t>();
             x >= 0 ? ++nonneg : ++neg;
         }
@@ -72,6 +71,9 @@ TEST(TestAlgorithm, Integer) {
         static_assert(std::is_same_v<std::remove_const_t<decltype(x)>, uintmax_t>);
     }
     { // <class T> integer(const T, const T)
+        constexpr size_t N = 1e3; // test count
+        constexpr size_t n = 1e6; // sub-test count
+
         std::mt19937_64& RE = tiny_random::random_engine;
         std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
         std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
@@ -89,8 +91,21 @@ TEST(TestAlgorithm, Integer) {
                 EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
             }
         }
+        { // special cases
+            constexpr intmax_t B[][2] = { { INTMAX_MIN / 2, INTMAX_MAX / 2 } };
+            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(intmax_t)); ++i) {
+
+            }
+        }
+        {
+            constexpr uintmax_t B[][2] = { { 0, UINTMAX_MAX } };
+            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) {
+
+            }
+        }
     }
     { // ASCII
+        constexpr size_t n = 1e3;
 
     }
     { // ASCII_string
