@@ -59,7 +59,7 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t n = 1e6; // test count    
+    constexpr size_t n = 1e7; // test count    
 
     { // integer()
         std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
@@ -79,9 +79,14 @@ TEST(TestAlgorithm, Integer) {
         }
         EDs /= n + 1; EDt /= n + 1; 
         const double EE = pow(2, 64) / (n + 1);
-        
+        for (size_t i = 0; i <= n; ++i) {
+            EDu += abs(u[i] - EDs); EDv += abs(v[i] - EDt);
+        }
+        EDu /= n + 1; EDv /= n + 1;
         std::cout << (EDs - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << EDu << std::endl;
+        std::cout << EDv << std::endl;
     }
 
     // <class T> integer(const T, const T)
