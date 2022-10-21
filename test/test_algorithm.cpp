@@ -28,7 +28,19 @@ TEST(TestAlgorithm, Rem) {
 }
 
 TEST(TestAlgorithm, Mod) {
+    using tiny_random::number::mod;
 
+    std::mt19937_64& R = tiny_random::random_engine;
+    std::uniform_int_distribution<intmax_t> U(INTMAX_MIN / 2, INTMAX_MAX / 2); // limit the range of random numbers to avert overflow
+    std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
+    constexpr size_t C = 1e9; // test count
+    for (size_t i = 0; i < C; ++i) {
+        auto a = U(R), b = U(R); const auto c = U(R);
+        EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
+        EXPECT_EQ(mod(a - b, c), mod(mod(a, c) - mod(b, c), c));
+        //a = u(R), b = u(R);
+        //EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
+    }
 }
 
 TEST(TestAlgorithm, Integer) {
@@ -86,6 +98,7 @@ TEST(TestAlgorithm, StringConversion) {
 }
 
 TEST(TestAlgorithm, Exp) {
+    GTEST_SKIP();
     constexpr size_t nsp = 1e6;
     constexpr size_t B[][2] = { { 1, 8 }, { 1, 16 }, { 1, 32 }, { 1, 64 }, { 1, 128 } , { 1, 256 } };
     std::exponential_distribution<double> E(2);
