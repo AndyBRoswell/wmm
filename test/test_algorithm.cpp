@@ -47,9 +47,11 @@ TEST(TestAlgorithm, Mod) {
     constexpr size_t n = 1e9; // test count
     for (size_t i = 0; i < n; ++i) {
         auto a = U(R), b = U(R), c = U(R);
+        while (c == 0) { c = U(R); } // division by zero is not allowed
         EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
         EXPECT_EQ(mod(a - b, c), mod(mod(a, c) - mod(b, c), c));
         a = u(R), b = u(R), c = u(R);
+        while (c == 0) { c = u(R); } // division by zero is not allowed
         EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
     }
 }
