@@ -121,26 +121,27 @@ TEST(TestAlgorithm, Integer) {
 
         constexpr size_t n = 1e3; // test count
 
-        static const std::set<int> shex(hex, hex + sizeof(hex) - 1);
-        static const std::set<int> slhex(lhex, lhex + sizeof(hex) - 1);
-        static const std::set<int> sualnum(ualnum, ualnum + sizeof(ualnum) - 1);
-        static const std::set<int> slalnum(lalnum, lalnum + sizeof(lalnum) - 1);
+        const std::set<int> shex(hex, hex + sizeof(hex) - 1);
+        const std::set<int> slhex(lhex, lhex + sizeof(hex) - 1);
+        const std::set<int> sualnum(ualnum, ualnum + sizeof(ualnum) - 1);
+        const std::set<int> slalnum(lalnum, lalnum + sizeof(lalnum) - 1);
         const std::function<bool(int)> contains[] = {
             [](int c) { return isdigit(c); },
-            [](int c) { return shex.contains(c); },
-            [](int c) { return slhex.contains(c); },
+            [&shex](int c) { return shex.contains(c); },
+            [&slhex](int c) { return slhex.contains(c); },
             [](int c) { return isupper(c); },
             [](int c) { return islower(c); },
             [](int c) { return isalpha(c); },
-            [](int c) { return sualnum.contains(c); },
-            [](int c) { return slalnum.contains(c); },
+            [&sualnum](int c) { return sualnum.contains(c); },
+            [&slalnum](int c) { return slalnum.contains(c); },
             [](int c) { return isalnum(c); },
             [](int c) { return ispunct(c); },
             [](int c) { return c >= 0x20 and c <= 0x7e; },
         };
+        std::set<int> coverage = {};
 
         using U = std::underlying_type_t<ASCII_char_type>;
-        for (U t = 0; t <= static_cast<U>(ASCII_char_type::printable); ++t) {
+        for (U t = static_cast<U>(ASCII_char_type::dec); t <= static_cast<U>(ASCII_char_type::printable); ++t) {
 
         }
     }
