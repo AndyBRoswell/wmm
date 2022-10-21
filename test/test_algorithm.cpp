@@ -59,7 +59,7 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t n = 20; // test count    
+    constexpr size_t n = 10; // test count    
 
     { // integer()
         std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
@@ -74,29 +74,24 @@ TEST(TestAlgorithm, Integer) {
         std::cout << std::endl;
 
         std::vector<intmax_t> ds; std::vector<uintmax_t> dt;
-        double Es = 0, Et = 0; // E = expectation
-        double Eds = 0, Edt = 0;
+        double Eds = 0, Edt = 0; // E = expectation
         for (size_t i = 1; i <= n + 1; ++i) {
             const auto d0 = s[i] - s[i - 1]; const auto d1 = t[i] - t[i - 1]; // >= 0
-            Es += d0; Et += d1;
+            Eds += d0; Edt += d1;
             ds.emplace_back(d0); dt.emplace_back(d1);
         }
         for (size_t i = 0; i <= n; ++i) {
             std::cout << ds[i] << "\t\t\t\t" << dt[i] << std::endl;
         }
         std::cout << std::endl;
-        Es /= n + 1; Et /= n + 1; 
+        Eds /= n + 1; Edt /= n + 1; 
         const double EE = pow(2, 64) / (n + 1);
-        for (size_t i = 0; i <= n; ++i) {
-            Eds += abs(ds[i] - Es); Edt += abs(dt[i] - Et);
-        }
-        Eds /= n + 1; Edt /= n + 1;
         const auto w = std::minmax_element(s.cbegin(), s.cend());
         const auto x = std::minmax_element(t.cbegin(), t.cend());
         const auto y = std::minmax_element(ds.cbegin(), ds.cend());
         const auto z = std::minmax_element(dt.cbegin(), dt.cend());
-        std::cout << (Es - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << (Et - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (Eds - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (Edt - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << Eds << std::endl;
         std::cout << Edt << std::endl;
         std::cout << *w.first << "\t\t\t\t" << *w.second << std::endl;
