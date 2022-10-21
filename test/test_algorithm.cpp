@@ -59,7 +59,7 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t n = 10; // test count    
+    constexpr size_t n = 1e7; // test count    
 
     { // integer()
         std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
@@ -70,37 +70,46 @@ TEST(TestAlgorithm, Integer) {
         std::sort(s.begin(), s.end()); std::sort(t.begin(), t.end());
 
         std::vector<intmax_t> ds; std::vector<uintmax_t> dt;
+        const double Ed = pow(2, 64) / (n + 1); // theorectical mean of distance
         double Eds = 0, Edt = 0; // E = expectation
-        double EDds = 0, EDdt = 0;
+        double EDds = 0, EDdt = 0; // D = deviation
         for (size_t i = 1; i <= n + 1; ++i) {
             const auto d0 = s[i] - s[i - 1]; const auto d1 = t[i] - t[i - 1]; // >= 0
             Eds += d0; Edt += d1;
             ds.emplace_back(d0); dt.emplace_back(d1);
         }
         Eds /= n + 1; Edt /= n + 1;
-
-        for (size_t i = 0; i <= n + 1; ++i) {
-            std::cout << s[i] << "\t\t\t\t" << t[i] << std::endl;
-        }
-        std::cout << std::endl;
         for (size_t i = 0; i <= n; ++i) {
-            std::cout << ds[i] << "\t\t\t\t" << dt[i] << std::endl;
+            EDds += abs(ds[i] - Ed); EDdt += abs(dt[i] - Ed);
         }
-        std::cout << std::endl;
+        EDds /= n + 1; EDdt /= n + 1;
 
-        const double EE = pow(2, 64) / (n + 1);
-        const auto w = std::minmax_element(s.cbegin(), s.cend());
-        const auto x = std::minmax_element(t.cbegin(), t.cend());
-        const auto y = std::minmax_element(ds.cbegin(), ds.cend());
-        const auto z = std::minmax_element(dt.cbegin(), dt.cend());
-        std::cout << (Eds - EE) / EE * 1e6 << " ppm" << std::endl;
-        std::cout << (Edt - EE) / EE * 1e6 << " ppm" << std::endl;
+        //for (size_t i = 0; i <= n + 1; ++i) {
+        //    std::cout << s[i] << "\t\t\t\t" << t[i] << std::endl;
+        //}
+        //std::cout << std::endl;
+        //for (size_t i = 0; i <= n; ++i) {
+        //    std::cout << ds[i] << "\t\t\t\t" << dt[i] << std::endl;
+        //}
+        //std::cout << std::endl;
+
         std::cout << Eds << std::endl;
         std::cout << Edt << std::endl;
-        std::cout << *w.first << "\t\t\t\t" << *w.second << std::endl;
-        std::cout << *x.first << "\t\t\t\t" << *x.second << std::endl;
-        std::cout << *y.first << "\t\t\t\t" << *y.second << std::endl;
-        std::cout << *z.first << "\t\t\t\t" << *z.second << std::endl;
+        std::cout << (Eds - Ed) / Ed * 1e6 << " ppm" << std::endl;
+        std::cout << (Edt - Ed) / Ed * 1e6 << " ppm" << std::endl;
+        std::cout << EDds << std::endl;
+        std::cout << EDdt << std::endl;
+        std::cout << (EDds - Ed) / Ed * 1e6 << " ppm" << std::endl;
+        std::cout << (EDdt - Ed) / Ed * 1e6 << " ppm" << std::endl;
+
+        //const auto w = std::minmax_element(s.cbegin(), s.cend());
+        //const auto x = std::minmax_element(t.cbegin(), t.cend());
+        //const auto y = std::minmax_element(ds.cbegin(), ds.cend());
+        //const auto z = std::minmax_element(dt.cbegin(), dt.cend());
+        //std::cout << *w.first << "\t\t\t\t" << *w.second << std::endl;
+        //std::cout << *x.first << "\t\t\t\t" << *x.second << std::endl;
+        //std::cout << *y.first << "\t\t\t\t" << *y.second << std::endl;
+        //std::cout << *z.first << "\t\t\t\t" << *z.second << std::endl;
     }
 
     // <class T> integer(const T, const T)
