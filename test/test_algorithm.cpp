@@ -94,11 +94,11 @@ TEST(TestAlgorithm, Integer) {
         { // special cases
             constexpr intmax_t b[][2] = {
                 { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
-                { INTMAX_MIN / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }
+                { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 }, 
             };
             constexpr uintmax_t B[][2] = {
                 { 0, 0 }, { 1, 1 },
-                { 0, UINTMAX_MAX }, { UINTMAX_MAX, UINTMAX_MAX },
+                { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX },
             };
             for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) {
                 for (size_t j = 0; j < n; ++j) {
