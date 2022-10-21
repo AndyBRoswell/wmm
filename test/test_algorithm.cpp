@@ -67,21 +67,27 @@ TEST(TestAlgorithm, Integer) {
             u.emplace_back(integer<intmax_t>());
             v.emplace_back(integer());
         }
+        std::sort(u.begin(), u.end());
+        std::sort(v.begin(), v.end());
+        double EX = 0, VX = 0; // E = expectation
+        double EY = 0, VY = 0; // V = variance
+        for (size_t i = 1; i < n; ++i) {
+            EX += u[i] - u[i - 1]; EY += v[i] - v[i - 1]; // >= 0
+        }
+        EX /= n + 1; EY /= n + 1;
+        const double EE = pow(2, 64) / (n + 1);
         for (size_t i = 1; i < n; ++i) {
 
         }
+        std::cout << (EX - EE) / EE * 1e6 << " ppm" << std::endl;
+        std::cout << (EY - EE) / EE * 1e6 << " ppm" << std::endl;
     }
 
     // <class T> integer(const T, const T)
 
-}
+    // ASCII
 
-TEST(TestAlgorithm, ASCII) {
-
-}
-
-TEST(TestAlgorithm, ASCIIString) {
-
+    // ASCII_string
 }
 
 TEST(TestAlgorithm, JSON) {
