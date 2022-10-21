@@ -92,7 +92,7 @@ TEST(TestAlgorithm, Integer) {
             }
         }
         { // special cases
-            constexpr intmax_t b[][2] = {
+            constexpr intmax_t b[][2] = { // B/b means bound
                 { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
                 { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 }, 
             };
@@ -117,8 +117,16 @@ TEST(TestAlgorithm, Integer) {
         }
     }
     { // ASCII
-        constexpr size_t n = 1e3;
+        using namespace tiny_random::chr;
 
+        constexpr size_t n = 1e3; // test count
+
+
+
+        using U = std::underlying_type_t<ASCII_char_type>;
+        for (U t = 0; t <= static_cast<U>(ASCII_char_type::printable); ++t) {
+
+        }
     }
     { // ASCII_string
 
