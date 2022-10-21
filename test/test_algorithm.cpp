@@ -59,14 +59,16 @@ TEST(TestAlgorithm, Mod) {
 TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
-    constexpr size_t n = 1e7; // test count    
+    constexpr size_t n = 20; // test count    
 
     { // integer()
         std::vector<intmax_t> s{ INTMAX_MIN }; std::vector<uintmax_t> t{ 0 };
         for (size_t i = 0; i < n; ++i) {
             s.emplace_back(integer<intmax_t>()); t.emplace_back(integer());
+            std::cout << *s.crbegin() << "  " << *t.crbegin() << std::endl;
         }
         s.emplace_back(INTMAX_MAX); t.emplace_back(UINTMAX_MAX);
+        std::cout << *s.crbegin() << "  " << *t.crbegin() << "\n" << std::endl;
         std::sort(s.begin(), s.end()); std::sort(t.begin(), t.end());
 
         std::vector<intmax_t> u, v;
@@ -83,10 +85,18 @@ TEST(TestAlgorithm, Integer) {
             EDu += abs(u[i] - EDs); EDv += abs(v[i] - EDt);
         }
         EDu /= n + 1; EDv /= n + 1;
+        const auto w = std::minmax(s.cbegin(), s.cend());
+        const auto x = std::minmax(t.cbegin(), t.cend());
+        const auto y = std::minmax(u.cbegin(), u.cend());
+        const auto z = std::minmax(v.cbegin(), v.cend());
         std::cout << (EDs - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << (EDt - EE) / EE * 1e6 << " ppm" << std::endl;
         std::cout << EDu << std::endl;
         std::cout << EDv << std::endl;
+        std::cout << *w.first << "  " << *w.second << std::endl;
+        std::cout << *x.first << "  " << *x.second << std::endl;
+        std::cout << *y.first << "  " << *y.second << std::endl;
+        std::cout << *z.first << "  " << *z.second << std::endl;
     }
 
     // <class T> integer(const T, const T)
