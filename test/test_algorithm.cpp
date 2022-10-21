@@ -121,7 +121,20 @@ TEST(TestAlgorithm, Integer) {
 
         constexpr size_t n = 1e3; // test count
 
-
+        const std::function<bool(int)> f[] = {
+            [](int c) { return isdigit(c); },
+            [](int c) {
+                static std::set<int> s(hex, hex + sizeof(hex));
+                return s.contains(c);
+            },
+            [](int c) {
+                static std::set<int> s(lhex, lhex + sizeof(hex));
+                return s.contains(c);
+            },
+            [](int c) { return isupper(c); },
+            [](int c) { return islower(c); },
+            [](int c) { return isalpha(c); },
+        };
 
         using U = std::underlying_type_t<ASCII_char_type>;
         for (U t = 0; t <= static_cast<U>(ASCII_char_type::printable); ++t) {
