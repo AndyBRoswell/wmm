@@ -14,7 +14,7 @@
 // Tests for tests begins here
 TEST(TestAlgorithm, Rem) {
     GTEST_SKIP();
-    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::mt19937_64& random_engine = tiny_random::random_engine;
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INT_MIN, INT_MAX);
     constexpr auto m = INT_MIN;
     constexpr auto a = 0x20, b = 0x7E;
@@ -27,13 +27,33 @@ TEST(TestAlgorithm, Rem) {
     }
 }
 
+TEST(TestAlgorithm, Mod) {
+
+}
+
+TEST(TestAlgorithm, Integer) {
+
+}
+
+TEST(TestAlgorithm, ASCII) {
+
+}
+
+TEST(TestAlgorithm, ASCIIString) {
+
+}
+
+TEST(TestAlgorithm, JSON) {
+
+}
+
 TEST(TestAlgorithm, Random) {
     auto mod = [](const auto& N, const auto& D) constexpr {
         const auto r = N % D;
         if (D > 0) { return r >= 0 ? r : r + D; }
         else { return r <= 0 ? r : r + D; }
     };
-    std::mt19937_64 random_engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::mt19937_64& random_engine = tiny_random::random_engine;
     std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
     constexpr intmax_t B[][2] = { { 1, 256 }, { 0x20, 0x7E }, { 0, 10 }, { -15, 13 }, { -997, -122 }, { 0, 0 }, { -1e6, 1e6 }, { -1.5e10, 1.6e10 }, { 0, 10 + 26 + 26 - 1 } };
     for (size_t h = 0; h < sizeof(B) / (2 * sizeof(intmax_t)); ++h) {
