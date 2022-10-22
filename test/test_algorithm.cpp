@@ -123,29 +123,38 @@ TEST(TestAlgorithm, Integer) {
         using tiny_random::chr::ASCII_string;
         using enum ASCII_char_type;
 
-        constexpr size_t n = 1e3; // test count
-
         const std::set<int> shex(chr::hex, chr::hex + sizeof(chr::hex) - 1);
         const std::set<int> slhex(chr::lhex, chr::lhex + sizeof(chr::lhex) - 1);
         const std::set<int> sualnum(chr::ualnum, chr::ualnum + sizeof(chr::ualnum) - 1);
         const std::set<int> slalnum(chr::lalnum, chr::lalnum + sizeof(chr::lalnum) - 1);
-        const std::vector<ASCII_char_type> enum_to_test = { dec, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable, };
-        const std::vector<std::tuple<std::function<bool(int)>, std::set<int>>> f = {
-            { [](int c) { return isdigit(c); }, {}, },
-            { [&shex](int c) { return shex.contains(c); }, {}, },
-            { [&slhex](int c) { return slhex.contains(c); }, {}, },
-            { [](int c) { return isupper(c); }, {}, },
-            { [](int c) { return islower(c); }, {}, },
-            { [](int c) { return isalpha(c); }, {}, },
-            { [&sualnum](int c) { return sualnum.contains(c); }, {}, },
-            { [&slalnum](int c) { return slalnum.contains(c); }, {}, },
-            { [](int c) { return isalnum(c); }, {}, },
-            { [](int c) { return ispunct(c); }, {}, },
-            { [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, },
+        const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>>> f = {
+            { dec, [](int c) { return isdigit(c); }, {}, },
+            { hex, [&shex](int c) { return shex.contains(c); }, {}, },
+            { lhex, [&slhex](int c) { return slhex.contains(c); }, {}, },
+            { ucase, [](int c) { return isupper(c); }, {}, },
+            { lcase, [](int c) { return islower(c); }, {}, },
+            { alpha, [](int c) { return isalpha(c); }, {}, },
+            { ualnum, [&sualnum](int c) { return sualnum.contains(c); }, {}, },
+            { lalnum, [&slalnum](int c) { return slalnum.contains(c); }, {}, },
+            { alnum, [](int c) { return isalnum(c); }, {}, },
+            { punct, [](int c) { return ispunct(c); }, {}, },
+            { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, },
         };
 
-        for (const auto& i : enum_to_test) {
+        constexpr size_t n = 1e3; // test count
 
+        for (bool q;;) {
+            for (size_t i = 0; i < 100; ++i) {
+                for (size_t j = 0; j < f.size(); ++j) {
+                    const auto c = ASCII(std::get<0>(f[j]));
+                    EXPECT_TRUE(std::get<1>(f[j])(c)); // char c is in the specified range, judged by the corresponding lambda
+                }
+            }
+            q = true;
+            for (size_t i = 0; i < f.size(); ++i) {
+                
+            }
+            if (q == true) { break; }
         }
     }
 }
