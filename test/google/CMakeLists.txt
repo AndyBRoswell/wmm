@@ -26,11 +26,12 @@ find_package(GTest CONFIG REQUIRED)
 
 enable_testing()
 
-qt_add_executable(wmmtest
+qt_add_executable(wmmgtest
     ${code_files}
 )
 
-set_target_properties(wmmtest PROPERTIES
+# target configuration
+set_target_properties(wmmgtest PROPERTIES
     # MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" # C/C++ > Code Generation > Runtime Library = /MTd instead of default /MDd
     MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -38,19 +39,18 @@ set_target_properties(wmmtest PROPERTIES
     MACOSX_BUNDLE TRUE
     # WIN32_EXECUTABLE TRUE
 )
-target_compile_definitions(wmmtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+target_compile_definitions(wmmgtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-# dependency: mongo_libs
-target_include_directories(wmmtest PUBLIC
+target_include_directories(wmmgtest PUBLIC
     ${wmm_root}
     ${JSON_inc_dir}
-    ${mongo_inc_dir}
+    ${mongo_inc_dir}    # dependency: mongo libs
 )
-target_link_libraries(wmmtest PUBLIC
+target_link_libraries(wmmgtest PUBLIC
     ${mongo_libs}
     GTest::gtest_main
     Qt6::Core
 )
 
 include(GoogleTest)
-# gtest_discover_tests(wmmtest)
+# gtest_discover_tests(wmmgtest)

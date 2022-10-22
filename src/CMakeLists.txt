@@ -44,9 +44,9 @@ endif ()
 find_library(DuckX duckx "${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/lib")
 
 target_include_directories(wmm PUBLIC
-    ${JSON_inc_dir}
-    ${mongo_inc_dir}
-    ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include
+    ${JSON_inc_dir}                                     # dependency: JSON libs
+    ${mongo_inc_dir}                                    # dependency: mongo libs
+    ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include # dependency: docx
 )
 target_link_libraries(wmm PUBLIC
     ${mongo_libs}

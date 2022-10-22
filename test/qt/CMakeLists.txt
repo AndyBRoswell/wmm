@@ -15,3 +15,25 @@ set(code_files
     ${modules_to_be_tested}
 )
 
+# dependency: Qt
+find_package(Qt6 6.3 COMPONENTS Test REQUIRED)
+
+# qt_add_executable(wmmqtest
+#     ${code_files}
+# )
+# 
+# set_target_properties(wmmqtest PROPERTIES
+#     WIN32_EXECUTABLE TRUE
+#     MACOSX_BUNDLE TRUE
+# )
+# target_compile_definitions(wmmgtest PUBLIC $<$<OR:$<CONFIG:Debug>,# $<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+# 
+# target_include_directories(wmmgtest PUBLIC
+#     ${wmm_root}
+#     ${JSON_inc_dir}     # dependency: JSON libs
+#     ${mongo_inc_dir}    # dependency: mongo libs
+# )
+# target_link_libraries(wmmqtest PUBLIC
+#     Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Test
+# )
+# 
