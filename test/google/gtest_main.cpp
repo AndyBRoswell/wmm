@@ -22,10 +22,10 @@
 #include "tiny_random.h"
 
 // Modules tested
-#include "../src/Algorithm.h"
-#include "../src/FileSystemAccessor.h"
-#include "../src/JSONFormatter.h"
-#include "../src/MongoDBAccessor.h"
+#include "src/Algorithm.h"
+#include "src/FileSystemAccessor.h"
+#include "src/JSONFormatter.h"
+#include "src/MongoDBAccessor.h"
 
 // Tests of WMM begin here.
 TEST(Algorithm, StringIeq) { // ieq is from powershell

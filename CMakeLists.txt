@@ -66,6 +66,7 @@ list(APPEND mongo_libs ${bsoncxx})
 list(APPEND mongo_libs ${mongocxx})
 
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(test/google)
+add_subdirectory(test/qt)
 
 message(STATUS "Note: Remember to run post-build script at the root directory of this software.")

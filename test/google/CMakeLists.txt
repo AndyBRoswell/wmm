@@ -6,10 +6,10 @@ file(GLOB_RECURSE headers
     *.h*
 )
 file(GLOB modules_to_be_tested
-    ../src/Algorithm.cpp
-    ../src/FileSystemAccessor.cpp
-    ../src/JSONFormatter.cpp
-    ../src/MongoDBAccessor.cpp
+    ${wmm_root}/src/Algorithm.cpp
+    ${wmm_root}/src/FileSystemAccessor.cpp
+    ${wmm_root}/src/JSONFormatter.cpp
+    ${wmm_root}/src/MongoDBAccessor.cpp
 )
 
 # set variables
@@ -43,6 +43,7 @@ target_compile_definitions(wmmtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWit
 
 # dependency: mongo_libs
 target_include_directories(wmmtest PUBLIC
+    ${wmm_root}
     ${JSON_inc_dir}
     ${mongo_inc_dir}
 )
