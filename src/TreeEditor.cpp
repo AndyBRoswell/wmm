@@ -120,33 +120,36 @@ namespace WritingMaterialsManager {
 
     void TreeEditor::contextMenuEvent(QContextMenuEvent* const Event) {
         QMenu* const ContextMenu = new QMenu(this);
+
+        // construct the context menu
         ContextMenu->addAction(MenuAction::Open);
-        const auto Connection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&TreeEditor::OpenFile));
+        const auto OpenFileConnection = connect(MenuAction::Open, &QAction::triggered, this, qOverload<>(&TreeEditor::OpenFile));
         QList<QMetaObject::Connection> CharsetEventHandlerConnections;
-        for (auto* const SetCharsetAction: MenuAction::SetCharset) {
+        for (auto* const SetCharsetAction: MenuAction::SetCharset) { // connect signals and slots for charset selection & record the connection for disposal
             CharsetEventHandlerConnections.emplace_back(connect(SetCharsetAction, &QAction::triggered, this, qOverload<>(&TreeEditor::SetCharset)));
         }
-        ContextMenu->addMenu(Menu::Charset);
-        ContextMenu->exec(Event->globalPos());
-        disconnect(Connection);
-        for (const auto& Connection: CharsetEventHandlerConnections) disconnect(Connection);
+        ContextMenu->addMenu(Menu::Charset); // add charset selection submenu with charset menu items
+
+        ContextMenu->exec(Event->globalPos()); // popup context menu and wait for action
+
+        // dispose the disappeared context menu
+        disconnect(OpenFileConnection);
+        for (const auto& Connection : CharsetEventHandlerConnections) { disconnect(Connection); }
     }
 
     void TreeEditor::OpenFile() {
         const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("JSON (*.json)"));
-        if (FileName.isEmpty() == false) OpenFile(FileName);
+        if (FileName.isEmpty() == false) { OpenFile(FileName); }
     }
 
     void TreeEditor::OpenFile(const QString& PathName) {
-        using namespace std;
-
-        shared_ptr<QFile> File = FileSystemAccessor::Open(PathName);
-        shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
+        std::shared_ptr<QFile> File = FileSystemAccessor::Open(PathName);
+        std::shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
         SetPathName(PathName.toUtf8());
         SetFileType(FileInfo->suffix().toUtf8());
         QByteArray FileContentsUTF8;
         QString FileContentsUTF16;
-        if (Charset == "<Charset>") Charset = "UTF-8"; // default encoding: UTF-8
+        if (Charset == "<Charset>") { Charset = "UTF-8"; } // default encoding: UTF-8
         if (Charset == "UTF-8") {
             FileContentsUTF8 = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = QString::fromUtf8(FileContentsUTF8);
@@ -159,7 +162,7 @@ namespace WritingMaterialsManager {
         }
         else {
             QTextCodec* const TextCodec = QTextCodec::codecForName(Charset);
-            shared_ptr<QTextDecoder> TextDecoder(TextCodec->makeDecoder());
+            std::shared_ptr<QTextDecoder> TextDecoder(TextCodec->makeDecoder());
             const QByteArray FileContentsRaw = FileSystemAccessor::GetAllRawContents(File);
             FileContentsUTF16 = TextDecoder->toUnicode(FileContentsRaw);
             FileContentsUTF8 = FileContentsUTF16.toUtf8();

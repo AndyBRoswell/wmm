@@ -79,7 +79,7 @@ namespace WritingMaterialsManager {
         std::shared_ptr<TextHighlighter> Highlighter; // highlighter for the open file
         std::shared_ptr<QtTreeModel> TreeModel; // for IntuitiveView
     private slots:
-        void OpenFile(); // open a file and show its content in this tree editor
+        void OpenFile(); // open a file and show its content using both IntuitiveView and RawView in this tree editor
         void OpenFile(const QString& PathName);
     };
 } // namespace WritingMaterialsManager
