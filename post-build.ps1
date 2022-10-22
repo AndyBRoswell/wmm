@@ -42,7 +42,7 @@ if ((test-path $BinDir) -eq $false) {
 $BuildTypeIsIllegal = $true
 foreach ($t in $supportedbuildtype) {
     if ($BuildType -ieq $t) { 
-        $BuildType = $t
+        $BuildType = $t # amend to canonical build type
         $BuildTypeIsIllegal = $false
         break
     }
@@ -64,10 +64,19 @@ echo 'Post-Build: Copying essentials to build directory ...'
 # Enter the directory of script (aka the root directory of this software) for the convenience of subsequent operations. This also avoided wrong behaviors when the working directory of the moment when this script was run wasn't the directory it locates.
 cd $shsd
 
-# Python related code, themes and test data
+# Python related code
 cp -r py $bind/py
+# theme
 cp -r src/thm $bind/thm
+# translation
 cp -r src/ts $bind/ts
+# Qt
+if (($BuildType -ieq "debug")) {
+    cp $QtBinDir/Qt6Testd.dll $bind/Qt6Testd.dll
+}
+else {
+    cp $QtBinDir/Qt6Test.dll $bind/Qt6Test.dll
+}
 
 # 3rd libraries
 cp $3rdd/mongo-c-driver-1.22.2/$BuildType/bin/bson-1.0.dll $bind/bson-1.0.dll
