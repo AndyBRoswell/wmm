@@ -6,10 +6,10 @@ file(GLOB_RECURSE headers
     *.h*
 )
 file(GLOB modules_to_be_tested
-    ${wmm_root}/src/Algorithm.cpp
-    ${wmm_root}/src/FileSystemAccessor.cpp
-    ${wmm_root}/src/JSONFormatter.cpp
-    ${wmm_root}/src/MongoDBAccessor.cpp
+    ../src/Algorithm.cpp
+    ../src/FileSystemAccessor.cpp
+    ../src/JSONFormatter.cpp
+    ../src/MongoDBAccessor.cpp
 )
 
 # set variables
