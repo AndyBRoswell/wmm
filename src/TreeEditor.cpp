@@ -74,13 +74,13 @@ namespace WritingMaterialsManager {
     QByteArray TreeEditor::GetFileType() const { return FileType; }
     void TreeEditor::SetFileType(const QByteArray& FileType) {
         using namespace std;
-        using F = SupportedFileType;
+        using enum SupportedFileType;
 
         try {
             const auto I = FileTypeToEnumID.find(FileType);
             if (I == FileTypeToEnumID.cend()) return; // not supported file type
-            switch (I->second) {
-            case F::JSON: case F::MongoDBExtendedJSON:
+            switch (I->second) { // supported file type, set the corresponding formatter and highlighter
+            case JSON: case MongoDBExtendedJSON:
                 Formatter = make_shared<JSONFormatter>();
                 Highlighter = make_shared<JSONHighlighter>(RawView->document());
                 break;
@@ -147,8 +147,8 @@ namespace WritingMaterialsManager {
         std::shared_ptr<QFileInfo> FileInfo = FileSystemAccessor::GetFileInfo(File);
         SetPathName(PathName.toUtf8());
         SetFileType(FileInfo->suffix().toUtf8());
-        QByteArray FileContentsUTF8;
-        QString FileContentsUTF16;
+        QByteArray FileContentsUTF8; // for parsing by JSON libraries
+        QString FileContentsUTF16; // for display
         if (Charset == "<Charset>") { Charset = "UTF-8"; } // default encoding: UTF-8
         if (Charset == "UTF-8") {
             FileContentsUTF8 = FileSystemAccessor::GetAllRawContents(File);
