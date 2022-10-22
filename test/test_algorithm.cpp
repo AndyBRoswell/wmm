@@ -143,16 +143,19 @@ TEST(TestAlgorithm, Integer) {
 
         constexpr size_t n = 1e3; // test count
 
-        for (;;) {
+        for (bool ok;;) {
             for (size_t i = 0; i < 100; ++i) {
                 for (size_t j = 0; j < f.size(); ++j) {
                     const auto c = ASCII(std::get<0>(f[j]));
                     EXPECT_TRUE(std::get<1>(f[j])(c)); // char c is in the specified range, judged by the corresponding lambda
                 }
             }
+            ok = true;
             for (size_t i = 0; i < f.size(); ++i) {
-                if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { continue; } // check if all chars in the specified range have been generated at least only once
+                if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { break; } // check if all chars in the specified range have been generated at least only once
+                std::cout << "<" << i << ", " << std::get<3>(f[i]) << ">" << std::endl;
             }
+            if (ok == true) { break; }
         }
     }
 }
