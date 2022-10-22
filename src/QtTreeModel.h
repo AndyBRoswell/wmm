@@ -40,19 +40,53 @@ namespace WritingMaterialsManager {
              */
             QVariant Data(lsize_t Column) const;
             void PushBackChild(Node* const Child);
+
+            /**
+             * Insert a subnode for this node.
+             * @param Position The position of insertion. The existing element at Position will be moved to (Position + RowCount).
+             * @param Child The subnode to be inserted.
+             * @return Whether the operation was succeeded.
+             */
             bool InsertChild(lsize_t Position, Node* const Child);
 
             /**
-             * Insert empty subnodes at this node.
+             * Insert empty subnodes for this node.
              * @param Position The position of insertion. The existing element at Position will be moved to (Position + RowCount).
              * @param RowCount The number of subnodes.
              * @param ColumnCount The number of elements of each subnode.
              * @return Whether the operation was succeeded.
              */
             bool InsertChildren(lsize_t Position, lsize_t RowCount, lsize_t ColumnCount);
+
+            /**
+             * The functions for inserting and removing columns are used differently to those for inserting and removing child items,
+             * because these are expected to be called on every item in the tree.
+             * This is done by recursively calling this function on each child of the item.
+             * ATTENTION: You MUSTN'T call this function at non-root nodes.
+             * @param Position
+             * @param ColumnCount The number of empty columns.
+             * @return Whether the operation was succeeded.
+             */
             bool InsertColumns(lsize_t Position, lsize_t ColumnCount);
             Node* Parent();
+
+            /**
+             * Remove child items at [Position, Position + Count)
+             * @param Position
+             * @param Count
+             * @return Whether the operation was succeeded.
+             */
             bool RemoveChildren(lsize_t Position, lsize_t Count);
+
+            /**
+             * The functions for inserting and removing columns are used differently to those for inserting and removing child items,
+             * because these are expected to be called on every item in the tree.
+             * This is done by recursively calling this function on each child of the item.
+             * ATTENTION: You MUSTN'T call this function at non-root nodes.
+             * @param Position
+             * @param Count The number of columns to be deleted.
+             * @return Whether the operation was succeeded.
+             */
             bool RemoveColumns(lsize_t Position, lsize_t Count);
             void ReverseChild();
 
@@ -82,7 +116,7 @@ namespace WritingMaterialsManager {
         };
 
         explicit QtTreeModel(QObject* Parent = nullptr);
-        ~QtTreeModel();
+        ~QtTreeModel(); // This will cause all items to be recursively deleted.
 
         // Header:
 

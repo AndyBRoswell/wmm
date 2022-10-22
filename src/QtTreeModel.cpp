@@ -55,13 +55,6 @@ namespace WritingMaterialsManager {
         return true;
     }
 
-/**
- * Insert empty subnodes at this node.
- * @param Position The position of insertion. The existing element at Position will be moved to (Position + RowCount).
- * @param RowCount The number of subnodes.
- * @param ColumnCount The number of elements of each subnode.
- * @return Whether the operation was succeeded.
- */
     bool QtTreeModel::Node::InsertChildren(const lsize_t Position, const lsize_t RowCount, const lsize_t ColumnCount) {
         if (Position < 0 || Position > SubNode.size()) return false;
         const qsizetype OldSize = SubNode.size();
@@ -73,12 +66,6 @@ namespace WritingMaterialsManager {
         return true;
     }
 
-/**
- * Remove child items at [Position, Position + Count)
- * @param Position
- * @param Count
- * @return Whether the operation was succeeded.
- */
     bool QtTreeModel::Node::RemoveChildren(const lsize_t Position, const lsize_t Count) {
         if (Position < 0 || Position + Count > SubNode.size()) return false;
         for (qsizetype i = Position; i < Position + Count; ++i) delete SubNode[i];
@@ -86,15 +73,6 @@ namespace WritingMaterialsManager {
         return true;
     }
 
-/**
- * The functions for inserting and removing columns are used differently to those for inserting and removing child items,
- * because they are expected to be called on every item in the tree.
- * This is done by recursively calling this function on each child of the item.
- * You MUSTN'T call this function at non-root nodes.
- * @param Position
- * @param ColumnCount The number of empty columns.
- * @return Whether the operation was succeeded.
- */
     bool QtTreeModel::Node::InsertColumns(const lsize_t Position, const lsize_t ColumnCount) {
         if (Position < 0 || Position > NodalData.size()) return false;
         NodalData.insert(Position, ColumnCount, QVariant());
@@ -102,12 +80,6 @@ namespace WritingMaterialsManager {
         return true;
     }
 
-/**
- * You MUSTN'T call this function at non-root nodes.
- * @param Position
- * @param Count The number of columns to be deleted.
- * @return Whether the operation was succeeded.
- */
     bool QtTreeModel::Node::RemoveColumns(lsize_t Position, lsize_t Count) {
         if (Position < 0 || Position + Count > NodalData.size()) return false;
         NodalData.remove(Position, Count);
@@ -121,7 +93,6 @@ namespace WritingMaterialsManager {
 
     QtTreeModel::QtTreeModel(QObject* Parent) : QAbstractItemModel(Parent), RootNode(new Node({ tr("Name/Index"), tr("Value") })) {}
 
-// This will cause all items to be recursively deleted.
     QtTreeModel::~QtTreeModel() { delete RootNode; }
 
     QVariant QtTreeModel::headerData(int Section, Qt::Orientation Orientation, int Role) const {
