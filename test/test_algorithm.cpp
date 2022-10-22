@@ -141,9 +141,7 @@ TEST(TestAlgorithm, Integer) {
             { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, 0x7e - 0x20 + 1 },
         };
 
-        constexpr size_t n = 1e3; // test count
-
-        for (bool ok;;) {
+        for (bool ok;;) { // single ASCII character
             for (size_t i = 0; i < 100; ++i) {
                 for (size_t j = 0; j < f.size(); ++j) {
                     const auto c = ASCII(std::get<0>(f[j]));
@@ -157,11 +155,32 @@ TEST(TestAlgorithm, Integer) {
             }
             if (ok == true) { break; }
         }
+
+        constexpr size_t n = 1e6; // test count
+        constexpr size_t lmax = 256; // default max string length
+
+        for (size_t i = 0; i < n; ++i) {
+            const auto tid = number::integer(0ull, f.size() - 1);
+            const auto t = std::get<0>(f[tid]);
+            const size_t l = number::integer(1ull, lmax);
+            const auto s = ASCII_string(l, t);
+            EXPECT_EQ(s.size(), l);
+            for (const auto c : s) {
+                EXPECT_TRUE(std::get<1>(f[tid])(c)); // expect that every char is of the specified type
+            }
+        }
     }
 }
 
 TEST(TestAlgorithm, JSON) {
-
+    constexpr size_t n = 100; // test count
+    
+    for (size_t i = 0; i < n; ++i) {
+        const auto json = QByteArray::fromStdString(tiny_random::chr::JSON());
+        QJsonParseError e;
+        const QJsonDocument d = QJsonDocument::fromJson(json, &e);
+        EXPECT_EQ(e.error, QJsonParseError::NoError);
+    }
 }
 
 TEST(TestAlgorithm, StringConversion) {
