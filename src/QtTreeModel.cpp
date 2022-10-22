@@ -13,61 +13,30 @@ namespace WritingMaterialsManager {
 
 /// class QtTreeModel::Node
 
-/**
- * Initially, each node has no children. They're added using the InsertChildren() function.
- * @param Data
- * @param Parent
- */
     QtTreeModel::Node::Node(const QList<QVariant>& Data, QtTreeModel::Node* Parent) : NodalData(Data), ParentNode(Parent) {}
 
-// The destructor ensures that each child added to the item is deleted when the item itself is deleted.
     QtTreeModel::Node::~Node() { qDeleteAll(SubNode); }
 
     QtTreeModel::Node* QtTreeModel::Node::Parent() { return ParentNode; }
 
-/**
- * Returns a specific child from the internal list of children.
- * @param Number The number of the required child of this node.
- * @return
- */
-    QtTreeModel::Node* QtTreeModel::Node::Child(int Number) {
-//    if (Number < 0 || Number >= SubNode.size()) return nullptr;
+    QtTreeModel::Node* QtTreeModel::Node::Child(lsize_t Number) {
+        if (Number < 0 || Number >= SubNode.size()) { return nullptr; } // index out of bound (OOB)
         return SubNode[Number];
     }
 
     lsize_t QtTreeModel::Node::ChildCount() const { return SubNode.count(); }
 
-/**
- * This function is used to determine the index of the child in its parent's children. (Element -> Array Index)
- * The root item has no parent item; for this item, we return 0 to be consistent with the other items.
- * @return
- */
     lsize_t QtTreeModel::Node::ChildNumber() const { return ParentNode != nullptr ? ParentNode->SubNode.indexOf(this) : 0; }
 
-/**
- * Returns the number of elements stored at this tree node.
- * @return
- */
     lsize_t QtTreeModel::Node::ColumnCount() const { return NodalData.count(); }
 
-/**
- * Data is retrieved using the Data() function, which accesses the appropriate element in this tree node.
- * @param Column
- * @return
- */
     QVariant QtTreeModel::Node::Data(int Column) const {
-        if (Column < 0 || Column >= NodalData.size()) return {};
+        if (Column < 0 || Column >= NodalData.size()) return {}; // OOB
         return NodalData[Column];
     }
 
-/**
- * Data is set using the SetData() function, which only stores values in this tree node for valid list indexes, corresponding to column values in the model.
- * @param Column
- * @param Value
- * @return Whether the operation was succeeded.
- */
     bool QtTreeModel::Node::SetData(lsize_t Column, const QVariant& Value) {
-        if (Column < 0 || Column >= NodalData.size()) return false;
+        if (Column < 0 || Column >= NodalData.size()) return false; // OOB
         NodalData[Column] = Value;
         return true;
     }
