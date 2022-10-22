@@ -39,7 +39,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     };
 
     { // csae-insensitive hasher
-        constexpr size_t g = 1e4;       // group count of test data
+        constexpr size_t g = 1e6;       // group count of test data
         constexpr size_t lmax = 256;    // max length of test strings
 
         constexpr wmm::CaseInsensitiveHasher hasher;
@@ -60,7 +60,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         }
     }
     { // case-insensitive comparator
-        constexpr size_t g = 1e2;       // group count of test data
+        constexpr size_t g = 1e3;       // group count of test data
         constexpr size_t lmax = 256;    // max length of test strings
 
         constexpr wmm::CaseInsensitiveStringComparator comparator;
@@ -164,7 +164,7 @@ TEST(MongoDBAccessor, BasicInfo) {
     WritingMaterialsManager::MongoDBAccessor mongoa;
     const QByteArray information[] = {
         mongoa.GetDatabasesInformation(),
-        mongoa.GetCollectionsInformation("admin"),
+        mongoa.GetCollectionsInformation("admin"), // these 3 databases are built-in
         mongoa.GetCollectionsInformation("config"),
         mongoa.GetCollectionsInformation("local"),
         mongoa.GetDBsAndCollsInfo(),
