@@ -24,7 +24,7 @@ namespace WritingMaterialsManager {
         setFont(DefaultCodeFont);
     }
 
-    void TextArea::mousePressEvent(QMouseEvent* E) {
+    void TextArea::mousePressEvent(QMouseEvent* const E) {
         QPlainTextEdit::mousePressEvent(E);
         emit MouseDown();
     }

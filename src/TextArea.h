@@ -13,7 +13,7 @@ namespace WritingMaterialsManager {
         explicit TextField(const QString& Text, QWidget* const Parent = nullptr);
         explicit TextField(QWidget* const Parent = nullptr);
 
-        void mousePressEvent(QMouseEvent* E) override; // mouse press event handler
+        void mousePressEvent(QMouseEvent* const E) override; // mouse press event handler
     signals:
         void MouseDown();
     };

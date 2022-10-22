@@ -9,7 +9,7 @@ namespace WritingMaterialsManager {
     public:
         using QTreeView::QTreeView;
 
-        void mousePressEvent(QMouseEvent* E) override;
+        void mousePressEvent(QMouseEvent* const E) override;
     signals:
         void MouseDown();
     };
