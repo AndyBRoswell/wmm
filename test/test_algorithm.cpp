@@ -34,6 +34,8 @@ TEST(TestAlgorithm, Mod) {
     std::mt19937_64& R = tiny_random::random_engine;
     std::uniform_int_distribution<intmax_t> U(INTMAX_MIN / 2, INTMAX_MAX / 2); // limit the range of random numbers to avert overflow
     std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
+    std::uniform_int_distribution<uintmax_t> V(0, UINTMAX_MAX / 2);
+    std::uniform_int_distribution<uintmax_t> v(0, UINT_MAX);
     { // a very simple demo of overflow
         constexpr intmax_t x[][3] = { { 10, -20, -1e10 }, { -1e6, -2e6, -1e10 }, { 1e9, 2e9, -5e9 }, { 1e9, 2e9, -1e10 }, };
         constexpr bool expect_eq[] = { true, true, false, false, };
@@ -46,13 +48,23 @@ TEST(TestAlgorithm, Mod) {
     }
     constexpr size_t n = 1e9; // test count
     for (size_t i = 0; i < n; ++i) {
-        auto a = U(R), b = U(R), c = U(R);
+        auto a = U(R), b = U(R), c = U(R); // signed
         while (c == 0) { c = U(R); } // division by zero is not allowed
         EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
         EXPECT_EQ(mod(a - b, c), mod(mod(a, c) - mod(b, c), c));
         a = u(R), b = u(R), c = u(R);
-        while (c == 0) { c = u(R); } // division by zero is not allowed
+        while (c == 0) { c = u(R); }
         EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
+        auto A = V(R), B = V(R), C = V(R); // unsigned
+        while (C == 0) { C = V(R); }
+        EXPECT_EQ(mod(A + B, C), mod(mod(A, C) + mod(B, C), C));
+        { // skip the test cases with overflow in intermediate steps
+            const uintmax_t beta[] = { mod(A, C), mod(B, C) };
+            if (A >= B and beta[0] >= beta[1]) { EXPECT_EQ(mod(A - B, C), mod(beta[0] - beta[1], C)); }
+        }
+        A = v(R), B = v(R), C = v(R);
+        while (C == 0) { C = v(R); }
+        EXPECT_EQ(mod(A * B, C), mod(mod(A, C) * mod(B, C), C));
     }
 }
 
