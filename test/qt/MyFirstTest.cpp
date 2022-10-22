@@ -15,6 +15,7 @@ private slots:
     void initTestCase()
     {
         qDebug("Called before everything else.");
+        qDebug(qApp->applicationFilePath().toStdString().c_str());
     }
 
     void myFirstTest()
