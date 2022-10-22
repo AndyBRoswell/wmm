@@ -127,34 +127,32 @@ TEST(TestAlgorithm, Integer) {
         const std::set<int> slhex(chr::lhex, chr::lhex + sizeof(chr::lhex) - 1);
         const std::set<int> sualnum(chr::ualnum, chr::ualnum + sizeof(chr::ualnum) - 1);
         const std::set<int> slalnum(chr::lalnum, chr::lalnum + sizeof(chr::lalnum) - 1);
-        const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>>> f = {
-            { dec, [](int c) { return isdigit(c); }, {}, },
-            { hex, [&shex](int c) { return shex.contains(c); }, {}, },
-            { lhex, [&slhex](int c) { return slhex.contains(c); }, {}, },
-            { ucase, [](int c) { return isupper(c); }, {}, },
-            { lcase, [](int c) { return islower(c); }, {}, },
-            { alpha, [](int c) { return isalpha(c); }, {}, },
-            { ualnum, [&sualnum](int c) { return sualnum.contains(c); }, {}, },
-            { lalnum, [&slalnum](int c) { return slalnum.contains(c); }, {}, },
-            { alnum, [](int c) { return isalnum(c); }, {}, },
-            { punct, [](int c) { return ispunct(c); }, {}, },
-            { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, },
+        const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>, size_t>> f = {
+            { dec, [](int c) { return isdigit(c); }, {}, 10, },
+            { hex, [&shex](int c) { return shex.contains(c); }, {}, 16, },
+            { lhex, [&slhex](int c) { return slhex.contains(c); }, {}, 16, },
+            { ucase, [](int c) { return isupper(c); }, {}, 26, },
+            { lcase, [](int c) { return islower(c); }, {}, 26, },
+            { alpha, [](int c) { return isalpha(c); }, {}, 52, },
+            { ualnum, [&sualnum](int c) { return sualnum.contains(c); }, {}, 36, },
+            { lalnum, [&slalnum](int c) { return slalnum.contains(c); }, {}, 36, },
+            { alnum, [](int c) { return isalnum(c); }, {}, 62, },
+            { punct, [](int c) { return ispunct(c); }, {}, sizeof(chr::punct) - 1, },
+            { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, 0x7e - 0x20 + 1 },
         };
 
         constexpr size_t n = 1e3; // test count
 
-        for (bool q;;) {
+        for (;;) {
             for (size_t i = 0; i < 100; ++i) {
                 for (size_t j = 0; j < f.size(); ++j) {
                     const auto c = ASCII(std::get<0>(f[j]));
                     EXPECT_TRUE(std::get<1>(f[j])(c)); // char c is in the specified range, judged by the corresponding lambda
                 }
             }
-            q = true;
             for (size_t i = 0; i < f.size(); ++i) {
-                
+                if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { continue; } // check if all chars in the specified range have been generated at least only once
             }
-            if (q == true) { break; }
         }
     }
 }

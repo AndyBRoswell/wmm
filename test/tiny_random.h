@@ -76,7 +76,7 @@ namespace tiny_random {
             case t::lhex: return lhex[number::integer(0, 16 - 1)];
             case t::ucase: return number::integer('A', 'Z');
             case t::lcase: return number::integer('a', 'z');
-            case t::alpha: return latin[number::integer(0, 26 - 1)];
+            case t::alpha: return latin[number::integer(0, 26 + 26 - 1)];
             case t::ualnum: return ualnum[number::integer(0, 10 + 26 - 1)];
             case t::lalnum: return lalnum[number::integer(0, 10 + 26 - 1)];
             case t::alnum: return alnum[number::integer(0, 10 + 26 + 26 - 1)];
