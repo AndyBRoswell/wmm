@@ -8,12 +8,12 @@ namespace WritingMaterialsManager {
     class TextField : public QLineEdit {
     Q_OBJECT
     public:
-        using QLineEdit::QLineEdit;
+        using QLineEdit::QLineEdit; // Inheriting ctors: All base ctors are made visible to overload resolution when initializing this (derived) class
 
         explicit TextField(const QString& Text, QWidget* const Parent = nullptr);
         explicit TextField(QWidget* const Parent = nullptr);
 
-        void mousePressEvent(QMouseEvent* E) override;
+        void mousePressEvent(QMouseEvent* E) override; // mouse press event handler
     signals:
         void MouseDown();
     };
