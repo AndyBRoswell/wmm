@@ -125,10 +125,39 @@ namespace WritingMaterialsManager {
 
         // Basic functionality:
 
+        /**
+         * Obtain the index of a specific subnode of a node.
+         * In this model, we only return model indices for child items,
+         * if the parent index is invalid (corresponding to the root item) or if it has a 0 column number.
+         * @param Row
+         * @param Column
+         * @param Parent
+         * @return
+         */
         QModelIndex index(lsize_t Row, lsize_t Column, const QModelIndex& Parent = QModelIndex()) const override;
+        /**
+         * Since each item contains information for an entire row of data,
+         * we create a model index to uniquely identify it by calling createIndex() with the row and column numbers and a pointer to the item.
+         * In the data() function, we will use item pointer & column number to access the data associated with the model index.
+         * In this model, the row number is not needed to identify data.
+         * Items without parents, including the root item, are handled by returning a null model index.
+         * Otherwise, a model index is created and returned as in the index() function, with a suitable row number,
+         * but with a 0 column number to be consistent with the scheme used in the index() implementation.
+         * @param Index
+         * @return
+         */
         QModelIndex parent(const QModelIndex& Index) const override;
 
+        /**
+         * @param Parent The tree node whose children count is wanted.
+         * @return The number of children it contains.
+         */
         lsize_t rowCount(const QModelIndex& Parent = QModelIndex()) const override;
+
+        /**
+         * @param Parent The tree node whose number of elements (terms of data) is wanted.
+         * @return The number of elements this tree node contains.
+         */
         lsize_t columnCount(const QModelIndex& Parent = QModelIndex()) const override;
 
         // Fetch data dynamically:
@@ -144,6 +173,11 @@ namespace WritingMaterialsManager {
 
         bool setData(const QModelIndex& Index, const QVariant& Value, int Role = Qt::EditRole) override;
 
+        /**
+         * Get the properties (i.e., editable or not) of an item.
+         * @param Index
+         * @return Properties of the item.
+         */
         Qt::ItemFlags flags(const QModelIndex& Index) const override;
 
         // Add data:

@@ -107,15 +107,6 @@ namespace WritingMaterialsManager {
         return Succeeded;
     }
 
-/**
- * Obtain the index of a specific subnode of a node.
- * In this model, we only return model indexes for child items
- * if the parent index is invalid (corresponding to the root item) or if it has a 0 column number.
- * @param Row
- * @param Column
- * @param Parent
- * @return
- */
     QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
         if (Parent.isValid() && Parent.column() != 0) return {};
         Node* ParentItem = GetItem(Parent);
@@ -125,17 +116,6 @@ namespace WritingMaterialsManager {
         return {};
     }
 
-/**
- * Since each item contains information for an entire row of data,
- * we create a model index to uniquely identify it by calling createIndex() with the row and column numbers and a pointer to the item.
- * In the data() function, we will use the item pointer and column number to access the data associated with the model index;
- * in this model, the row number is not needed to identify data.
- * Items without parents, including the root item, are handled by returning a null model index.
- * Otherwise, a model index is created and returned as in the index() function, with a suitable row number,
- * but with a 0 column number to be consistent with the scheme used in the index() implementation.
- * @param Index
- * @return
- */
     QModelIndex QtTreeModel::parent(const QModelIndex& Index) const {
         if (Index.isValid() == false) return {};
         Node* CurrentItem = GetItem(Index);
@@ -144,10 +124,6 @@ namespace WritingMaterialsManager {
         return createIndex(ParentItem->ChildNumber(), 0, ParentItem);
     }
 
-/**
- * @param Parent The tree node whose children count is wanted.
- * @return The number of children it contains.
- */
     lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
         if (Parent.isValid() && Parent.column() > 0) return 0;
 //    if (Parent.isValid()) return 0;
@@ -155,10 +131,6 @@ namespace WritingMaterialsManager {
         return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
     }
 
-/**
- * @param Parent The tree node whose number of elements (terms of data) is wanted.
- * @return The number of elements this tree node contains.
- */
     lsize_t QtTreeModel::columnCount(const QModelIndex& Parent) const {
 //    return Parent.isValid() ? GetItem(Parent)->ColumnCount() : 0;
         // for the situation where column count is fixed:
@@ -191,16 +163,11 @@ namespace WritingMaterialsManager {
 //    const bool Succeeded = Item->SetData(Index.column(), Value);
 //    if (Succeeded) { emit dataChanged(Index, Index, { Qt::DisplayRole, Qt::EditRole }); }
 //    return Succeeded;
-        return false;
+        return false; // Direct editing on the tree model is NOT supported yet.
     }
 
-/**
- * Get the properties (i.e., editable) of an item.
- * @param Index
- * @return Properties of the item.
- */
     Qt::ItemFlags QtTreeModel::flags(const QModelIndex& Index) const {
-        if (!Index.isValid()) return Qt::NoItemFlags;
+        if (Index.isValid() == false) return Qt::NoItemFlags;
 //    return QAbstractItemModel::flags(Index);
 //    return static_cast<QFlags<Qt::ItemFlag>>(QAbstractItemModel::flags(Index) | Qt::TextSelectableByMouse);
 //    return static_cast<QFlags<Qt::ItemFlag>>(QAbstractItemModel::flags(Index) | Qt::TextSelectableByKeyboard);
