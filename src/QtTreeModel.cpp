@@ -220,9 +220,9 @@ namespace WritingMaterialsManager {
         using namespace std;
         using namespace rapidjson;
 
-        RootNode->RemoveChildren(0, RootNode->ChildCount());
-        Node* const JSONRoot = new Node();
-        RootNode->PushBackChild(JSONRoot);
+        RootNode->RemoveChildren(0, RootNode->ChildCount()); // clear the extant tree nodes
+        Node* const JSONRoot = new Node(); // new root for the unique entry of the entire tree structure
+        RootNode->PushBackChild(JSONRoot); // This tree model support multiple trees, but JSON only has exactly 1 root node. Thus RootNode has just 1 child.
 
         Document JSONDocument;
         JSONDocument.Parse(UTF8JSONString.constData());
