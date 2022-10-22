@@ -35,9 +35,8 @@ namespace WritingMaterialsManager {
             auto AvailableCharsets = QTextCodec::availableCodecs();
             std::sort(AvailableCharsets.begin(), AvailableCharsets.end(), [](const QByteArray& A, const QByteArray& B) { return A < B; });
             for (const auto& Charset: AvailableCharsets) {
-                QAction* const CharsetAction = new QAction(Charset);
-                MenuAction::SetCharset.emplace_back(CharsetAction);
-                Menu::Charset->addAction(CharsetAction);
+                MenuAction::SetCharset.emplace_back(new QAction(Charset));
+                Menu::Charset->addAction(MenuAction::SetCharset.back());
             }
         });
 

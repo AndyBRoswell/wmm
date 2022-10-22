@@ -26,9 +26,9 @@ namespace WritingMaterialsManager {
             MongoDBExtendedJSON = 2,
         };
 
-        QTabWidget* const TabView;
-        TreeView* const IntuitiveView;
-        TextArea* const RawView;
+        QTabWidget* const TabView; // the main tab widget containing IntuitiveView and RawView
+        TreeView* const IntuitiveView; // show the tree structure of JSON
+        TextArea* const RawView; // show the raw content of JSON
 
         explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~TreeEditor();
@@ -54,15 +54,15 @@ namespace WritingMaterialsManager {
         void contextMenuEvent(QContextMenuEvent* const Event) override;
     private:
         static const std::unordered_map<QByteArray, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
-        struct Menu {
-            inline static QMenu* Charset;
+        struct Menu { // menu items
+            inline static QMenu* Charset; // charset menu item
             Menu() = delete;
             Menu(const Menu&) = delete;
             Menu(Menu&&) = delete;
             Menu& operator=(const Menu&) = delete;
             Menu& operator=(Menu&&) = delete;
         };
-        struct MenuAction {
+        struct MenuAction { // actions of menu items
             inline static QAction* Open;
             inline static QList<QAction*> SetCharset;
             MenuAction() = delete;

@@ -37,4 +37,4 @@ private slots:
 };
 
 QTEST_MAIN(MyFirstTest)
-#include "MyFirstTest.moc"
+#include "MyFirstTest.moc" // this compilation error can be ignored
