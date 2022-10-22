@@ -41,17 +41,17 @@ namespace WritingMaterialsManager {
         void ShouldUpdateFileType();
         void ShouldUpdateCharset();
     public slots:
-        void ArrangeContentView();
+        void ArrangeContentView(); // format & highlight the displaying content
 
-        QByteArray GetPathName() const;
-        void SetPathName(const QByteArray& FileName);
-        QByteArray GetFileType() const;
-        void SetFileType(const QByteArray& FileType);
+        QByteArray GetPathName() const; // get the pathname of the open file of this tree editor
+        void SetPathName(const QByteArray& FileName); // set the pathname of this tree editor as the pathname of the open file
+        QByteArray GetFileType() const; // get the extension of the open file of this tree editor
+        void SetFileType(const QByteArray& FileType); // set the file type of this tree editor as the extension of the open file so as to perform the proper operations
         QByteArray GetCharset() const;
         void SetCharset(); // This slot is for QAction::triggered()
-        void SetCharset(const QByteArray& Charset);
+        void SetCharset(const QByteArray& Charset); // set the charset of this tree editor as the proper charset for appropriately reading the content of the open file
     protected:
-        void contextMenuEvent(QContextMenuEvent* const Event) override;
+        void contextMenuEvent(QContextMenuEvent* const Event) override; // context menu event handler
     private:
         static const std::unordered_map<QByteArray, SupportedFileType, CaseInsensitiveHasher, CaseInsensitiveStringComparator> FileTypeToEnumID; // mainly for switch-case statement so far.
         struct Menu { // menu items

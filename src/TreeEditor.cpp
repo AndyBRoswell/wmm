@@ -104,12 +104,13 @@ namespace WritingMaterialsManager {
     void TreeEditor::ArrangeContentView() {
         auto PlainText = RawView->toPlainText();
         auto PlainTextCopy = PlainText;
-        Highlighter->setDocument(nullptr);
-        try {
+
+        Highlighter->setDocument(nullptr); // suspend the highlighting before the consummation of formatting
+        try { // attempt to format the text
             Formatter->Format(PlainText);
             RawView->setPlainText(PlainText);
         }
-        catch (...) {
+        catch (...) { // format failed
             RawView->setPlainText(PlainTextCopy); // restore the original text
         }
         Highlighter->setDocument(RawView->document());
