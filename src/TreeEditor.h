@@ -21,20 +21,20 @@ namespace WritingMaterialsManager {
     class TreeEditor : public QWidget {
     Q_OBJECT
     public:
-        enum class SupportedFileType : size_t {
+        enum class SupportedFileType : size_t { // file types supported by the tree editor
             JSON = 1,
             MongoDBExtendedJSON = 2,
         };
 
         QTabWidget* const TabView; // the main tab widget containing IntuitiveView and RawView
-        TreeView* const IntuitiveView; // show the tree structure of JSON
-        TextArea* const RawView; // show the raw content of JSON
+        TreeView* const IntuitiveView; // show the tree structure of the open JSON
+        TextArea* const RawView; // show the raw content of the open JSON
 
         explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~TreeEditor();
 
-        void SetText(const QString& Text = {});
-        void AppendText(const QString& Text = {});
+        void SetText(const QString& Text = {}); // set content for this tree editor
+        void AppendText(const QString& Text = {}); // append content for this tree editor
 
     signals:
         void ShouldUpdatePathName();
@@ -72,14 +72,14 @@ namespace WritingMaterialsManager {
             MenuAction& operator=(MenuAction&&) = delete;
         };
 
-        QByteArray PathName{};
-        QByteArray FileType{};
-        QByteArray Charset{};
-        std::shared_ptr<TextFormatter> Formatter;
-        std::shared_ptr<TextHighlighter> Highlighter;
-        std::shared_ptr<QtTreeModel> TreeModel;
+        QByteArray PathName{}; // the pathname of the open file
+        QByteArray FileType{}; // the extension of the open file
+        QByteArray Charset{}; // the charset used for reading the open file
+        std::shared_ptr<TextFormatter> Formatter; // formatter for the open file
+        std::shared_ptr<TextHighlighter> Highlighter; // highlighter for the open file
+        std::shared_ptr<QtTreeModel> TreeModel; // for IntuitiveView
     private slots:
-        void OpenFile();
+        void OpenFile(); // open a file and show its content in this tree editor
         void OpenFile(const QString& PathName);
     };
 } // namespace WritingMaterialsManager

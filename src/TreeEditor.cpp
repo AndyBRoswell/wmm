@@ -20,17 +20,16 @@ namespace WritingMaterialsManager {
         { "MongoDB Extended JSON", SupportedFileType::MongoDBExtendedJSON },
     }; // mainly for switch-case statement so far.
 
-    TreeEditor::TreeEditor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) : QWidget(parent),
-                                                                                                                               TabView(new QTabWidget),
-                                                                                                                               IntuitiveView(new TreeView),
-                                                                                                                               RawView(new TextArea),
-                                                                                                                               TreeModel(TreeModel) {
+    TreeEditor::TreeEditor(const QByteArray& FileType, const std::shared_ptr<QtTreeModel>& TreeModel, QWidget* const parent) :
+        QWidget(parent), TabView(new QTabWidget), IntuitiveView(new TreeView), RawView(new TextArea), TreeModel(TreeModel) {
         static std::once_flag StaticInitCompleted;
         std::call_once(StaticInitCompleted, [](){
+            // menu item Open
             MenuAction::Open = new QAction(tr("打开"));
             MenuAction::Open->setShortcut(QKeySequence::Open);
             MenuAction::Open->setStatusTip(tr("打开一个文件"));
 
+            // menu item Charset
             Menu::Charset = new QMenu(tr("字符集"));
             auto AvailableCharsets = QTextCodec::availableCodecs();
             std::sort(AvailableCharsets.begin(), AvailableCharsets.end(), [](const QByteArray& A, const QByteArray& B) { return A < B; });
@@ -40,6 +39,7 @@ namespace WritingMaterialsManager {
             }
         });
 
+        // connect signals and slots
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
@@ -47,9 +47,9 @@ namespace WritingMaterialsManager {
         connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
         connect(RawView, &TextArea::MouseDown, this, &TreeEditor::ShouldUpdateCharset);
 
-        setFocusPolicy(Qt::StrongFocus);
+        setFocusPolicy(Qt::StrongFocus); // the widget accepts focus by both tabbing and clicking. On macOS this will also be indicate that the widget accepts tab focus when in 'Text/List focus mode'.
         SetFileType(FileType);
-        SetCharset("UTF-8");
+        SetCharset("UTF-8"); // default charset: UTF-8
 
         IntuitiveView->setModel(TreeModel.get());
         TabView->addTab(IntuitiveView, tr("直观"));
