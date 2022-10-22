@@ -20,9 +20,13 @@ set(Qt_ts_Files # Qt translation files
 )
 
 # dependency: Qt
+find_package(Qt6 6.3 COMPONENTS Gui Widgets Core5Compat PdfWidgets REQUIRED)
+
 qt_add_executable(wmm
     ${code_files}
 )
+
+# target configuration
 set_target_properties(wmm PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER sw.abr.top
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -47,7 +51,7 @@ target_include_directories(wmm PUBLIC
 target_link_libraries(wmm PUBLIC
     ${mongo_libs}
     ${DuckX}
-    Qt6::Core Qt6::Widgets Qt6::Core5Compat Qt6::PdfWidgets
+    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Core5Compat Qt6::PdfWidgets
 )
 
 # post-build

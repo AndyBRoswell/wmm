@@ -46,7 +46,7 @@ TEST(TestAlgorithm, Mod) {
             else { EXPECT_NE(A, B); }
         }
     }
-    constexpr size_t n = 1e9; // test count
+    constexpr size_t n = 1e8; // test count
     for (size_t i = 0; i < n; ++i) {
         auto a = U(R), b = U(R), c = U(R); // signed
         while (c == 0) { c = U(R); } // division by zero is not allowed
