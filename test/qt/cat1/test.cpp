@@ -13,12 +13,10 @@ private:
 
 private slots:
     void initTestFCase() {
-        qDebug("GUI Test Cat. 1");
+        qDebug("GUI Test Cat. 1"); // cat.1 for relatively simpler GUI components
     }
 
     void TreeView() {
-        WritingMaterialsManager::TreeView tree_view;
-
         // signals are emitted when this TreeView is focused
         QTestEventList event_list;
         constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
@@ -30,6 +28,7 @@ private slots:
         }
 
         // begin signal test
+        WritingMaterialsManager::TreeView tree_view;
         QSignalSpy signal_spy(&tree_view, &WritingMaterialsManager::TreeView::MouseDown);
         event_list.simulate(&tree_view);
         QCOMPARE(signal_spy.count(), 12);
