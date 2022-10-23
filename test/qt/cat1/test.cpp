@@ -13,7 +13,7 @@ class test : public QObject {
 private:
 
 private slots:
-    void initTestFCase() {
+    void initTestCase() {
         qDebug("GUI Test Cat. 1"); // cat. 1 for relatively simpler GUI components
     }
 
