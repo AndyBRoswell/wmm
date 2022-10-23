@@ -4,8 +4,9 @@
 #include <QTest>
 
 // files to be tested
-#include <src/TreeView.h>
-#include <src/TextArea.h>
+#include "src/global.h"
+#include "src/TreeView.h"
+#include "src/TextArea.h"
 
 class test : public QObject {
     Q_OBJECT
@@ -62,6 +63,10 @@ private slots:
             }
             QCOMPARE(spy.count(), signal_count);
         }
+
+        // verify default font
+        QCOMPARE(text_field.font(), wmm::DefaultCodeFont);
+        QCOMPARE(text_area.font(), wmm::DefaultCodeFont);
     }
 
     void cleanupTestCase() {
