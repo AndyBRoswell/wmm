@@ -43,6 +43,7 @@ target_compile_definitions(wmmgtest PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWi
 
 target_include_directories(wmmgtest PUBLIC
     ${wmm_root}
+    ${wmm_root}/test
     ${JSON_inc_dir}
     ${mongo_inc_dir}    # dependency: mongo libs
 )

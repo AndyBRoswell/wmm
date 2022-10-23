@@ -39,6 +39,7 @@ target_compile_definitions(wmmqtest-cat1 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:
 
 target_include_directories(wmmqtest-cat1 PUBLIC
     ${wmm_root}
+    ${wmm_root}/test
     ${JSON_inc_dir}     # dependency: JSON libs
     ${mongo_inc_dir}    # dependency: mongo libs
 )
@@ -54,6 +55,7 @@ target_compile_definitions(wmmqtest-cat2 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:
 
 target_include_directories(wmmqtest-cat2 PUBLIC
     ${wmm_root}
+    ${wmm_root}/test
     ${JSON_inc_dir}     # dependency: JSON libs
     ${mongo_inc_dir}    # dependency: mongo libs
 )
