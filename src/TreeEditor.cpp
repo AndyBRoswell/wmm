@@ -39,7 +39,7 @@ namespace WritingMaterialsManager {
             }
         });
 
-        // connect signals and slots
+        // show proper information on the status bar when the corresponding GUI component is focused
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdatePathName);
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateFileType);
         connect(IntuitiveView, &TreeView::MouseDown, this, &TreeEditor::ShouldUpdateCharset);

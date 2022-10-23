@@ -16,6 +16,8 @@ private slots:
     void TreeView() {
         WritingMaterialsManager::TreeView TreeView;
 
+        // signals are emitted when this TreeView is focused
+
     }
 
     void cleanupTestCase() {
