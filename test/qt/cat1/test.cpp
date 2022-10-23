@@ -5,6 +5,7 @@
 
 // files to be tested
 #include <src/TreeView.h>
+#include <src/TextArea.h>
 
 class test : public QObject {
     Q_OBJECT
@@ -15,7 +16,9 @@ private slots:
         qDebug("GUI Test Cat. 1"); // cat.1 for relatively simpler GUI components
     }
 
-    void TreeView() {
+    void Signal() {
+        namespace wmm = WritingMaterialsManager;
+
         // signals are emitted when this TreeView is focused
         QTestEventList events;
         constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
@@ -27,13 +30,17 @@ private slots:
         }
 
         // begin signal test
-        WritingMaterialsManager::TreeView tree_view;
-        QSignalSpy signal_spy(&tree_view, &WritingMaterialsManager::TreeView::MouseDown);
-        events.simulate(&tree_view);
-        //QCOMPARE(signal_spy.count(), 12);
+        const std::shared_ptr<QWidget> widgets[] = { 
+            std::make_shared<wmm::TreeView>(),
+            std::make_shared<wmm::TextField>(),
+            std::make_shared<wmm::TextArea>(),
+        };
 
-        //QLineEdit lineEdit;
-        //events.simulate(&lineEdit);
+        for (const auto& widget : widgets) {
+            QSignalSpy signal_spy(widget.get(), &wmm::TreeView::MouseDown);
+            events.simulate(&tree_view);
+            QCOMPARE(signal_spy.count(), 12);
+        }
     }
 
     void cleanupTestCase() {

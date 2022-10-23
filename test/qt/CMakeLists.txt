@@ -13,6 +13,8 @@ file(GLOB_RECURSE cat2-headers
 )
 file(GLOB modules_to_be_tested
     ${wmm_root}/src/TreeView.cpp
+    ${wmm_root}/src/TextArea.cpp
+    ${wmm_root}/src/global.cpp
 )
 
 # dependency: Qt
