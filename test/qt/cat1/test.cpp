@@ -1,6 +1,7 @@
 #include <array>
 
 #include <QObject>
+#include <QSignalSpy>
 #include <QTest>
 
 // files to be tested
@@ -27,7 +28,11 @@ private slots:
             event_list.addMousePress(m);
             event_list.addMouseRelease(m);
         }
+
+        // begin signal test
+        QSignalSpy signal_spy(&tree_view, &WritingMaterialsManager::TreeView::MouseDown);
         event_list.simulate(&tree_view);
+        QCOMPARE(signal_spy.count(), 12);
     }
 
     void cleanupTestCase() {
