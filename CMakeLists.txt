@@ -16,7 +16,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # If language is enabled by project() or enable_language(), CMAKE_<LANG>_COMPILER_LOADED is 1.
 project(wmm VERSION 0.1 LANGUAGES CXX)		# Writing Materials Manager (WMM)
 project(wmmgtest VERSION 0.1 LANGUAGES CXX)	# Tests for WMM using Google Test
-project(wmmqtest VERSION 0.1 LANGUAGES CXX) # Tests for WMM using Qt Test
+# project(wmmqtest VERSION 0.1 LANGUAGES CXX) # Tests for WMM using Qt Test
 
 # print system info (both host and target platform)
 message(STATUS "Host System: ${CMAKE_HOST_SYSTEM_NAME} ${CMAKE_HOST_SYSTEM_VERSION}")
