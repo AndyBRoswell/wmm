@@ -30,16 +30,26 @@ private slots:
         }
 
         // begin signal test
-        const std::shared_ptr<QWidget> widgets[] = { 
-            std::make_shared<wmm::TreeView>(),
-            std::make_shared<wmm::TextField>(),
-            std::make_shared<wmm::TextArea>(),
-        };
+        constexpr qsizetype signal_count = 12;
 
-        for (const auto& widget : widgets) {
-            QSignalSpy signal_spy(widget.get(), &wmm::TreeView::MouseDown);
+        wmm::TreeView tree_view;
+        wmm::TextField text_field;
+        wmm::TextArea text_area;
+        {
+            qDebug("Testing TreeView");
+            QSignalSpy spy(&tree_view, &wmm::TreeView::MouseDown);
             events.simulate(&tree_view);
-            QCOMPARE(signal_spy.count(), 12);
+            QCOMPARE(spy.count(), signal_count);
+        }        {
+            qDebug("Testing TextField");
+            QSignalSpy spy(&text_field, &wmm::TextField::MouseDown);
+            events.simulate(&text_field);
+            QCOMPARE(spy.count(), signal_count);
+        }        {
+            qDebug("Testing TextArea");
+            QSignalSpy spy(&text_area, &wmm::TextArea::MouseDown);
+            events.simulate(&text_area);
+            QCOMPARE(spy.count(), signal_count);
         }
     }
 
