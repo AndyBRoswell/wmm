@@ -32,7 +32,7 @@ qt_add_executable(wmmqtest-cat2
 )
 
 set_target_properties(wmmqtest-cat1 PROPERTIES
-    WIN32_EXECUTABLE TRUE
+    # WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 target_compile_definitions(wmmqtest-cat1 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
