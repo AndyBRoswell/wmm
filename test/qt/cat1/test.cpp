@@ -30,7 +30,7 @@ private slots:
         }
 
         // begin signal test
-        constexpr qsizetype signal_count = 6; // click, dclick
+        constexpr qsizetype signal_count = 6; // click, press
 
         wmm::TreeView tree_view;
         wmm::TextField text_field;
