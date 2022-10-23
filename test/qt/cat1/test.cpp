@@ -17,7 +17,7 @@ private slots:
         qDebug("GUI Test Cat. 1"); // cat. 1 for relatively simpler GUI components
     }
 
-    void Signal() {
+    void SignalAndCtor() {
         namespace wmm = WritingMaterialsManager;
 
         // signals are emitted when this TreeView is focused
