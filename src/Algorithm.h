@@ -12,7 +12,17 @@ namespace WritingMaterialsManager {
     };
 
     struct CaseInsensitiveStringComparator {
-        bool operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept; // Qt recommends pass string views by value
+        template<class T> consteval static bool has_static_compare() {
+            //return rand();
+            return std::is_same_v<T, QAnyStringView> || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> || std::is_same_v<T, QString>;
+        }
+        
+        template<class T = QAnyStringView> typename std::enable_if_t<has_static_compare<T>(), bool> operator()(const T LHS, const T RHS) const noexcept { // Qt recommends pass string views by value
+            return T::compare(LHS, RHS, Qt::CaseInsensitive) == 0;
+        }
+        bool operator()(const QByteArray& LHS, const QByteArray& RHS) const noexcept {
+            return LHS.compare(RHS, Qt::CaseInsensitive) == 0;
+        }
     };
 }
 

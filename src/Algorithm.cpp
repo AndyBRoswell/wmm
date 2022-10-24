@@ -11,8 +11,4 @@ namespace WritingMaterialsManager {
     }
 
 /// struct CaseInsensitiveStringComparator
-
-    bool CaseInsensitiveStringComparator::operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept {
-        return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0;
-    }
 }

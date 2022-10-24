@@ -111,7 +111,7 @@ namespace tiny_random {
 
             constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
                 switch (D) {
-                case distribution::uniform: return number::integer(m, M);
+                default: return number::integer(m, M);
                 case distribution::exponential:
                     if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>((number::integer(0, 1) == 0 ? 1 : -1) * number::integer(m, M) * EXP(random_engine)))); }
                     else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
