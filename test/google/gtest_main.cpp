@@ -65,7 +65,17 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
 
         constexpr wmm::CaseInsensitiveHasher hasher;
         for (size_t i = 0; i < g; ++i) {
-
+            // create test data
+            std::vector<std::string> A(3);
+            std::vector<QByteArray> B(3);
+            std::vector<QString> C(3);
+            std::generate(A.begin(), A.end(), []() { return next_str(next_int(1ull, lmax)); });
+            std::generate(B.begin(), B.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+            std::generate(C.begin(), C.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+            { // verify the hasher
+                std::string s[3] = { A[0], A[1], A[2] };
+                const size_t h[2][2] = { { hasher(A[0].c_str()), hasher(s[0].c_str()) } };
+            }
         }
     }
     { // case-insensitive comparator
