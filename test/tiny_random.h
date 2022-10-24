@@ -17,13 +17,13 @@ namespace tiny_random {
     }
 
     namespace number {
-        template<class T> constexpr T mod(const T& N, const T& D) { // N mod D. Note: mod is different from rem (%).
+        template<class T> constexpr T mod(const T& N, const T& D) noexcept { // N mod D. Note: mod is different from rem (%).
             const T r = N % D;
             if (D > 0) { return r >= 0 ? r : r + D; }
             else { return r <= 0 ? r : r + D; }
         }
 
-        template<class T = uintmax_t > T integer() { // return a random integer between [INTMAX_MIN, INTMAX_MAX] or [0, UINTMAX_MAX]
+        template<class T = uintmax_t > T integer() noexcept { // return a random integer between [INTMAX_MIN, INTMAX_MAX] or [0, UINTMAX_MAX]
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             if constexpr (std::is_signed_v<T>) return max_uniform_int_dist(random_engine);
             else return max_uniform_uint_dist(random_engine);
@@ -32,7 +32,7 @@ namespace tiny_random {
         /* Return a random integer between[a, b], a <= b.
         If a, b are of signed types, then b - a <= INTMAX_MAX / 2 - INTMAX_MIN / 2 = pow(2, 63) - 1; 
         If a, b are of unsigned types, then b - a <= UINTMAX_MAX - 0 = pow(2, 64) - 1. */
-        template<class T = uintmax_t> T integer(const T a, const T b) {
+        template<class T = uintmax_t> T integer(const T a, const T b) noexcept {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             const T L = b - a + 1;
             if constexpr (std::is_signed_v<T>) {
@@ -68,7 +68,7 @@ namespace tiny_random {
             dec = 1, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
-        template<class T = char> typename enable_if_sbc<T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII character
+        template<class T = char> typename enable_if_sbc<T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII character
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -85,13 +85,13 @@ namespace tiny_random {
             }
         }
 
-        template<class T = char> typename enable_if_sbs<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) { // return an ASCII string
+        template<class T = char> typename enable_if_sbs<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII string
             std::basic_string<T> s;
             for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }
 
-        template<class T = char> typename enable_if_sbs<T> JSON() { // return a random JSON string which strictly comply the ECMA-262 3ed (Dec 1999) but with random whitespaces
+        template<class T = char> typename enable_if_sbs<T> JSON() noexcept { // return a random JSON string which strictly comply the RFC 4627 (Jul 2006) but with random whitespaces
             enum class state : char {
                 value,                                                  // value
                 object, array,                                          // recursive structures
@@ -109,7 +109,7 @@ namespace tiny_random {
             };
             static std::exponential_distribution<double> EXP(2);
 
-            constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) {
+            constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) noexcept {
                 switch (D) {
                 default: return number::integer(m, M);
                 case distribution::exponential:
@@ -117,7 +117,7 @@ namespace tiny_random {
                     else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
                 }
             };
-            constexpr auto next_enum = []<class T>(const T & m, const T & M) {
+            constexpr auto next_enum = []<class T>(const T & m, const T & M) noexcept {
                 return static_cast<T>(number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)));
             };
 
