@@ -6,7 +6,7 @@
 
 namespace WritingMaterialsManager {
     struct CaseInsensitiveHasher {
-        static const auto DefaultHashAlgorithm = QCryptographicHash::Blake2b_160;
+        static constexpr auto DefaultHashAlgorithm = QCryptographicHash::Blake2b_160;
         
         template<class T> consteval static bool is_UTF_8_compatible_charset_f() {
             return std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QUtf8StringView>
@@ -18,8 +18,11 @@ namespace WritingMaterialsManager {
         
         size_t operator()(const QByteArray& Str) const noexcept;
         size_t operator()(const QString& Str) const noexcept;
-        size_t operator()(const QByteArrayView& Str) const noexcept;
-        size_t operator()(const QStringView& Str) const noexcept;
+        //size_t operator()(const QByteArrayView Str) const noexcept;
+        size_t operator()(const QStringView Str) const noexcept;
+        template<class T = QByteArrayView> typename std::enable_if_t<is_UTF_8_compatible_charset_v<T>, size_t> operator()(const T Str) const noexcept {
+            return this->operator()(QByteArray(Str.constData(), Str.size()));
+        }
     };
 
     struct CaseInsensitiveStringComparator {
