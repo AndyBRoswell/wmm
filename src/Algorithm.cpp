@@ -9,9 +9,6 @@ namespace WritingMaterialsManager {
         const QByteArrayView v(reinterpret_cast<const char*>(STR.constData()), STR.size() * 2);
         return *reinterpret_cast<const size_t*>(QCryptographicHash::hash(v, DefaultHashAlgorithm).right(sizeof(size_t)).constData());
     }
-    //size_t CaseInsensitiveHasher::operator()(const QByteArrayView Str) const noexcept {
-    //    return this->operator()(QByteArray(Str.constData(), Str.size()));
-    //}
     size_t CaseInsensitiveHasher::operator()(const QStringView Str) const noexcept {
         const QString STR = QString::fromRawData(Str.constData(), Str.size()).toUpper();
         const QByteArrayView v(reinterpret_cast<const char*>(STR.constData()), STR.size() * 2);
