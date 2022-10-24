@@ -38,7 +38,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         return tiny_random::chr::ASCII_string(l, t);
     };
 
-    { // csae-insensitive hasher
+    { // case-insensitive hasher
         constexpr size_t g = 1e6;       // group count of test data
         constexpr size_t lmax = 256;    // max length of test strings
 
@@ -57,6 +57,15 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
             else { EXPECT_EQ(hasher(w), hasher(x)); }
             if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
             else { EXPECT_EQ(hasher(y), hasher(z)); }
+        }
+    }
+    { // case-insensitive hasher
+        constexpr size_t g = 1e6;       // group count of test data
+        constexpr size_t lmax = 256;    // max length of test strings
+
+        constexpr wmm::CaseInsensitiveHasher hasher;
+        for (size_t i = 0; i < g; ++i) {
+
         }
     }
     { // case-insensitive comparator
