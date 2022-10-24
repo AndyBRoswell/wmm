@@ -18,7 +18,9 @@ namespace WritingMaterialsManager {
 
     struct CaseInsensitiveStringComparator {
         template<class T> consteval static bool has_static_compare() {
-            return std::is_same_v<T, QAnyStringView> || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> || std::is_same_v<T, QString>
+            return std::is_same_v<T, QAnyStringView> 
+                || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> 
+                || std::is_same_v<T, QString>
                 // types with implicit conversions to the types above
                 || std::is_same_v<T, std::remove_cvref_t<char*>> || std::is_same_v<T, std::remove_cvref_t<char8_t*>>
                 || std::is_same_v<T, std::remove_cvref_t<char16_t*>> || std::is_same_v<T, std::remove_cvref_t<unsigned short*>> || std::is_same_v<T, std::remove_cvref_t<QChar*>>
