@@ -8,7 +8,13 @@ namespace WritingMaterialsManager {
     struct CaseInsensitiveHasher {
         static const auto DefaultHashAlgorithm = QCryptographicHash::Blake2b_160;
         
-        
+        template<class T> consteval static bool is_UTF_8_compatible_charset_f() {
+            return std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QUtf8StringView>
+                // types with implicit conversions to the types above
+                || std::is_same_v<T, std::remove_cvref_t<char*>> || std::is_same_v<T, std::remove_cvref_t<char8_t>>;
+        }
+        template<class T> struct is_UTF_8_compatible_charset : std::integral_constant<bool, is_UTF_8_compatible_charset_f<T>()> {};;
+        template<class T> static constexpr bool is_UTF_8_compatible_charset_v = is_UTF_8_compatible_charset<T>::value;
         
         size_t operator()(const QByteArray& Str) const noexcept;
         size_t operator()(const QString& Str) const noexcept;
@@ -23,8 +29,7 @@ namespace WritingMaterialsManager {
                 || std::is_same_v<T, QString>
                 // types with implicit conversions to the types above
                 || std::is_same_v<T, std::remove_cvref_t<char*>> || std::is_same_v<T, std::remove_cvref_t<char8_t*>>
-                || std::is_same_v<T, std::remove_cvref_t<char16_t*>> || std::is_same_v<T, std::remove_cvref_t<unsigned short*>> || std::is_same_v<T, std::remove_cvref_t<QChar*>>
-                ;
+                || std::is_same_v<T, std::remove_cvref_t<char16_t*>> || std::is_same_v<T, std::remove_cvref_t<unsigned short*>> || std::is_same_v<T, std::remove_cvref_t<QChar*>>;
         }
         template<class T> struct has_static_compare : std::integral_constant<bool, has_static_compare_f<T>()> {};
         template<class T> static constexpr bool has_static_compare_v = has_static_compare<T>::value;
