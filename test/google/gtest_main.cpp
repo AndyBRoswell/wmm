@@ -64,20 +64,26 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
         constexpr size_t lmax = 256;    // max length of test strings
 
         constexpr wmm::CaseInsensitiveHasher hasher;
-        for (size_t i = 0; i < g; ++i) {
-            // create test data
-            std::vector<std::string> A(3);
-            std::vector<QByteArray> B(3);
-            std::vector<QString> C(3);
-            std::generate(A.begin(), A.end(), []() { return next_str(next_int(1ull, lmax)); });
-            std::generate(B.begin(), B.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
-            std::generate(C.begin(), C.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
-            { // verify the hasher
-                std::string s[3] = { A[0], A[1], A[2] };
-                next_int(0, 1) ? std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), ::toupper) : std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                const size_t h[2] = { hasher.operator() < QByteArrayView > (A[0].c_str()), hasher.operator() < QByteArrayView > (s[0].c_str()) };
+        for (size_t i = 0; i < g; ++i) { // verify the hasher
+            {
+                std::vector<std::string> s(3);
+                std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
+
+                std::string t[3] = { s[0], s[1], s[2] };
+                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+                const size_t h[2] = { hasher.operator() < QByteArrayView > (s[0].c_str()), hasher.operator() < QByteArrayView > (t[0].c_str()) };
                 EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+
+            }
+            {
+                std::vector<QByteArray> s(3);
+                std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+
+            }
+            {
+                std::vector<QString> s(3);
+                std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
 
             }
         }
