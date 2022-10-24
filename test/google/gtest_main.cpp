@@ -48,13 +48,13 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
             const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
             const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) } };
             for (size_t j = 0; j < 2; ++j) {
-                EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function
+                EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(h[j][0], h[j][0]); EXPECT_EQ(h[j][1], h[j][1]);   // s -ceq t -> H(s) == H(t)
             }
             const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
             const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
             if (w.toUpper() != x.toUpper()) { EXPECT_NE(hasher(w), hasher(x)); } // s != t -> H(s) != H(t)
-            else { EXPECT_EQ(hasher(w), hasher(x)); }
+            else { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
             if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
             else { EXPECT_EQ(hasher(y), hasher(z)); }
         }
@@ -72,9 +72,10 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
                 std::string t[3] = { s[0], s[1], s[2] };
                 next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
                 const size_t h[2] = { hasher.operator() < QByteArrayView > (s[0].c_str()), hasher.operator() < QByteArrayView > (t[0].c_str()) };
-                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function
+                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-
+                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
+                //if (t[1] != t[2]) { EXPECT_NE(hasher.operator() < QLatin1StringView > (t[1].c_str()), hasher.operator() < QLatin1StringView > (t[2].c_str())); }
             }
             {
                 std::vector<QByteArray> s(3);
