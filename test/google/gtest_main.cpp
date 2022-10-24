@@ -1,4 +1,5 @@
 // std
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -65,19 +66,6 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
 
         constexpr wmm::CaseInsensitiveStringComparator comparator;
         for (size_t i = 0; i < g; ++i) {
-            const QString s = QString::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // haphazardly select tolower or toupper
-            EXPECT_TRUE(comparator(s, t)); EXPECT_TRUE(comparator(s, s)); EXPECT_TRUE(comparator(t, t));
-            const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = QString::fromStdString(next_str(next_int(1ull, lmax)));
-            if (u.toUpper() != v.toUpper()) { EXPECT_FALSE(comparator(u, v)); }
-            else { EXPECT_FALSE(comparator(u, v)); }
-        }
-    }
-    { // case-insensitive comparator
-        constexpr size_t g = 1e3;       // group count of test data
-        constexpr size_t lmax = 256;    // max length of test strings
-
-        constexpr wmm::CaseInsensitiveStringComparator comparator;
-        for (size_t i = 0; i < g; ++i) {
             // create test data
             std::vector<std::string> A(3);
             std::vector<QByteArray> B(3);
@@ -85,22 +73,27 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
             std::generate(A.begin(), A.end(), []() { return next_str(next_int(1ull, lmax)); });
             std::generate(B.begin(), B.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
             std::generate(C.begin(), C.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
-
             { // verify the comparator
                 std::string s[3] = { A[0], A[1], A[2] };
-                next_int(0, 1) ? std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::toupper) : std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::tolower); // haphazardly select tolower or toupper
+                next_int(0, 1) ? std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), ::toupper) : std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), ::tolower); // haphazardly select tolower or toupper
                 EXPECT_TRUE(comparator(A[0].c_str(), s[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
                 EXPECT_TRUE(comparator(A[0].c_str(), A[0].c_str()));  // comparison of 2 identical strings should yield equal
                 EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));
-                for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].cbegin(), std::toupper); }
+                for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].begin(), ::toupper); }
                 if (s[1] != s[2]) { EXPECT_FALSE(comparator(A[1].c_str(), A[2].c_str())); } // these 2 strings converted to the same case are not identical
                 else { EXPECT_TRUE(comparator(A[1].c_str(), A[2].c_str())); }
             }
             {
-                const QByteArray s = B[0].toUpper();
+                const QByteArray s = next_int(0, 1) ? B[0].toUpper() : B[0].toLower();
+                EXPECT_TRUE(comparator(B[0], s)); EXPECT_TRUE(comparator(B[0], B[0])); EXPECT_TRUE(comparator(s, s));
+                if (B[1].toUpper() != B[2].toUpper()) { EXPECT_FALSE(comparator(B[1], B[2])); }
+                else { EXPECT_TRUE(comparator(B[1], B[2])); }
             }
             {
-
+                const QString s = next_int(0, 1) ? C[0].toUpper() : C[0].toLower();
+                EXPECT_TRUE(comparator(C[0], s)); EXPECT_TRUE(comparator(C[0], C[0])); EXPECT_TRUE(comparator(s, s));
+                if (C[1].toUpper() != C[2].toUpper()) { EXPECT_FALSE(comparator(C[1], C[2])); }
+                else { EXPECT_TRUE(comparator(C[1], C[2])); }
             }
         }
     }
