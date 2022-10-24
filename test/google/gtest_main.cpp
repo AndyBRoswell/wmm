@@ -86,15 +86,22 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
             std::generate(B.begin(), B.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
             std::generate(C.begin(), C.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
 
-            // verify the comparator
-            std::string s[3] = { A[0], A[1], A[2] };
-            next_int(0, 1) ? std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::toupper) : std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::tolower); // haphazardly select tolower or toupper
-            EXPECT_TRUE(comparator(A[0].c_str(), s[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
-            EXPECT_TRUE(comparator(A[0].c_str(), A[0].c_str()));  // comparison of 2 identical strings should yield equal
-            EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));
-            for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].cbegin(), std::toupper); }
-            if (s[1] != s[2]) { EXPECT_FALSE(comparator(A[1].c_str(), A[2].c_str())); } // these 2 strings converted to the same case are not identical
-            else { EXPECT_TRUE(comparator(A[1].c_str(), A[2].c_str())); }
+            { // verify the comparator
+                std::string s[3] = { A[0], A[1], A[2] };
+                next_int(0, 1) ? std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::toupper) : std::transform(s[0].cbegin(), s[0].cend(), s[0].begin(), std::tolower); // haphazardly select tolower or toupper
+                EXPECT_TRUE(comparator(A[0].c_str(), s[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
+                EXPECT_TRUE(comparator(A[0].c_str(), A[0].c_str()));  // comparison of 2 identical strings should yield equal
+                EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));
+                for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].cbegin(), std::toupper); }
+                if (s[1] != s[2]) { EXPECT_FALSE(comparator(A[1].c_str(), A[2].c_str())); } // these 2 strings converted to the same case are not identical
+                else { EXPECT_TRUE(comparator(A[1].c_str(), A[2].c_str())); }
+            }
+            {
+                const QByteArray s = B[0].toUpper();
+            }
+            {
+
+            }
         }
     }
 }
