@@ -76,6 +76,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
                 for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
                 //if (t[1] != t[2]) { EXPECT_NE(hasher.operator() < QLatin1StringView > (t[1].c_str()), hasher.operator() < QLatin1StringView > (t[2].c_str())); }
+                //std::is_same_v<std::remove_cvref_t<const char*>, char*>;
             }
             {
                 std::vector<QByteArray> s(3);
