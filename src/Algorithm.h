@@ -13,8 +13,8 @@ namespace WritingMaterialsManager {
 
     struct CaseInsensitiveStringComparator {
         template<class T> consteval static bool has_static_compare() {
-            //return rand();
-            return std::is_same_v<T, QAnyStringView> || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> || std::is_same_v<T, QString>;
+            return std::is_same_v<T, QAnyStringView> || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> || std::is_same_v<T, QString>
+                || std::is_same_v<T, std::remove_cvref_t<char*>>; // types with implicit conversions to the types above
         }
         
         template<class T = QAnyStringView> typename std::enable_if_t<has_static_compare<T>(), bool> operator()(const T LHS, const T RHS) const noexcept { // Qt recommends pass string views by value
