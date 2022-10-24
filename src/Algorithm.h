@@ -12,7 +12,7 @@ namespace WritingMaterialsManager {
     };
 
     struct CaseInsensitiveStringComparator {
-        bool operator()(const QString& LHS, const QString& RHS) const;
+        bool operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept; // Qt recommends pass string views by value
     };
 }
 

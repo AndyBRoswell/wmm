@@ -10,7 +10,7 @@ namespace WritingMaterialsManager {
 
 /// ----------------------------------------------------------------
 
-    bool CaseInsensitiveStringComparator::operator()(const QString& LHS, const QString& RHS) const {
-        return LHS.size() == RHS.size() && std::equal(LHS.cbegin(), LHS.cend(), RHS.cbegin(), [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
+    bool CaseInsensitiveStringComparator::operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept {
+        return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0;
     }
 }
