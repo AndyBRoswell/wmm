@@ -7,14 +7,22 @@
 namespace WritingMaterialsManager {
     struct CaseInsensitiveHasher {
         static const auto DefaultHashAlgorithm = QCryptographicHash::Blake2b_160;
+        
+        
+        
         size_t operator()(const QByteArray& Str) const noexcept;
         size_t operator()(const QString& Str) const noexcept;
+        size_t operator()(const QByteArrayView& Str) const noexcept;
+        size_t operator()(const QStringView& Str) const noexcept;
     };
 
     struct CaseInsensitiveStringComparator {
         template<class T> consteval static bool has_static_compare() {
             return std::is_same_v<T, QAnyStringView> || std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView> || std::is_same_v<T, QString>
-                || std::is_same_v<T, std::remove_cvref_t<char*>>; // types with implicit conversions to the types above
+                // types with implicit conversions to the types above
+                || std::is_same_v<T, std::remove_cvref_t<char*>> || std::is_same_v<T, std::remove_cvref_t<char8_t*>>
+                || std::is_same_v<T, std::remove_cvref_t<char16_t*>> || std::is_same_v<T, std::remove_cvref_t<unsigned short*>> || std::is_same_v<T, std::remove_cvref_t<QChar*>>
+                ;
         }
         
         template<class T = QAnyStringView> typename std::enable_if_t<has_static_compare<T>(), bool> operator()(const T LHS, const T RHS) const noexcept { // Qt recommends pass string views by value
