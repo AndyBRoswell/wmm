@@ -69,6 +69,12 @@ private slots:
         QCOMPARE(text_area.font(), wmm::DefaultCodeFont);
     }
 
+    void TreeView() {
+        std::unordered_map<QByteArray, std::function<void>(void)> test_function = {
+            
+        };
+    }
+
     void cleanupTestCase() {
         qDebug("End GUI Test Cat. 1");
     }
