@@ -1,6 +1,8 @@
 #include <QObject>
 #include <QTest>
 
+#include "src/TreeEditor.h"
+
 class test : public QObject {
     Q_OBJECT
 private:
@@ -8,6 +10,10 @@ private:
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 2");
+    }
+
+    void TreeEditor__open_JSON() {
+
     }
 
     void cleanupTestCase() {
