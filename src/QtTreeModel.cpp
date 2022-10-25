@@ -211,7 +211,7 @@ namespace WritingMaterialsManager {
 
     QtTreeModel::Node* QtTreeModel::GetItem(const QModelIndex& Index) const {
         if (Index.isValid()) {
-            if (Index.internalPointer() != nullptr) return static_cast<Node*>(Index.internalPointer());
+            if (Index.internalPointer() != nullptr) { return static_cast<Node*>(Index.internalPointer()); }
         }
         return RootNode; // for a certain kind of consistency?
     }
