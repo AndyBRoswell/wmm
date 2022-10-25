@@ -47,13 +47,9 @@ namespace WritingMaterialsManager {
             if constexpr (std::is_class_v<T>) { return LHS.compare(RHS, Qt::CaseInsensitive) == 0; }
             else {
                 if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_same_v<std::remove_cvref_t<T>, const char8_t*>) {
-                    const QByteArrayView LV(LHS), RV(RHS);
-                    return LV.compare(RV, Qt::CaseInsensitive) == 0;
+                    return QByteArrayView(LHS).compare(QByteArrayView(RHS), Qt::CaseInsensitive) == 0;
                 }
-                else {
-                    const QStringView LV(LHS), RV(RHS);
-                    return LV.compare(RV, Qt::CaseInsensitive) == 0;
-                }
+                else { return QStringView(LHS).compare(QStringView(RHS), Qt::CaseInsensitive) == 0; }
             }
         }
         template<class T = QByteArray> typename std::enable_if_t<supported_but_should_be_by_ref_v<T>, bool> operator()(const T& LHS, const T& RHS) {
