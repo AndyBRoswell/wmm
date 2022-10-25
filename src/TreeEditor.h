@@ -33,6 +33,7 @@ namespace WritingMaterialsManager {
         explicit TreeEditor(const QByteArray& FileType = "<File Type>", const std::shared_ptr<QtTreeModel>& TreeModel = std::make_shared<QtTreeModel>(), QWidget* const parent = nullptr);
         ~TreeEditor();
 
+        QString GetText();
         void SetText(const QString& Text = {}); // set content for this tree editor
         void AppendText(const QString& Text = {}); // append content for this tree editor
 

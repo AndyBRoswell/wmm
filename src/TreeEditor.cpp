@@ -62,6 +62,7 @@ namespace WritingMaterialsManager {
 
     TreeEditor::~TreeEditor() {}
 
+    QString TreeEditor::GetText() { return RawView->toPlainText(); }
     void TreeEditor::SetText(const QString& Text) { RawView->setPlainText(Text); }
     void TreeEditor::AppendText(const QString& Text) { RawView->appendPlainText(Text); }
 
