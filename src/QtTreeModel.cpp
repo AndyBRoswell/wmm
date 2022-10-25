@@ -271,4 +271,6 @@ namespace WritingMaterialsManager {
         }
         endResetModel();
     }
+
+    const QtTreeModel::Node* QtTreeModel::GetRootNode() const { return RootNode; }
 }

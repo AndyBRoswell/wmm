@@ -192,6 +192,7 @@ namespace WritingMaterialsManager {
 
         // custom functions
         void FromJSON(const QByteArray& UTF8JSONString); // construct this tree model from JSON
+        const Node* GetRootNode() const;
     private:
         Node* GetItem(const QModelIndex& Index) const;
         Node* RootNode = nullptr;
