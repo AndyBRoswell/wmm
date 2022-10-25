@@ -11,7 +11,7 @@
 class test : public QObject {
     Q_OBJECT
 private:
-    inline static constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
+    static constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
 
 private slots:
     void initTestCase() {
