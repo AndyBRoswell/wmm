@@ -22,7 +22,8 @@ TEST(TreeEditor, ConvertCharsetForArtificialJSON) {
         codec.emplace(charset, QTextCodec::codecForName(charset));
     }
 
-    QFile file_list_file("test/TreeEditor/datgen.json");
+    const QByteArray wd = QByteArray("test/TreeEditor");
+    QFile file_list_file(wd + "/datgen.json");
     if (file_list_file.open(QIODevice::OpenModeFlag::ReadOnly) == false) { return; }
     const QJsonArray file_list = QJsonDocument::fromJson(file_list_file.readAll()).array();
     for (const auto& term : file_list) {
@@ -36,7 +37,7 @@ TEST(TreeEditor, ConvertCharsetForArtificialJSON) {
         const QByteArray target_file_name_prefix = "a-" + QByteArray::number(get_high_resolution_tick_count());
         for (const auto& c : codec) {
             const QByteArray encoded_string = c.second->fromUnicode(content); // assume utf8
-            QFile target_file(target_file_name_prefix + "-" + c.first + ".json");
+            QFile target_file(wd + "/" + target_file_name_prefix + "-" + c.first + ".json");
             target_file.open(QIODevice::OpenModeFlag::WriteOnly);
             target_file.write(encoded_string);
         }
