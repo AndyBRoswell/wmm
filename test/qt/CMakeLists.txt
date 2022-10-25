@@ -12,22 +12,22 @@ file(GLOB_RECURSE cat2-headers
     cat2/*.h*
 )
 file(GLOB cat1-modules-to-be-tested
-    ${wmm_root}/src/TreeView.cpp
-    ${wmm_root}/src/TextArea.cpp
     ${wmm_root}/src/global.cpp
+    ${wmm_root}/src/TextArea.cpp
+    ${wmm_root}/src/TreeView.cpp
 )
 file(GLOB cat2-modules-to-be-tested
-    ${wmm_root}/src/TreeView.cpp
-    ${wmm_root}/src/TextArea.cpp
-    ${wmm_root}/src/global.cpp
-    ${wmm_root}/src/TreeEditor.cpp
-    ${wmm_root}/src/QtTreeModel.cpp
     ${wmm_root}/src/Algorithm.cpp
-    ${wmm_root}/src/JSONFormatter.cpp
-    ${wmm_root}/src/TextFormatter.cpp
-    ${wmm_root}/src/JSONHighlighter.cpp
-    ${wmm_root}/src/TextHighlighter.cpp
     ${wmm_root}/src/FileSystemAccessor.cpp
+    ${wmm_root}/src/global.cpp
+    ${wmm_root}/src/JSONFormatter.cpp
+    ${wmm_root}/src/JSONHighlighter.cpp
+    ${wmm_root}/src/QtTreeModel.cpp
+    ${wmm_root}/src/TextArea.cpp
+    ${wmm_root}/src/TextFormatter.cpp
+    ${wmm_root}/src/TextHighlighter.cpp
+    ${wmm_root}/src/TreeEditor.cpp
+    ${wmm_root}/src/TreeView.cpp
 )
 
 # dependency: Qt
