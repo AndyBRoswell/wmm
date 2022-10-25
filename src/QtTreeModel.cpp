@@ -30,7 +30,7 @@ namespace WritingMaterialsManager {
 
     lsize_t QtTreeModel::Node::ColumnCount() const { return NodalData.count(); }
 
-    QVariant QtTreeModel::Node::Data(int Column) const {
+    QVariant QtTreeModel::Node::Data(lsize_t Column) const {
         if (Column < 0 || Column >= NodalData.size()) return {}; // OOB
         return NodalData[Column];
     }
