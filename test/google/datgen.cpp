@@ -7,5 +7,7 @@
 #include <gtest/gtest.h>
 
 TEST(TreeEditor, ConvertCharsetForArtificialData) {
-    const QDir wd("test/TreeEditor");
+    QFile file_list("test/TreeEditor/in.json");
+    if (file_list.open(QIODevice::OpenModeFlag::ReadOnly) == false) { return; }
+
 }
