@@ -29,17 +29,22 @@ TEST(TreeEditor, ConvertCharsetForArtificialJSON) {
     for (const auto& term : file_list) {
         // get source file and open
         const QJsonObject file = term.toObject();
-        QFile input_file(file.value("src").toString());
-        input_file.open(QIODevice::OpenModeFlag::ReadOnly);
+        QFile source_file(file.value("src").toString());
+        source_file.open(QIODevice::OpenModeFlag::ReadOnly);
 
         // read and convert
-        const QByteArray content = input_file.readAll();
+        const QByteArray content = source_file.readAll();
         const QByteArray target_file_name_prefix = "a-" + QByteArray::number(get_high_resolution_tick_count());
+        { // also make a copy of the original file
+            QFile target_file(wd + "/" + target_file_name_prefix + ".json");
+            target_file.open(QIODevice::OpenModeFlag::WriteOnly);
+            target_file.write(content);
+        }
         for (const auto& c : codec) {
-            const QByteArray encoded_string = c.second->fromUnicode(content); // assume utf8
+            const QByteArray encoded_content = c.second->fromUnicode(content); // assume utf8
             QFile target_file(wd + "/" + target_file_name_prefix + "-" + c.first + ".json");
             target_file.open(QIODevice::OpenModeFlag::WriteOnly);
-            target_file.write(encoded_string);
+            target_file.write(encoded_content);
         }
     }
 }
