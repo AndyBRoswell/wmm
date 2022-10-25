@@ -9,6 +9,7 @@
 #include <QSignalSpy>
 #include <QString>
 #include <QTest>
+#include <QTextCodec>
 
 // files to be tested
 #include "src/TreeEditor.h"
@@ -52,10 +53,13 @@ private slots:
             QFile test_file(test_file_name);
             test_file.open(QIODevice::OpenModeFlag::ReadOnly);
             QJsonParseError JSON_error;
-            const QJsonDocument doc = QJsonDocument::fromJson(test_file.readAll(), &JSON_error);
+            QTextCodec* codec = QTextCodec::codecForName(charset);
+            QTextDecoder* const decoder = codec->makeDecoder();
+            const QJsonDocument doc = QJsonDocument::fromJson(decoder->toUnicode(test_file.readAll()).toUtf8(), &JSON_error);
             if (JSON_error.error == QJsonParseError::NoError) {
                 
             }
+            delete decoder;
         }
     }
 
