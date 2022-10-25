@@ -50,7 +50,7 @@ target_include_directories(wmmgtest PUBLIC
 target_link_libraries(wmmgtest PUBLIC
     ${mongo_libs}
     GTest::gtest_main
-    Qt6::Core
+    Qt6::Core Qt6::Core5Compat
 )
 
 include(GoogleTest)
