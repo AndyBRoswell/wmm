@@ -170,5 +170,8 @@ namespace WritingMaterialsManager {
         }
         RawView->setPlainText(FileContentsUTF16);
         TreeModel->FromJSON(FileContentsUTF8);
+        IntuitiveView->expandAll();
+        IntuitiveView->resizeColumnToContents(0);
+        IntuitiveView->resizeColumnToContents(1);
     }
 } // namespace WritingMaterialsManager
