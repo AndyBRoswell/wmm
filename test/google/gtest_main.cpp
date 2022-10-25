@@ -31,34 +31,13 @@
 TEST(Algorithm, StringIeq) { // ieq is from powershell
     namespace wmm = WritingMaterialsManager;
     
-    constexpr auto next_int = [](const auto a, const auto b) -> auto {
+    constexpr auto next_int = [](const auto a, const auto b) noexcept -> auto {
         return tiny_random::number::integer(a, b);
     };
-    constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) {
+    constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) noexcept {
         return tiny_random::chr::ASCII_string(l, t);
     };
 
-    { // case-insensitive hasher
-        constexpr size_t g = 1e6;       // group count of test data
-        constexpr size_t lmax = 256;    // max length of test strings
-
-        constexpr wmm::CaseInsensitiveHasher hasher;
-        for (size_t i = 0; i < g; ++i) {
-            const QByteArray s = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), t = next_int(0, 1) ? s.toLower() : s.toUpper(); // 1ull -> 1uz since C++23
-            const QString u = QString::fromStdString(next_str(next_int(1ull, lmax))), v = next_int(0, 1) ? u.toLower() : u.toUpper();
-            const size_t h[2][2] = { { hasher(s), hasher(t) }, { hasher(u), hasher(v) } };
-            for (size_t j = 0; j < 2; ++j) {
-                EXPECT_EQ(h[j][0], h[j][1]);                                // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(h[j][0], h[j][0]); EXPECT_EQ(h[j][1], h[j][1]);   // s -ceq t -> H(s) == H(t)
-            }
-            const QByteArray w = QByteArray::fromStdString(next_str(next_int(1ull, lmax))), x = QByteArray::fromStdString(next_str(next_int(1ull, lmax)));
-            const QString y = QString::fromStdString(next_str(next_int(1ull, lmax))), z = QString::fromStdString(next_str(next_int(1ull, lmax)));
-            if (w.toUpper() != x.toUpper()) { EXPECT_NE(hasher(w), hasher(x)); } // s != t -> H(s) != H(t)
-            else { EXPECT_EQ(hasher(w), hasher(x)); } // s == t -> H(s) == H(t)
-            if (y.toUpper() != z.toUpper()) { EXPECT_NE(hasher(y), hasher(z)); }
-            else { EXPECT_EQ(hasher(y), hasher(z)); }
-        }
-    }
     { // case-insensitive hasher
         constexpr size_t g = 1e6;       // group count of test data
         constexpr size_t lmax = 256;    // max length of test strings
@@ -75,7 +54,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
                 EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
                 for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // generally s[1] != s[2], then t[1] != t[2]
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
                 else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
             }
             {
@@ -86,12 +65,19 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
                 const size_t h[2] = { hasher(s[0]), hasher(t) };
                 EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-
+                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+                else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             }
             {
                 std::vector<QString> s(3);
                 std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
 
+                const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+                const size_t h[2] = { hasher(s[0]), hasher(t) };
+                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+                else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             }
         }
     }

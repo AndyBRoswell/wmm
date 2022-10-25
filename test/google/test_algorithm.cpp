@@ -197,10 +197,10 @@ TEST(TestAlgorithm, JSON) {
 
 TEST(TestAlgorithm, StringConversion) {
     GTEST_SKIP();
-    auto next_int = [](const auto a, const auto b) -> auto {
+    auto next_int = [](const auto a, const auto b) noexcept -> auto {
         return tiny_random::number::integer(a, b);
     };
-    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) {
+    auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::alnum) noexcept {
         return tiny_random::chr::ASCII_string(l, t);
     };
 
