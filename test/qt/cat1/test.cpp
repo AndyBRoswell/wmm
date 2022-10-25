@@ -70,9 +70,9 @@ private slots:
     }
 
     void TreeView() {
-        //std::unordered_map<QByteArray, std::function<void>(void)> test_function = {
-        //    
-        //};
+        std::unordered_map<QByteArray, std::function<void(void)>> test_function = {
+            
+        };
     }
 
     void cleanupTestCase() {
