@@ -20,11 +20,11 @@ namespace WritingMaterialsManager {
             ~Node(); // The destructor ensures that each child added to the item is deleted when the item itself is deleted.
 
             /**
-             * Returns a specific child from the internal list of children.
+             * Returns the specific child from the internal list of children.
              * @param Number The No. of the required child of this node.
              * @return
              */
-            Node* Child(lsize_t Number);
+            Node* Child(lsize_t Number); // nth child
             lsize_t ChildCount() const;
 
             /**
@@ -95,7 +95,7 @@ namespace WritingMaterialsManager {
              * The root item has no parent item. For this item, we return 0 to be consistent with the other items.
              * @return
              */
-            lsize_t ChildNumber() const;
+            lsize_t ChildNumber() const; // child number at parent node
 
             /**
              * Data is set by this function, which only stores values in this tree node for valid list indices, corresponding to column values in the model.
