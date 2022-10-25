@@ -1,3 +1,5 @@
+#include <QDir>
+#include <QFile>
 #include <QObject>
 #include <QTest>
 
@@ -13,6 +15,8 @@ private slots:
     }
 
     void TreeEditor__open_JSON() {
+        const QDir wd("test/TreeEditor");
+        const QStringList test_file_list = wd.entryList({ "*.json" });
 
     }
 
