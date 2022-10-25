@@ -27,7 +27,11 @@ namespace WritingMaterialsManager {
     };
 
     struct CaseInsensitiveStringComparator {
-
+        template<class T> consteval static bool supported_but_should_be_by_ref_f() {
+            return std::is_same_v<T, QString> || std::is_same_v<T, QByteArray>;
+        }
+        template<class T> struct supported_but_should_be_by_ref : std::integral_constant<bool, supported_but_should_be_by_ref_f<T>()> {};
+        template<class T> static constexpr bool supported_but_should_be_by_ref_v = supported_but_should_be_by_ref<T>::value;
         
         template<class T> consteval static bool supported_but_no_static_compare_f() {
             return std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView>
@@ -39,12 +43,21 @@ namespace WritingMaterialsManager {
         template<class T> static constexpr bool supported_but_no_static_compare_v = supported_but_no_static_compare<T>::value;
         
         bool operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept; // Qt recommends pass string views by value
-        bool operator()(const QString& LHS, const QString& RHS) const noexcept; // Qt recommends pass string views by value
         template<class T = QByteArrayView> typename std::enable_if_t<supported_but_no_static_compare_v<T>, bool> operator()(const T LHS, const T RHS) const noexcept {
             if constexpr (std::is_class_v<T>) { return LHS.compare(RHS, Qt::CaseInsensitive) == 0; }
             else {
-                
+                if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_same_v<std::remove_cvref_t<T>, const char8_t*>) {
+                    const QByteArrayView LV(LHS), RV(RHS);
+                    return LV.compare(RV, Qt::CaseInsensitive) == 0;
+                }
+                else {
+                    const QStringView LV(LHS), RV(RHS);
+                    return LV.compare(RV, Qt::CaseInsensitive) == 0;
+                }
             }
+        }
+        template<class T = QByteArray> typename std::enable_if_t<supported_but_should_be_by_ref_v<T>, bool> operator()(const T& LHS, const T& RHS) {
+            return LHS.compare(RHS, Qt::CaseInsensitive) == 0;
         }
     };
 }

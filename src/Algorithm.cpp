@@ -20,6 +20,6 @@ namespace WritingMaterialsManager {
     }
 
     bool CaseInsensitiveStringComparator::operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept {
-        return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0;
+        return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0; // QAnyStringView only has static member compare
     }
 }
