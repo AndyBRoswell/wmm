@@ -74,12 +74,18 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
                 const size_t h[2] = { hasher.operator() < QByteArrayView > (s[0].c_str()), hasher.operator() < QByteArrayView > (t[0].c_str()) };
                 EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
+                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // generally s[1] != s[2], then t[1] != t[2]
+                else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
             }
             {
                 std::vector<QByteArray> s(3);
                 std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+
+                const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+                const size_t h[2] = { hasher(s[0]), hasher(t) };
+                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
 
             }
             {
