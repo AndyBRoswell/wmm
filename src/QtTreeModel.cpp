@@ -120,8 +120,9 @@ namespace WritingMaterialsManager {
         if (Index.isValid() == false) return {};
         Node* CurrentItem = GetItem(Index);
         Node* ParentItem = CurrentItem != nullptr ? CurrentItem->Parent() : nullptr;
+        // top-level nodes act as entry points of trees thus return the root node as their parent is regarded illegal
         if (ParentItem == RootNode || ParentItem == nullptr) return {};
-        return createIndex(ParentItem->ChildNumber(), 0, ParentItem);
+        return createIndex(ParentItem->ChildNumber(), 0, ParentItem); // return the index of the parent of the specified node
     }
 
     lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
