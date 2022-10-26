@@ -58,7 +58,8 @@ private slots:
 
         for (size_t i = 0; i < n; ++i) {
             // generate JSON and import into the tree model
-            tree_model.FromJSON(QByteArray::fromStdString(tiny_random::chr::JSON()));
+            const auto test_JSON = tiny_random::chr::JSON();
+            tree_model.FromJSON(QByteArray::fromStdString(test_JSON));
 
             // verify
             QByteArray generated_JSON;
@@ -131,6 +132,12 @@ private slots:
                 } break;
                 }
             }
+            QJsonParseError e[2];
+            const QJsonDocument d[2] = { 
+                QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
+                QJsonDocument::fromJson(generated_JSON, e + 1),
+            };
+            QCOMPARE(d[0], d[1]);
         }
     }
 

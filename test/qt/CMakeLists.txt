@@ -62,7 +62,7 @@ target_link_libraries(wmmqtest-cat1 PUBLIC
 )
 
 set_target_properties(wmmqtest-cat2 PROPERTIES
-    WIN32_EXECUTABLE TRUE
+    # WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 target_compile_definitions(wmmqtest-cat2 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
