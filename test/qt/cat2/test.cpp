@@ -137,6 +137,13 @@ private slots:
                 QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
                 QJsonDocument::fromJson(generated_JSON, e + 1),
             };
+            {
+                QDir wd("test/QtTreeModel");
+                if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
+                QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
+                for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
+                f[0].write(test_JSON.c_str()); f[1].write(generated_JSON);
+            }
             QCOMPARE(d[0], d[1]);
         }
     }
