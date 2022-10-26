@@ -32,7 +32,7 @@ private slots:
 
         enum class JSON_data_type { Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
         
-        constexpr size_t n = 10; // test count
+        constexpr size_t n = 1; // test count
 
         wmm::QtTreeModel tree_model;
 
@@ -50,9 +50,11 @@ private slots:
                 case QMetaType::ULongLong: return Unsigned;
                 case QMetaType::Double: return Double;
                 }
-            default:
+                break;
+            default: {
                 if (data.value<QString>() == "<Array>") { return Array; }
                 else { return Object; }
+            }
             }
         };
 
@@ -105,27 +107,27 @@ private slots:
                         break;
                     case Array: {
                         const auto child_count = tree_model.rowCount(index);
-                        s.emplace("]");
+                        s.emplace(QByteArray("]"));
                         for (auto i = child_count - 1; i > 0; --i) {
                             s.emplace(tree_model.index(i, 1, index));
-                            s.emplace(",");
+                            s.emplace(QByteArray(","));
                         }
                         s.emplace(tree_model.index(0, 1, index));
-                        s.emplace("]");
+                        s.emplace(QByteArray("["));
                     } break;
                     case Object: {
                         const auto child_count = tree_model.rowCount(index);
-                        s.emplace("}");
+                        s.emplace(QByteArray("}"));
                         for (auto i = child_count - 1; i > 0; --i) {
                             s.emplace(tree_model.index(i, 1, index));
-                            s.emplace(":");
+                            s.emplace(QByteArray(":"));
                             s.emplace(tree_model.index(i, 0, index));
-                            s.emplace(",");
-                            s.emplace(tree_model.index(0, 1, index));
-                            s.emplace(":");
-                            s.emplace(tree_model.index(0, 0, index));
+                            s.emplace(QByteArray(","));
                         }
-                        s.emplace("{");
+                        s.emplace(tree_model.index(0, 1, index));
+                        s.emplace(QByteArray(":"));
+                        s.emplace(tree_model.index(0, 0, index));
+                        s.emplace(QByteArray("{"));
                     } break;
                     }
                 } break;

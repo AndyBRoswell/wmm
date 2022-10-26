@@ -111,7 +111,7 @@ namespace WritingMaterialsManager {
     QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
         // Only return model indices if the parent index is invalid (corresponding to the root item) or if the parent has no columns.
         // The reason of this is unknown yet.
-        if (Parent.isValid() && Parent.column() != 0) return {};
+        //if (Parent.isValid() && Parent.column() != 0) return {};
         Node* ParentItem = GetItem(Parent);
         if (ParentItem == nullptr) return {}; // ERROR: Even root node != nullptr. Hence return an invalid index
         Node* TargetItem = ParentItem->Child(Row);
@@ -129,7 +129,7 @@ namespace WritingMaterialsManager {
     }
 
     lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
-        if (Parent.isValid() && Parent.column() > 0) return 0;
+        //if (Parent.isValid() && Parent.column() > 0) return 0;
         const Node* const ParentItem = GetItem(Parent);
         return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
     }
