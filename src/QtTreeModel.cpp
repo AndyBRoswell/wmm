@@ -233,7 +233,7 @@ namespace WritingMaterialsManager {
         std::stack<Node*, std::vector<Node*>> t;        // target (tree structure of this model)
         s.emplace(Pointer("").Get(JSONDocument));       // traversal begins at the root node of the source JSON
         JSONRoot->PushBackData("");
-        t.emplace(JSONRoot);
+        t.emplace(JSONRoot);                            // construction begins at the root node of the target tree structure
         while (s.empty() == false) { // non-recursive DFS
             const Value* const ns = s.top();
             s.pop();
