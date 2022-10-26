@@ -129,7 +129,6 @@ namespace WritingMaterialsManager {
 
     lsize_t QtTreeModel::rowCount(const QModelIndex& Parent) const {
         if (Parent.isValid() && Parent.column() > 0) return 0;
-//    if (Parent.isValid()) return 0;
         const Node* const ParentItem = GetItem(Parent);
         return ParentItem != nullptr ? ParentItem->ChildCount() : 0;
     }

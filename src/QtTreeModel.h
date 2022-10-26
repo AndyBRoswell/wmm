@@ -193,6 +193,7 @@ namespace WritingMaterialsManager {
         bool removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent = QModelIndex()) override;
 
         // custom functions
+
         void FromJSON(const QByteArray& UTF8JSONString); // construct this tree model from JSON
         const Node* GetRootNode() const;
     private:
