@@ -51,14 +51,14 @@ private slots:
                 case QMetaType::Double: return Double;
                 }
                 break;
-            default:
-                if (data.value<QString>() == "<Array>") { return Array; }
-                else { return Object; }
+            default: {
+                
+            } break;
             }
         };
         auto escape = [&](QByteArray& str) noexcept {
-            str.replace(R"(")", R"(\")");
             str.replace(R"(\)", R"(\\)");
+            str.replace(R"(")", R"(\")");
             str.replace("\f", R"(\f)");
             str.replace("\n", R"(\n)");
             str.replace("\r", R"(\r)");
