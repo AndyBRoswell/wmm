@@ -51,11 +51,18 @@ private slots:
                 case QMetaType::Double: return Double;
                 }
                 break;
-            default: {
+            default:
                 if (data.value<QString>() == "<Array>") { return Array; }
                 else { return Object; }
             }
-            }
+        };
+        auto escape = [&](QByteArray& str) noexcept {
+            str.replace(R"(")", R"(\")");
+            str.replace(R"(\)", R"(\\)");
+            str.replace("\f", R"(\f)");
+            str.replace("\n", R"(\n)");
+            str.replace("\r", R"(\r)");
+            str.replace("\t", R"(\t)");
         };
 
         for (size_t i = 0; i < n; ++i) {
@@ -93,9 +100,13 @@ private slots:
                             break;
                         }
                         break;
-                    case String:
-                        generated_JSON.append('\"').append(value.value<QString>().toUtf8()).append('\"');
-                        break;
+                    case String: {
+                        generated_JSON.append('\"');
+                        QByteArray string = value.value<QString>().toUtf8();
+                        escape(string);
+                        generated_JSON.append(string);
+                        generated_JSON.append('\"');
+                    } break;
                     case Signed:
                         generated_JSON.append(QByteArray::number(value.value<int64_t>()));
                         break;
