@@ -213,7 +213,7 @@ namespace WritingMaterialsManager {
         if (Index.isValid()) { // directly return the node the index queries if the given index is valid
             if (Index.internalPointer() != nullptr) { return static_cast<Node*>(Index.internalPointer()); }
         }
-        return RootNode; // always returns the root node (without any valid data) when the given index is invalid
+        return RootNode; // always returns the (special) root node when the given index is invalid
     }
 
     void QtTreeModel::FromJSON(const QByteArray& UTF8JSONString) {
