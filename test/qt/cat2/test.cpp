@@ -35,6 +35,11 @@ private slots:
         constexpr size_t n = 10; // test count
 
         wmm::QtTreeModel tree_model;
+
+        auto get_JSON_data_type = [&](const QModelIndex& index) noexcept {
+
+        };
+
         for (size_t i = 0; i < n; ++i) {
             // generate JSON and import into the tree model
             tree_model.FromJSON(QByteArray::fromStdString(tiny_random::chr::JSON()));
