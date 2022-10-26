@@ -110,9 +110,9 @@ namespace WritingMaterialsManager {
     QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
         if (Parent.isValid() && Parent.column() != 0) return {};
         Node* ParentItem = GetItem(Parent);
-        if (ParentItem == nullptr) return {}; // ERROR: Even root node != nullptr
+        if (ParentItem == nullptr) return {}; // ERROR: Even root node != nullptr. Hence return an invalid index
         Node* TargetItem = ParentItem->Child(Row);
-        if (TargetItem != nullptr) return createIndex(Row, Column, TargetItem); // index for the node queried
+        if (TargetItem != nullptr) return createIndex(Row, Column, TargetItem); // index for the data item of the node queried
         return {};
     }
 
