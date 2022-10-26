@@ -108,6 +108,8 @@ namespace WritingMaterialsManager {
     }
 
     QModelIndex QtTreeModel::index(lsize_t Row, lsize_t Column, const QModelIndex& Parent) const {
+        // Only return model indices if the parent index is invalid (corresponding to the root item) or if the parent has no columns.
+        // The reason of this is unknown yet.
         if (Parent.isValid() && Parent.column() != 0) return {};
         Node* ParentItem = GetItem(Parent);
         if (ParentItem == nullptr) return {}; // ERROR: Even root node != nullptr. Hence return an invalid index
@@ -232,7 +234,7 @@ namespace WritingMaterialsManager {
         stack<const Value*, vector<const Value*>> s;    // source (source JSON)
         std::stack<Node*, std::vector<Node*>> t;        // target (tree structure of this model)
         s.emplace(Pointer("").Get(JSONDocument));       // traversal begins at the root node of the source JSON
-        JSONRoot->PushBackData("");
+        JSONRoot->PushBackData("<JSON Root>");
         t.emplace(JSONRoot);                            // construction begins at the root node of the target tree structure
         while (s.empty() == false) { // non-recursive DFS
             const Value* const ns = s.top();
