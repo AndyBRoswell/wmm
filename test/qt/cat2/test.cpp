@@ -74,9 +74,10 @@ private slots:
                     break;
                 case QMetaType::QModelIndex: {
                     using enum JSON_data_type;
-
-                    const QVariant value = tree_model.data(top_node.value<QModelIndex>());
-                    switch (static_cast<JSON_data_type>(value.typeId())) {
+                    
+                    const auto index = top_node.value<QModelIndex>();
+                    const QVariant value = tree_model.data(index);
+                    switch (get_JSON_data_type(index)) {
                     case Null:
                         generated_JSON.append("null");
                         break;
@@ -103,7 +104,6 @@ private slots:
                         generated_JSON.append(QByteArray::number(value.value<double>()));
                         break;
                     case Array: {
-                        const auto index = top_node.value<QModelIndex>();
                         const auto child_count = tree_model.rowCount(index);
                         s.emplace("]");
                         for (auto i = child_count - 1; i > 0; --i) {
@@ -114,7 +114,6 @@ private slots:
                         s.emplace("]");
                     } break;
                     case Object: {
-                        const auto index = top_node.value<QModelIndex>();
                         const auto child_count = tree_model.rowCount(index);
                         s.emplace("}");
                         for (auto i = child_count - 1; i > 0; --i) {
