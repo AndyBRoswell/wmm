@@ -249,9 +249,10 @@ namespace WritingMaterialsManager {
                 else if (ns->IsDouble()) { nt->PushBackData(ns->GetDouble()); }
                 break; // other number types are not supported.
             case kArrayType:
-                if (ns->End() == ns->Begin()) break;
-                for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) {
+                if (ns->End() == ns->Begin()) break; // this is an empty array
+                for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) { // process the subnodes recursively (implemented by iteration)
                     s.emplace(&*i);
+                    // Each new child node c has a No. (subscript) and the corresponding value. c's parent is nt (current node of the tree structure)
                     Node* const c = new Node({ i - ns->Begin() }, nt);
                     nt->PushBackChild(c);
                     t.emplace(c);
@@ -259,9 +260,10 @@ namespace WritingMaterialsManager {
                 nt->ReverseChild();
                 break;
             case kObjectType:
-                if (ns->MemberEnd() == ns->MemberBegin()) break;
-                for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) {
+                if (ns->MemberEnd() == ns->MemberBegin()) break; // this is an empty object
+                for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) { // process the subnodes recursively (implemented by iteration)
                     s.emplace(&i->value);
+                    // Each new child node c has the key name and the corresponding value. c's parent is nt (current node of the tree structure)
                     Node* const c = new Node({ i->name.GetString() }, nt);
                     nt->PushBackChild(c);
                     t.emplace(c);
