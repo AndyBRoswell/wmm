@@ -65,16 +65,16 @@ private slots:
             std::stack<QVariant, std::vector<QVariant>> s;
             s.emplace(tree_model.index(0, 1, {}));
             while (s.empty() == false) {
-                const QVariant n = s.top();
+                const QVariant top_node = s.top();
                 s.pop();
-                switch (n.typeId()) {
+                switch (top_node.typeId()) {
                 case QMetaType::QByteArray:
-                    generated_JSON.append(n.value<QByteArray>());
+                    generated_JSON.append(top_node.value<QByteArray>());
                     break;
                 case QMetaType::QModelIndex: {
                     using enum JSON_data_type;
 
-                    const QVariant value = tree_model.data(n.value<QModelIndex>());
+                    const QVariant value = tree_model.data(top_node.value<QModelIndex>());
                     switch (static_cast<JSON_data_type>(value.typeId())) {
                     case Null:
                         generated_JSON.append("null");
@@ -89,8 +89,44 @@ private slots:
                             break;
                         }
                         break;
-                    case Signed:
+                    case String:
+                        generated_JSON.append('\"').append(value.value<QString>().toUtf8()).append('\"');
                         break;
+                    case Signed:
+                        generated_JSON.append(QByteArray::number(value.value<int64_t>()));
+                        break;
+                    case Unsigned:
+                        generated_JSON.append(QByteArray::number(value.value<uint64_t>()));
+                        break;
+                    case Double:
+                        generated_JSON.append(QByteArray::number(value.value<double>()));
+                        break;
+                    case Array: {
+                        const auto index = top_node.value<QModelIndex>();
+                        const auto child_count = tree_model.rowCount(index);
+                        s.emplace("]");
+                        for (auto i = child_count - 1; i > 0; --i) {
+                            s.emplace(tree_model.index(i, 1, index));
+                            s.emplace(",");
+                        }
+                        s.emplace(tree_model.index(0, 1, index));
+                        s.emplace("]");
+                    } break;
+                    case Object: {
+                        const auto index = top_node.value<QModelIndex>();
+                        const auto child_count = tree_model.rowCount(index);
+                        s.emplace("}");
+                        for (auto i = child_count - 1; i > 0; --i) {
+                            s.emplace(tree_model.index(i, 1, index));
+                            s.emplace(":");
+                            s.emplace(tree_model.index(i, 0, index));
+                            s.emplace(",");
+                            s.emplace(tree_model.index(0, 1, index));
+                            s.emplace(":");
+                            s.emplace(tree_model.index(0, 0, index));
+                        }
+                        s.emplace("{");
+                    } break;
                     }
                 } break;
                 }
