@@ -52,7 +52,15 @@ private slots:
                 }
                 break;
             default: {
-                
+                if (index.column() == 0) {
+                    const QModelIndex value_index = index.siblingAtColumn(1);
+                    if (data.value<QString>() == "<Array>") { return Array; }
+                    else { return Object; }
+                }
+                else { // index.column() == 1
+                    if (data.value<QString>() == "<Array>") { return Array; }
+                    else { return Object; }
+                }
             } break;
             }
         };
