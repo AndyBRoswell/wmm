@@ -180,7 +180,7 @@ namespace WritingMaterialsManager {
         if (TargetItem == nullptr) return false;
         beginInsertRows(Parent, Position, Position + ChildCount - 1);
 //    const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, TargetItem->ColumnCount());
-        const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, RootNode->ColumnCount());
+        const bool Succeeded = TargetItem->InsertChildren(Position, ChildCount, RootNode->ColumnCount()); // so far the column count is fixed
         endInsertRows();
         return Succeeded;
     }
@@ -204,7 +204,7 @@ namespace WritingMaterialsManager {
     bool QtTreeModel::removeColumns(lsize_t Position, lsize_t ColumnCount, const QModelIndex& Parent) {
         beginRemoveColumns(Parent, Position, Position + ColumnCount - 1);
         const bool Succeeded = RootNode->RemoveColumns(Position, ColumnCount);
-        if (RootNode->ChildCount() == 0) removeRows(0, rowCount());
+        if (RootNode->ChildCount() == 0) { removeRows(0, rowCount()); }
         endRemoveColumns();
         return Succeeded;
     }

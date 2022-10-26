@@ -155,7 +155,8 @@ namespace WritingMaterialsManager {
          */
         lsize_t rowCount(const QModelIndex& Parent = QModelIndex()) const override;
 
-        /**
+        /*
+         * So far the column count is fixed.
          * @param Parent The tree node whose number of elements (terms of data) is wanted.
          * @return The number of elements this tree node contains.
          */
