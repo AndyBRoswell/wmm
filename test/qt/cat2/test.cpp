@@ -37,7 +37,21 @@ private slots:
         wmm::QtTreeModel tree_model;
 
         auto get_JSON_data_type = [&](const QModelIndex& index) noexcept {
+            using enum JSON_data_type;
 
+            const QVariant data = tree_model.data(index);
+            switch (tree_model.rowCount(index)) {
+            case 0:
+                switch (data.typeId()) {
+                case QMetaType::Nullptr: return Null;
+                case QMetaType::Bool: return Boolean;
+                case QMetaType::QString: return String;
+                case QMetaType::LongLong: case QMetaType::ULongLong: case QMetaType::Double: return Number;
+                }
+            default:
+                if (data.value<QString>() == "<Array>") { return Array; }
+                else { return Object; } // "<Object>"
+            }
         };
 
         for (size_t i = 0; i < n; ++i) {

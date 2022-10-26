@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QFlags>
+#include <QVariant>
 
 #include "rapidjson/document.h"
 #include "rapidjson/pointer.h"
@@ -241,7 +242,8 @@ namespace WritingMaterialsManager {
             Node* const nt = t.top();
             t.pop();
             switch (ns->GetType()) {
-            case kNullType: nt->PushBackData(""); break;
+            //case kNullType: nt->PushBackData(""); break;
+            case kNullType: nt->PushBackData(QVariant::fromValue(nullptr)); break;
             case kFalseType: case kTrueType: nt->PushBackData(ns->GetBool()); break;
             case kStringType: nt->PushBackData(ns->GetString()); break;
             case kNumberType:
