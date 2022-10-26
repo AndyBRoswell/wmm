@@ -112,7 +112,7 @@ namespace WritingMaterialsManager {
         Node* ParentItem = GetItem(Parent);
         if (ParentItem == nullptr) return {}; // ERROR: Even root node != nullptr
         Node* TargetItem = ParentItem->Child(Row);
-        if (TargetItem != nullptr) return createIndex(Row, Column, TargetItem);
+        if (TargetItem != nullptr) return createIndex(Row, Column, TargetItem); // index for the node queried
         return {};
     }
 
