@@ -56,7 +56,7 @@ namespace tiny_random {
             constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             constexpr char punct[] = "!\"#$%&'()*+,-./"";:<=>?@""[\\]^_`{|}~";
             constexpr char JSON_non_esc[] = "!#$%&'()*+,-./;0123456789;:<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-            constexpr char JSON_esc[] = R"("\/bfnrtu)";
+            constexpr char JSON_esc[] = R"("\/fnrtu)"; // no \b
         }
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;

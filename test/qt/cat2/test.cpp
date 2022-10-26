@@ -30,7 +30,7 @@ private slots:
     void QtTreeModel__construct_from_JSON() {
         namespace wmm = WritingMaterialsManager;
 
-        enum class JSON_data_type { Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
+        enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
         
         constexpr size_t n = 1; // test count
 
@@ -63,6 +63,7 @@ private slots:
                 }
             } break;
             }
+            return Invalid;
         };
         auto escape = [&](QByteArray& str) noexcept {
             str.replace(R"(\)", R"(\\)");
@@ -94,7 +95,9 @@ private slots:
                     
                     const auto index = top_node.value<QModelIndex>();
                     const QVariant value = tree_model.data(index);
-                    switch (get_JSON_data_type(index)) {
+                    const auto data_type = get_JSON_data_type(index);
+                    QVERIFY(data_type != Invalid);
+                    switch (data_type) {
                     case Null:
                         generated_JSON.append("null");
                         break;
