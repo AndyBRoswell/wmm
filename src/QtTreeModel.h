@@ -115,6 +115,7 @@ namespace WritingMaterialsManager {
             Node* ParentNode;
         };
 
+        // The name of each column is stored at the root node. The entry point of each tree is the child of the root node
         explicit QtTreeModel(QObject* Parent = nullptr);
         ~QtTreeModel(); // This will cause all items to be recursively deleted.
 

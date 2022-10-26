@@ -2,6 +2,7 @@
 #include <unordered_map>
 
 // Qt
+#include <QAbstractItemModelTester>
 #include <QDir>
 #include <QFile>
 #include <QJsonDocument>
