@@ -249,6 +249,7 @@ namespace WritingMaterialsManager {
                 else if (ns->IsDouble()) { nt->PushBackData(ns->GetDouble()); }
                 break; // other number types are not supported.
             case kArrayType:
+                nt->PushBackData("<Array>");
                 if (ns->End() == ns->Begin()) break; // this is an empty array
                 for (Value::ConstValueIterator i = ns->End() - 1; i >= ns->Begin(); --i) { // process the subnodes recursively (implemented by iteration)
                     s.emplace(&*i);
@@ -260,6 +261,7 @@ namespace WritingMaterialsManager {
                 nt->ReverseChild();
                 break;
             case kObjectType:
+                nt->PushBackData("<Object>");
                 if (ns->MemberEnd() == ns->MemberBegin()) break; // this is an empty object
                 for (Value::ConstMemberIterator i = ns->MemberEnd() - 1; i >= ns->MemberBegin(); --i) { // process the subnodes recursively (implemented by iteration)
                     s.emplace(&i->value);
