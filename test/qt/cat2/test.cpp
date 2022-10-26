@@ -12,6 +12,9 @@
 #include <QTest>
 #include <QTextCodec>
 
+// this software
+#include "tiny_random.h"
+
 // files to be tested
 #include "src/TreeEditor.h"
 
@@ -22,6 +25,23 @@ private:
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 2");
+    }
+
+    void QtTreeModel__construct_from_JSON() {
+        namespace wmm = WritingMaterialsManager;
+
+        enum class JSON_data_type { Null, Boolean, String, Number, Array, Object, };
+        
+        constexpr size_t n = 10; // test count
+
+        wmm::QtTreeModel tree_model;
+        for (size_t i = 0; i < n; ++i) {
+            // generate JSON and import into the tree model
+            tree_model.FromJSON(QByteArray::fromStdString(tiny_random::chr::JSON()));
+
+            // verify
+
+        }
     }
 
     void TreeEditor__open_JSON() {

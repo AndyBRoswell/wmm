@@ -117,7 +117,7 @@ namespace tiny_random {
                     else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
                 }
             };
-            constexpr auto next_enum = []<class T>(const T & m, const T & M) noexcept {
+            constexpr auto next_enum = []<class T>(const T m, const T M) noexcept {
                 return static_cast<T>(number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)));
             };
 
