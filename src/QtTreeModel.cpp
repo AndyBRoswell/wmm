@@ -229,9 +229,9 @@ namespace WritingMaterialsManager {
         JSONDocument.Parse(UTF8JSONString.constData());
 
         beginResetModel();
-        stack<const Value*, vector<const Value*>> s;
-        std::stack<Node*, std::vector<Node*>> t;
-        s.emplace(Pointer("").Get(JSONDocument));
+        stack<const Value*, vector<const Value*>> s;    // source (source JSON)
+        std::stack<Node*, std::vector<Node*>> t;        // target (tree structure of this model)
+        s.emplace(Pointer("").Get(JSONDocument));       // traversal begins at the root node of the source JSON
         JSONRoot->PushBackData("");
         t.emplace(JSONRoot);
         while (s.empty() == false) { // non-recursive DFS
