@@ -30,7 +30,7 @@ private slots:
     void QtTreeModel__construct_from_JSON() {
         namespace wmm = WritingMaterialsManager;
 
-        enum class JSON_data_type { Null, Boolean, String, Number, Array, Object, };
+        enum class JSON_data_type { Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
         
         constexpr size_t n = 10; // test count
 
@@ -46,11 +46,13 @@ private slots:
                 case QMetaType::Nullptr: return Null;
                 case QMetaType::Bool: return Boolean;
                 case QMetaType::QString: return String;
-                case QMetaType::LongLong: case QMetaType::ULongLong: case QMetaType::Double: return Number;
+                case QMetaType::LongLong: return Signed;
+                case QMetaType::ULongLong: return Unsigned;
+                case QMetaType::Double: return Double;
                 }
             default:
                 if (data.value<QString>() == "<Array>") { return Array; }
-                else { return Object; } // "<Object>"
+                else { return Object; }
             }
         };
 
@@ -59,7 +61,40 @@ private slots:
             tree_model.FromJSON(QByteArray::fromStdString(tiny_random::chr::JSON()));
 
             // verify
+            QByteArray generated_JSON;
+            std::stack<QVariant, std::vector<QVariant>> s;
+            s.emplace(tree_model.index(0, 1, {}));
+            while (s.empty() == false) {
+                const QVariant n = s.top();
+                s.pop();
+                switch (n.typeId()) {
+                case QMetaType::QByteArray:
+                    generated_JSON.append(n.value<QByteArray>());
+                    break;
+                case QMetaType::QModelIndex: {
+                    using enum JSON_data_type;
 
+                    const QVariant value = tree_model.data(n.value<QModelIndex>());
+                    switch (static_cast<JSON_data_type>(value.typeId())) {
+                    case Null:
+                        generated_JSON.append("null");
+                        break;
+                    case Boolean:
+                        switch (value.value<bool>()) {
+                        case false:
+                            generated_JSON.append("false");
+                            break;
+                        case true:
+                            generated_JSON.append("true");
+                            break;
+                        }
+                        break;
+                    case Signed:
+                        break;
+                    }
+                } break;
+                }
+            }
         }
     }
 
