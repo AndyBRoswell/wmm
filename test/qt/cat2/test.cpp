@@ -40,26 +40,20 @@ private slots:
             using enum JSON_data_type;
 
             const QVariant data = tree_model.data(index);
-            switch (tree_model.rowCount(index)) {
-            case 0:
-                switch (data.typeId()) {
-                case QMetaType::Nullptr: return Null;
-                case QMetaType::Bool: return Boolean;
-                case QMetaType::QString: return String;
-                case QMetaType::LongLong: return Signed;
-                case QMetaType::ULongLong: return Unsigned;
-                case QMetaType::Double: return Double;
-                }
-                break;
-            default: {
-                if (index.column() == 0) {
-                    const QModelIndex value_index = index.siblingAtColumn(1);
-                    if (data.value<QString>() == "<Array>") { return Array; }
-                    else { return Object; }
-                }
-                else { // index.column() == 1
-                    if (data.value<QString>() == "<Array>") { return Array; }
-                    else { return Object; }
+            switch (data.typeId()) {
+            case QMetaType::Nullptr: return Null;
+            case QMetaType::Bool: return Boolean;
+            case QMetaType::LongLong: return Signed;
+            case QMetaType::ULongLong: return Unsigned;
+            case QMetaType::Double: return Double;
+            case QMetaType::QString: {
+                if (index.column() == 0) { return String; }
+                else if (index.column() == 1) {
+                    if (tree_model.rowCount(index) == 0) { return String; }
+                    else { // tree_model.rowCount(index) > 0
+                        if (data.value<QString>() == "<Array>") { return Array; }
+                        else if (data.value<QString>() == "<Array>") { return Object; }
+                    }
                 }
             } break;
             }
