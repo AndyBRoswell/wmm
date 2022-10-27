@@ -24,7 +24,7 @@
 class test : public QObject {
     Q_OBJECT
 private:
-    bool tree_model_test(WritingMaterialsManager::QtTreeModel& tree_model, const std::string& test_JSON) {
+    bool QtTreeModel_test(WritingMaterialsManager::QtTreeModel& tree_model, const std::string& test_JSON) {
         enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
 
         auto get_JSON_data_type = [&](const QModelIndex& index) noexcept {
@@ -171,7 +171,7 @@ private slots:
 
         for (size_t i = 0; i < n; ++i) {
             const auto test_JSON = tiny_random::chr::JSON();
-            QVERIFY(tree_model_test(tree_model, test_JSON));
+            QVERIFY(QtTreeModel_test(tree_model, test_JSON));
         }
     }
 
@@ -206,9 +206,10 @@ private slots:
             QJsonParseError JSON_error;
             QTextCodec* codec = QTextCodec::codecForName(charset);
             QTextDecoder* const decoder = codec->makeDecoder();
-            const QJsonDocument doc = QJsonDocument::fromJson(decoder->toUnicode(test_file.readAll()).toUtf8(), &JSON_error);
+            const auto test_JSON = decoder->toUnicode(test_file.readAll()).toUtf8();
+            const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
             if (JSON_error.error == QJsonParseError::NoError) {
-                
+                QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString());
             }
             delete decoder;
         }
