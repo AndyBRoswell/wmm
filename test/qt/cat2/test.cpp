@@ -191,7 +191,6 @@ private slots:
         for (const auto& test_file_name : test_file_list) {
             const QStringList file_name_part = test_file_name.split("_");
             const QByteArray charset = file_name_part.size() == 3 ? file_name_part[2].toUtf8().toUpper() : QByteArray("UTF-8");
-            //const QByteArray charset = file_name_part.size() == 3 ? file_name_part[2].toUtf8(): "utf-8";
 
             // test side
             tree_editor.SetCharset(charset);
