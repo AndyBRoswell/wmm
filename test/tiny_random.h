@@ -197,8 +197,6 @@ namespace tiny_random {
                         ret.push_back('\"');
                     } break;
                     case number: {
-
-
                         const bool negative = next_int(0, 1);
                         if (negative) ret.push_back('-');
                         switch (next_int(0, 1)) {
