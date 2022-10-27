@@ -128,7 +128,7 @@ namespace tiny_random {
             const double p_escape = 0.01;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t max_recursive_depth = 4;
+            const size_t max_recursive_depth = 6;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -188,7 +188,7 @@ namespace tiny_random {
                                 const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
                                 ret.append(e);
                                 if (e[1] == 'u') {
-                                    const int h = next_int(0ui32, static_cast<uint32_t>(UINT16_MAX));
+                                    const int h = next_int(0x00A0ui32, static_cast<uint32_t>(UINT16_MAX));
                                     for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
                                 }
                             }
