@@ -228,7 +228,7 @@ namespace WritingMaterialsManager {
         RootNode->PushBackChild(JSONRoot); // This tree model support multiple trees, but JSON only has exactly 1 root node. Thus RootNode has just 1 child.
 
         Document JSONDocument;
-        JSONDocument.Parse(UTF8JSONString.constData());
+        JSONDocument.Parse<ParseFlag::kParseFullPrecisionFlag>(UTF8JSONString.constData());
 
         beginResetModel();
         stack<const Value*, vector<const Value*>> s;    // source (source JSON)

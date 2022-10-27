@@ -23,7 +23,7 @@ namespace WritingMaterialsManager {
         GenericStringBuffer<OutputEncoding> JSONOStream;
         PrettyWriter<GenericStringBuffer<OutputEncoding>, ParsingOutputEncoding, OutputEncoding> JSONWriter(JSONOStream);
         try {
-            ParseResult ParseResult = JSONReader.Parse(JSONIStream, JSONWriter);
+            ParseResult ParseResult = JSONReader.Parse<ParseFlag::kParseFullPrecisionFlag>(JSONIStream, JSONWriter);
             if (ParseResult.IsError()) throw runtime_error(string("Exception at ") + __FUNCTION__ + ": Parsing ERROR.");
         }
         catch (const runtime_error& e) {

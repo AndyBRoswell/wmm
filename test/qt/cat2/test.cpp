@@ -159,7 +159,8 @@ private slots:
                 if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
                 QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
                 for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
-                f[0].write(test_JSON.c_str()); f[1].write(generated_JSON);
+                //f[0].write(test_JSON.c_str()); f[1].write(generated_JSON);
+                f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
             }
             QCOMPARE(e[0].error, QJsonParseError::ParseError::NoError);
             QCOMPARE(e[1].error, QJsonParseError::ParseError::NoError);
