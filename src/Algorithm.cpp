@@ -18,6 +18,7 @@ namespace WritingMaterialsManager {
         const QByteArrayView v(reinterpret_cast<const char*>(STR.constData()), STR.size() * 2);
         return *reinterpret_cast<const size_t*>(QCryptographicHash::hash(v, DefaultHashAlgorithm).right(sizeof(size_t)).constData());
     }
+// ----------------------------------------------------------------
 
     bool CaseInsensitiveStringComparator::operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept {
         return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0; // QAnyStringView only has static member compare
