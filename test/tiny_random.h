@@ -128,7 +128,7 @@ namespace tiny_random {
             const double p_escape = 0.01;
             const size_t min_single_ws_len = 0, max_single_ws_len = 8;
             const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t max_recursive_depth = 4;
+            const size_t max_recursive_depth = 6;
             const distribution arr_len_dist = distribution::exponential;
             const distribution obj_size_dist = distribution::exponential;
             const distribution str_len_dist = distribution::exponential;
@@ -197,6 +197,8 @@ namespace tiny_random {
                         ret.push_back('\"');
                     } break;
                     case number: {
+
+
                         const bool negative = next_int(0, 1);
                         if (negative) ret.push_back('-');
                         switch (next_int(0, 1)) {
@@ -205,15 +207,17 @@ namespace tiny_random {
                             switch (next_int(0, 1)) {
                             default: { // no scientific notation
                                 static std::uniform_real_distribution<double> U(0, 10);
-                                ret.append(std::to_string(U(random_engine) * EXP(random_engine)));
+                                const auto out_str = std::format("{:.{}f}", U(random_engine) * EXP(random_engine), DBL_DECIMAL_DIG);
+                                ret.append(out_str);
                             } break;
                             case 1: { // scientific notation
                                 static std::uniform_real_distribution<double> U(1, 10);
                                 const double coef = U(random_engine);
-                                const int exp = next_int(-308, 308, distribution::exponential);
-                                if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::to_string(DBL_MAX)); }
+                                const int exp = next_int(-DBL_MAX_10_EXP, DBL_MAX_10_EXP, distribution::exponential);
+                                if (const double r = coef * pow(10, exp); isinf(r)) { ret.append(std::format("{:.{}f}", DBL_MAX, DBL_DECIMAL_DIG)); }
                                 else {
-                                    ret.append(std::to_string(coef) + (next_int(0, 1) == 0 ? "E" : "e"));
+                                    const auto coef_str = std::format("{:.{}f}", coef, DBL_DECIMAL_DIG);
+                                    ret.append(coef_str + (next_int(0, 1) == 0 ? "E" : "e"));
                                     if (exp < 0) { ret.append(std::to_string(exp)); }
                                     else { ret.append((next_int(0, 1) == 0 ? "" : "+") + std::to_string(exp)); }
                                 }

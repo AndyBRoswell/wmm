@@ -12,6 +12,9 @@
 #include <QTest>
 #include <QTextCodec>
 
+// rapidjson
+#include "rapidjson/document.h"
+
 // this software
 #include "tiny_random.h"
 
