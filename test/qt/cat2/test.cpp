@@ -24,20 +24,8 @@
 class test : public QObject {
     Q_OBJECT
 private:
-
-private slots:
-    void initTestCase() {
-        qDebug("GUI Test Cat. 2");
-    }
-
-    void QtTreeModel__construct_from_JSON() {
-        namespace wmm = WritingMaterialsManager;
-
+    bool tree_model_test(WritingMaterialsManager::QtTreeModel& tree_model, const std::string& test_JSON) {
         enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
-        
-        constexpr size_t n = 100; // test count
-
-        wmm::QtTreeModel tree_model;
 
         auto get_JSON_data_type = [&](const QModelIndex& index) noexcept {
             using enum JSON_data_type;
@@ -71,103 +59,119 @@ private slots:
             str.replace("\t", R"(\t)");
         };
 
-        for (size_t i = 0; i < n; ++i) {
-            // generate JSON and import into the tree model
-            const auto test_JSON = tiny_random::chr::JSON();
-            tree_model.FromJSON(QByteArray::fromStdString(test_JSON));
+        tree_model.FromJSON(QByteArray::fromStdString(test_JSON)); // import JSON
+        
+        // generate JSON from tree model
+        QByteArray generated_JSON;
+        std::stack<QVariant, std::vector<QVariant>> s;
+        s.emplace(tree_model.index(0, 1, {}));
+        while (s.empty() == false) {
+            const QVariant top_node = s.top();
+            s.pop();
+            switch (top_node.typeId()) {
+            case QMetaType::QByteArray:
+                generated_JSON.append(top_node.value<QByteArray>());
+                break;
+            case QMetaType::QModelIndex: {
+                using enum JSON_data_type;
 
-            // verify
-            QByteArray generated_JSON;
-            std::stack<QVariant, std::vector<QVariant>> s;
-            s.emplace(tree_model.index(0, 1, {}));
-            while (s.empty() == false) {
-                const QVariant top_node = s.top();
-                s.pop();
-                switch (top_node.typeId()) {
-                case QMetaType::QByteArray:
-                    generated_JSON.append(top_node.value<QByteArray>());
+                const auto index = top_node.value<QModelIndex>();
+                const QVariant value = tree_model.data(index);
+                const auto data_type = get_JSON_data_type(index);
+                assert(data_type != Invalid);
+                switch (data_type) {
+                case Null:
+                    generated_JSON.append("null");
                     break;
-                case QMetaType::QModelIndex: {
-                    using enum JSON_data_type;
-                    
-                    const auto index = top_node.value<QModelIndex>();
-                    const QVariant value = tree_model.data(index);
-                    const auto data_type = get_JSON_data_type(index);
-                    QVERIFY(data_type != Invalid);
-                    switch (data_type) {
-                    case Null:
-                        generated_JSON.append("null");
+                case Boolean:
+                    switch (value.value<bool>()) {
+                    case false:
+                        generated_JSON.append("false");
                         break;
-                    case Boolean:
-                        switch (value.value<bool>()) {
-                        case false:
-                            generated_JSON.append("false");
-                            break;
-                        case true:
-                            generated_JSON.append("true");
-                            break;
-                        }
+                    case true:
+                        generated_JSON.append("true");
                         break;
-                    case String: {
-                        generated_JSON.append('\"');
-                        QByteArray string = value.value<QString>().toUtf8();
-                        escape(string);
-                        generated_JSON.append(string);
-                        generated_JSON.append('\"');
-                    } break;
-                    case Signed:
-                        generated_JSON.append(QByteArray::number(value.value<int64_t>()));
-                        break;
-                    case Unsigned:
-                        generated_JSON.append(QByteArray::number(value.value<uint64_t>()));
-                        break;
-                    case Double:
-                        generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG));
-                        break;
-                    case Array: {
-                        const auto child_count = tree_model.rowCount(index);
-                        s.emplace(QByteArray("]"));
-                        for (auto i = child_count - 1; i > 0; --i) {
-                            s.emplace(tree_model.index(i, 1, index));
-                            s.emplace(QByteArray(","));
-                        }
-                        s.emplace(tree_model.index(0, 1, index));
-                        s.emplace(QByteArray("["));
-                    } break;
-                    case Object: {
-                        const auto child_count = tree_model.rowCount(index);
-                        s.emplace(QByteArray("}"));
-                        for (auto i = child_count - 1; i > 0; --i) {
-                            s.emplace(tree_model.index(i, 1, index));
-                            s.emplace(QByteArray(":"));
-                            s.emplace(tree_model.index(i, 0, index));
-                            s.emplace(QByteArray(","));
-                        }
-                        s.emplace(tree_model.index(0, 1, index));
-                        s.emplace(QByteArray(":"));
-                        s.emplace(tree_model.index(0, 0, index));
-                        s.emplace(QByteArray("{"));
-                    } break;
                     }
+                    break;
+                case String: {
+                    generated_JSON.append('\"');
+                    QByteArray string = value.value<QString>().toUtf8();
+                    escape(string);
+                    generated_JSON.append(string);
+                    generated_JSON.append('\"');
+                } break;
+                case Signed:
+                    generated_JSON.append(QByteArray::number(value.value<int64_t>()));
+                    break;
+                case Unsigned:
+                    generated_JSON.append(QByteArray::number(value.value<uint64_t>()));
+                    break;
+                case Double:
+                    generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG));
+                    break;
+                case Array: {
+                    const auto child_count = tree_model.rowCount(index);
+                    s.emplace(QByteArray("]"));
+                    for (auto i = child_count - 1; i > 0; --i) {
+                        s.emplace(tree_model.index(i, 1, index));
+                        s.emplace(QByteArray(","));
+                    }
+                    s.emplace(tree_model.index(0, 1, index));
+                    s.emplace(QByteArray("["));
+                } break;
+                case Object: {
+                    const auto child_count = tree_model.rowCount(index);
+                    s.emplace(QByteArray("}"));
+                    for (auto i = child_count - 1; i > 0; --i) {
+                        s.emplace(tree_model.index(i, 1, index));
+                        s.emplace(QByteArray(":"));
+                        s.emplace(tree_model.index(i, 0, index));
+                        s.emplace(QByteArray(","));
+                    }
+                    s.emplace(tree_model.index(0, 1, index));
+                    s.emplace(QByteArray(":"));
+                    s.emplace(tree_model.index(0, 0, index));
+                    s.emplace(QByteArray("{"));
                 } break;
                 }
+            } break;
             }
-            QJsonParseError e[2];
-            const QJsonDocument d[2] = { 
-                QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
-                QJsonDocument::fromJson(generated_JSON, e + 1),
-            };
-            QCOMPARE(e[0].error, QJsonParseError::ParseError::NoError);
-            QCOMPARE(e[1].error, QJsonParseError::ParseError::NoError);
-            if (d[0] != d[1]) {
-                std::cout << "ERROR at i = " << i << ", n = " << n << std::endl;
-                QDir wd("test/QtTreeModel");
-                if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
-                QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
-                for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
-                f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
-                QVERIFY(false);
-            }
+        }
+
+        // verify
+        QJsonParseError e[2];
+        const QJsonDocument d[2] = {
+            QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
+            QJsonDocument::fromJson(generated_JSON, e + 1),
+        };
+        assert(e[0].error == QJsonParseError::ParseError::NoError);
+        assert(e[1].error == QJsonParseError::ParseError::NoError);
+        if (d[0] != d[1]) {
+            QDir wd("test/QtTreeModel");
+            if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
+            QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
+            for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
+            f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
+            return false;
+        }
+        return true;
+    }
+
+private slots:
+    void initTestCase() {
+        qDebug("GUI Test Cat. 2");
+    }
+
+    void QtTreeModel__construct_from_JSON() {
+        namespace wmm = WritingMaterialsManager;
+
+        constexpr size_t n = 100; // test count
+
+        wmm::QtTreeModel tree_model;
+
+        for (size_t i = 0; i < n; ++i) {
+            const auto test_JSON = tiny_random::chr::JSON();
+            QVERIFY(tree_model_test(tree_model, test_JSON));
         }
     }
 
