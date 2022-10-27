@@ -122,7 +122,7 @@ private slots:
                         generated_JSON.append(QByteArray::number(value.value<uint64_t>()));
                         break;
                     case Double:
-                        generated_JSON.append(QByteArray::number(value.value<double>()));
+                        generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG));
                         break;
                     case Array: {
                         const auto child_count = tree_model.rowCount(index);
