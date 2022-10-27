@@ -84,7 +84,6 @@ namespace WritingMaterialsManager {
         }
         DatabaseConsole::ArrangeContentViewForAssociatedEditors();
     }
-
 /// ----------------------------------------------------------------
 
     MongoShAccessor::MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL) {
@@ -117,7 +116,6 @@ namespace WritingMaterialsManager {
         qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
         SendResult();
     }
-
 /// ----------------------------------------------------------------
 
     AnotherMongoDBConsole::AnotherMongoDBConsole(QWidget* const Parent) : DatabaseConsole(Parent) {
