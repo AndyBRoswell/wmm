@@ -51,7 +51,8 @@ namespace WritingMaterialsManager {
         SetTextForAssociatedEditors("");
         RefreshAssociatedEditors();
         // Here we don't call MongoShAccessor::Execute(const QString& Command) directly.
-        // Instead, we sent another signal so that the query is run on another thread.
+        // Instead, we sent another signal 'cause parameters of connected signals and slots must match 
+        // and QPushButton::clicked() can't carry a string (which is for the command to be executed).
         qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
         emit NewShellCommand(CommandForm->toPlainText());
         qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
