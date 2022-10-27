@@ -56,7 +56,7 @@ namespace tiny_random {
             constexpr char alnum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             constexpr char punct[] = "!\"#$%&'()*+,-./"";:<=>?@""[\\]^_`{|}~";
             constexpr char JSON_non_esc[] = "!#$%&'()*+,-./;0123456789;:<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-            constexpr char JSON_esc[] = R"("\/fnrtu)"; // no \b
+            constexpr char JSON_esc[] = R"("\/fnrt)"; // no \b \u
         }
 
         template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
@@ -187,10 +187,10 @@ namespace tiny_random {
                             if (U(random_engine) <= p_escape) { // generate an escape character
                                 const char e[] = { '\\', JSON_esc[next_int(0ui64, sizeof(JSON_esc) - 1 - 1)], '\0' };
                                 ret.append(e);
-                                if (e[1] == 'u') {
-                                    const int h = next_int(0x00A0ui32, static_cast<uint32_t>(UINT16_MAX));
-                                    for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
-                                }
+                                //if (e[1] == 'u') {
+                                //    const int h = next_int(0x00A0ui32, static_cast<uint32_t>(UINT16_MAX));
+                                //    for (int i = 3, d = UINT16_MAX; i >= 0; --i, d /= 16) { ret.push_back(hex[h / d % 16]); } // convert to hex
+                                //}
                             }
                             else { ret.push_back(JSON_non_esc[next_int(0ui64, sizeof(JSON_non_esc) - 1 - 1)]); } // generate normal character;
                         }

@@ -35,7 +35,7 @@ private slots:
 
         enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
         
-        constexpr size_t n = 1; // test count
+        constexpr size_t n = 20; // test count
 
         wmm::QtTreeModel tree_model;
 
@@ -157,16 +157,16 @@ private slots:
                 QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
                 QJsonDocument::fromJson(generated_JSON, e + 1),
             };
-            //{
-            //    QDir wd("test/QtTreeModel");
-            //    if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
-            //    QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
-            //    for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
-            //    f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
-            //}
             QCOMPARE(e[0].error, QJsonParseError::ParseError::NoError);
             QCOMPARE(e[1].error, QJsonParseError::ParseError::NoError);
-            QCOMPARE(d[0], d[1]);
+            if (d[0] != d[1]) {
+                QDir wd("test/QtTreeModel");
+                if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
+                QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
+                for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
+                f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
+                QVERIFY(false);
+            }
         }
     }
 
