@@ -35,7 +35,7 @@ private slots:
 
         enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
         
-        constexpr size_t n = 20; // test count
+        constexpr size_t n = 100; // test count
 
         wmm::QtTreeModel tree_model;
 
