@@ -161,6 +161,8 @@ private slots:
                 for (size_t i = 0; i < 2; ++i) { f[i].open(QIODevice::OpenModeFlag::WriteOnly); }
                 f[0].write(test_JSON.c_str()); f[1].write(generated_JSON);
             }
+            QCOMPARE(e[0].error, QJsonParseError::ParseError::NoError);
+            QCOMPARE(e[1].error, QJsonParseError::ParseError::NoError);
             QCOMPARE(d[0], d[1]);
         }
     }
