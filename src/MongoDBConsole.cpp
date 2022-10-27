@@ -8,9 +8,8 @@
 #include <bsoncxx/exception/exception.hpp>
 
 namespace WritingMaterialsManager {
-    MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : DatabaseConsole(Parent),
-                                                                                           mongoshAccessor(mongoshCommandForm->text(), URLForm->text()),
-                                                                                           mongoshCommandForm(new TextField(mongoshCommand)) {
+    MongoDBConsole::MongoDBConsole(const QString& mongoshCommand, QWidget* const Parent) : 
+        DatabaseConsole(Parent), mongoshAccessor(mongoshCommandForm->text(), URLForm->text()), mongoshCommandForm(new TextField(mongoshCommand)) {
         mongoshAccessor.moveToThread(&mongoshAccessThread);
         connect(&mongoshAccessThread, &QThread::finished, &mongoshAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &MongoDBConsole::ExecuteShellCommand);
