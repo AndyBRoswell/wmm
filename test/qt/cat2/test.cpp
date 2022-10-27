@@ -160,6 +160,7 @@ private slots:
             QCOMPARE(e[0].error, QJsonParseError::ParseError::NoError);
             QCOMPARE(e[1].error, QJsonParseError::ParseError::NoError);
             if (d[0] != d[1]) {
+                std::cout << "ERROR at n = " << n << std::endl;
                 QDir wd("test/QtTreeModel");
                 if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
                 QFile f[2] = { QFile(wd.path() + "/d0.json"), QFile(wd.path() + "/d1.json") };
