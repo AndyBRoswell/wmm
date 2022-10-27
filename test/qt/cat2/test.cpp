@@ -52,7 +52,7 @@ private slots:
                     if (tree_model.rowCount(index) == 0) { return String; }
                     else { // tree_model.rowCount(index) > 0
                         if (data.value<QString>() == "<Array>") { return Array; }
-                        else if (data.value<QString>() == "<Array>") { return Object; }
+                        else if (data.value<QString>() == "<Object>") { return Object; }
                     }
                 }
             } break;
