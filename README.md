@@ -35,7 +35,7 @@ With the purpose of purging these data outright, the original repository is not 
 需要安装的软件：
 - Visual Studio 2022，或：至少安装 MSVC（VS C++ Build Tools）14.3（其它支持 C17 和 C++20 的版本亦可）
 - CMake
-- Qt（版本不低于 6.3）
+- Qt（版本不低于 6.4）
 - MongoDB
 
 ### IDE 支持
