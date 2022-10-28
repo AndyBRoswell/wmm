@@ -158,7 +158,7 @@ private slots:
         wmm::QtTreeModel tree_model;
 
         for (size_t i = 0; i < n; ++i) {
-            qDebug(QByteArray("[") + i + " / " + n + "]");
+            qDebug("[" + QByteArray::number(i + 1) + " / " + QByteArray::number(n) + "]");
             qDebug("Generating reference JSON ...");
             const auto test_JSON = tiny_random::chr::JSON();
             qDebug("Reference JSON generated.");
