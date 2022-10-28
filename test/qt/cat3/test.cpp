@@ -13,7 +13,7 @@ private slots:
     }
 
     void cleanupTestCase() {
-        qDebug("End GUI Test Cat. 2");
+        qDebug("End GUI Test Cat. 3");
     }
 };
 

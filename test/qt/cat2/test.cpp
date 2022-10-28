@@ -200,11 +200,11 @@ private slots:
             QFile test_file(path_name);
             test_file.open(QIODevice::OpenModeFlag::ReadOnly);
             QJsonParseError JSON_error;
-            QTextCodec* codec = QTextCodec::codecForName(charset);
-            QTextDecoder* const decoder = codec->makeDecoder();
-            const auto test_JSON = decoder->toUnicode(test_file.readAll()).toUtf8();
+            QTextCodec* text_codec = QTextCodec::codecForName(charset);
+            QTextDecoder* const text_decoder = text_codec->makeDecoder();
+            const auto test_JSON = text_decoder->toUnicode(test_file.readAll()).toUtf8();
             const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
-            delete decoder;
+            delete text_decoder;
             if (JSON_error.error == QJsonParseError::NoError) {
                 try { QVERIFY(QtTreeModel_test(*tree_editor.IntuitiveView->model(), test_JSON.toStdString())); }
                 catch (const std::exception& e) { qFatal(e.what()); }
