@@ -74,17 +74,11 @@ private:
                 const auto data_type = get_JSON_data_type(index);
                 if (data_type == Invalid) { throw std::runtime_error("Invalid JSON data type"); }
                 switch (data_type) {
-                case Null:
-                    generated_JSON.append("null");
-                    break;
+                case Null: generated_JSON.append("null"); break;
                 case Boolean:
                     switch (value.value<bool>()) {
-                    case false:
-                        generated_JSON.append("false");
-                        break;
-                    case true:
-                        generated_JSON.append("true");
-                        break;
+                    case false: generated_JSON.append("false"); break;
+                    case true: generated_JSON.append("true"); break;
                     }
                     break;
                 case String: {
@@ -95,15 +89,9 @@ private:
                     generated_JSON.append(string);
                     generated_JSON.append('\"');
                 } break;
-                case Signed:
-                    generated_JSON.append(QByteArray::number(value.value<int64_t>()));
-                    break;
-                case Unsigned:
-                    generated_JSON.append(QByteArray::number(value.value<uint64_t>()));
-                    break;
-                case Double:
-                    generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG));
-                    break;
+                case Signed: generated_JSON.append(QByteArray::number(value.value<int64_t>())); break;
+                case Unsigned: generated_JSON.append(QByteArray::number(value.value<uint64_t>())); break;
+                case Double: generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG)); break;
                 case Array: {
                     const auto child_count = tree_model.rowCount(index);
                     s.emplace(QByteArray("]"));
@@ -212,12 +200,8 @@ private slots:
             const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
             delete decoder;
             if (JSON_error.error == QJsonParseError::NoError) {
-                try {
-                    QVERIFY(QtTreeModel_test(*tree_editor.IntuitiveView->model(), test_JSON.toStdString()));
-                }
-                catch (const std::exception& e) {
-                    qFatal(e.what());
-                }
+                try { QVERIFY(QtTreeModel_test(*tree_editor.IntuitiveView->model(), test_JSON.toStdString())); }
+                catch (const std::exception& e) { qFatal(e.what()); }
             }
 
             signal_spy_ShouldUpdatePathName.clear();
