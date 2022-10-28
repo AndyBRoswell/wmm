@@ -185,24 +185,26 @@ private slots:
         QSignalSpy signal_spy_ShouldUpdateCharset(&tree_editor, SIGNAL(ShouldUpdateCharset()));
 
         const QDir wd("test/TreeEditor");
-        const QStringList test_file_list = wd.entryList({ "*.json" });
+        const QStringList test_file_entry = wd.entryList({ "*.json" });
 
-        for (const auto& test_file_name : test_file_list) {
-            qDebug("testing " + test_file_name.toUtf8());
-            auto suffix_pos = test_file_name.lastIndexOf('.');
-            if (suffix_pos == -1) { suffix_pos = test_file_name.size(); }
-            const QStringList base_name_part = test_file_name.first(suffix_pos).split('_');
+        for (auto i = 0; i < test_file_entry.size(); ++i) {
+            const auto& file_name = test_file_entry[i];
+            qDebug("[" + QByteArray::number(i) + "]" + "testing " + file_name.toUtf8());
+            auto suffix_pos = file_name.lastIndexOf('.');
+            if (suffix_pos == -1) { suffix_pos = file_name.size(); }
+            const QStringList base_name_part = file_name.first(suffix_pos).split('_');
             const QByteArray charset = base_name_part.size() == 3 ? base_name_part[2].toUtf8().toUpper() : QByteArray("UTF-8");
 
             // test side
             tree_editor.SetCharset(charset);
             QCOMPARE(signal_spy_ShouldUpdateCharset.count(), 1);
-            tree_editor.OpenFile(wd.path() + "/" + test_file_name);
+            const auto path_name = wd.path() + "/" + file_name;
+            tree_editor.OpenFile(path_name);
             QCOMPARE(signal_spy_ShouldUpdatePathName.count(), 1);
             QCOMPARE(signal_spy_ShouldUpdateFileType.count(), 1);
 
             // verification side
-            QFile test_file(test_file_name);
+            QFile test_file(path_name);
             test_file.open(QIODevice::OpenModeFlag::ReadOnly);
             QJsonParseError JSON_error;
             QTextCodec* codec = QTextCodec::codecForName(charset);
