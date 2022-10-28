@@ -31,8 +31,6 @@ private:
             using enum JSON_data_type;
 
             const QVariant data = tree_model.data(index);
-            const auto type = data.typeId();
-            //qDebug(QByteArray::number(type));
             switch (data.typeId()) {
             case QMetaType::Nullptr: return Null;
             case QMetaType::Bool: return Boolean;
@@ -56,6 +54,7 @@ private:
         };
 
         // generate JSON from tree model
+        qDebug("Generating JSON from tree structure ...");
         QByteArray generated_JSON;
         std::stack<QVariant, std::vector<QVariant>> s;
         s.emplace(tree_model.index(0, 1, {}));
@@ -83,7 +82,6 @@ private:
                     generated_JSON.append('\"');
                     QByteArray string = value.value<QString>().toUtf8();
                     escape(string);
-                    //qDebug(string);
                     generated_JSON.append(string);
                     generated_JSON.append('\"');
                 } break;
@@ -124,8 +122,10 @@ private:
             } break;
             }
         }
+        qDebug("Completed generating JSON from tree structure.");
 
         // verify
+        qDebug("Comparing reference JSON and generated JSON ...");
         QJsonParseError e[2];
         const QJsonDocument d[2] = {
             QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
@@ -141,6 +141,7 @@ private:
             f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
             return false;
         }
+        qDebug("Congratulations: 2 JSON are identical, the tree model worked correctly.");
         return true;
     }
 
@@ -157,8 +158,12 @@ private slots:
         wmm::QtTreeModel tree_model;
 
         for (size_t i = 0; i < n; ++i) {
+            qDebug("Generating reference JSON ...");
             const auto test_JSON = tiny_random::chr::JSON();
+            qDebug("Reference JSON generated.");
+            qDebug("Constructing tree structure from reference JSON ...");
             tree_model.FromJSON(QByteArray::fromStdString(test_JSON)); // import JSON
+            qDebug("Tree structure constructed.");
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
         }
     }
