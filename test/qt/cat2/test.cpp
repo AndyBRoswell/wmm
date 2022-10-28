@@ -63,9 +63,7 @@ private:
             const QVariant top_node = s.top();
             s.pop();
             switch (top_node.typeId()) {
-            case QMetaType::QByteArray:
-                generated_JSON.append(top_node.value<QByteArray>());
-                break;
+            case QMetaType::QByteArray: generated_JSON.append(top_node.value<QByteArray>()); break;
             case QMetaType::QModelIndex: {
                 using enum JSON_data_type;
 
@@ -94,29 +92,33 @@ private:
                 case Double: generated_JSON.append(QByteArray::number(value.value<double>(), 'g', DBL_DECIMAL_DIG)); break;
                 case Array: {
                     const auto child_count = tree_model.rowCount(index);
-                    s.emplace(QByteArray("]"));
-                    for (auto i = child_count - 1; i > 0; --i) {
-                        s.emplace(tree_model.index(i, 1, index));
-                        s.emplace(QByteArray(","));
+                    if (child_count == 0) { s.emplace(QByteArray("[]")); }
+                    else {
+                        s.emplace(QByteArray("]"));
+                        for (auto i = child_count - 1; i > 0; --i) {
+                            s.emplace(tree_model.index(i, 1, index));
+                            s.emplace(QByteArray(","));
+                        }
+                        s.emplace(tree_model.index(0, 1, index));
+                        s.emplace(QByteArray("["));
                     }
-                    if (child_count != 0) { s.emplace(tree_model.index(0, 1, index)); }
-                    s.emplace(QByteArray("["));
                 } break;
                 case Object: {
                     const auto child_count = tree_model.rowCount(index);
-                    s.emplace(QByteArray("}"));
-                    for (auto i = child_count - 1; i > 0; --i) {
-                        s.emplace(tree_model.index(i, 1, index));
-                        s.emplace(QByteArray(":"));
-                        s.emplace(tree_model.index(i, 0, index));
-                        s.emplace(QByteArray(","));
-                    }
-                    if (child_count != 0) {
+                    if (child_count == 0) { s.emplace(QByteArray("{}")); }
+                    else {
+                        s.emplace(QByteArray("}"));
+                        for (auto i = child_count - 1; i > 0; --i) {
+                            s.emplace(tree_model.index(i, 1, index));
+                            s.emplace(QByteArray(":"));
+                            s.emplace(tree_model.index(i, 0, index));
+                            s.emplace(QByteArray(","));
+                        }
                         s.emplace(tree_model.index(0, 1, index));
                         s.emplace(QByteArray(":"));
                         s.emplace(tree_model.index(0, 0, index));
+                        s.emplace(QByteArray("{"));
                     }
-                    s.emplace(QByteArray("{"));
                 } break;
                 }
             } break;
