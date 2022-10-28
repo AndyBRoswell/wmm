@@ -188,33 +188,36 @@ private slots:
         const QStringList test_file_list = wd.entryList({ "*.json" });
 
         for (const auto& test_file_name : test_file_list) {
-            const QStringList file_name_part = test_file_name.split("_");
-            const QByteArray charset = file_name_part.size() == 3 ? file_name_part[2].toUtf8().toUpper() : QByteArray("UTF-8");
+            qDebug("testing " + test_file_name.toUtf8());
+            auto suffix_pos = test_file_name.lastIndexOf('.');
+            if (suffix_pos == -1) { suffix_pos = test_file_name.size(); }
+            const QStringList base_name_part = test_file_name.first(suffix_pos).split('_');
+            const QByteArray charset = base_name_part.size() == 3 ? base_name_part[2].toUtf8().toUpper() : QByteArray("UTF-8");
 
             // test side
             tree_editor.SetCharset(charset);
             QCOMPARE(signal_spy_ShouldUpdateCharset.count(), 1);
             tree_editor.OpenFile(wd.path() + "/" + test_file_name);
-            //QCOMPARE(signal_spy_ShouldUpdatePathName.count(), 1);
-            //QCOMPARE(signal_spy_ShouldUpdateFileType.count(), 1);
+            QCOMPARE(signal_spy_ShouldUpdatePathName.count(), 1);
+            QCOMPARE(signal_spy_ShouldUpdateFileType.count(), 1);
 
             // verification side
-            //QFile test_file(test_file_name);
-            //test_file.open(QIODevice::OpenModeFlag::ReadOnly);
-            //QJsonParseError JSON_error;
-            //QTextCodec* codec = QTextCodec::codecForName(charset);
-            //QTextDecoder* const decoder = codec->makeDecoder();
-            //const auto test_JSON = decoder->toUnicode(test_file.readAll()).toUtf8();
-            //const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
-            //delete decoder;
-            //if (JSON_error.error == QJsonParseError::NoError) {
-                //try {
-                //    QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString());
-                //}
-                //catch (const std::exception& e) {
-                //    std::cout << e.what() << std::endl;
-                //}
-            //}
+            QFile test_file(test_file_name);
+            test_file.open(QIODevice::OpenModeFlag::ReadOnly);
+            QJsonParseError JSON_error;
+            QTextCodec* codec = QTextCodec::codecForName(charset);
+            QTextDecoder* const decoder = codec->makeDecoder();
+            const auto test_JSON = decoder->toUnicode(test_file.readAll()).toUtf8();
+            const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
+            delete decoder;
+            if (JSON_error.error == QJsonParseError::NoError) {
+                try {
+                    QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString());
+                }
+                catch (const std::exception& e) {
+                    std::cout << e.what() << std::endl;
+                }
+            }
 
             signal_spy_ShouldUpdatePathName.clear();
             signal_spy_ShouldUpdateFileType.clear();
