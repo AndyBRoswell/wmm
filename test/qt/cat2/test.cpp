@@ -212,12 +212,7 @@ private slots:
             const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
             delete decoder;
             if (JSON_error.error == QJsonParseError::NoError) {
-                try {
-                    QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString());
-                }
-                catch (const std::exception& e) {
-                    std::cout << e.what() << std::endl;
-                }
+                QVERIFY(QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString()));
             }
 
             signal_spy_ShouldUpdatePathName.clear();
