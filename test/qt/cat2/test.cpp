@@ -76,7 +76,7 @@ private:
                 const auto index = top_node.value<QModelIndex>();
                 const QVariant value = tree_model.data(index);
                 const auto data_type = get_JSON_data_type(index);
-                if (data_type == Invalid) { return false; }
+                if (data_type == Invalid) { throw std::runtime_error("Invalid JSON data type"); }
                 switch (data_type) {
                 case Null:
                     generated_JSON.append("null");
@@ -142,7 +142,8 @@ private:
             QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
             QJsonDocument::fromJson(generated_JSON, e + 1),
         };
-        if (e[0].error != QJsonParseError::ParseError::NoError or e[1].error != QJsonParseError::ParseError::NoError) { return false; };
+        if (e[0].error != QJsonParseError::ParseError::NoError) { throw std::runtime_error("Syntax ERROR in reference JSON"); }
+        if (e[1].error != QJsonParseError::ParseError::NoError) { throw std::runtime_error("Syntax ERROR in generated JSON"); };
         if (d[0] != d[1]) {
             QDir wd("test/QtTreeModel");
             if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
