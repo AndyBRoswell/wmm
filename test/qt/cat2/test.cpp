@@ -54,7 +54,6 @@ private:
         };
 
         // generate JSON from tree model
-        qDebug("Generating JSON from tree structure ...");
         QByteArray generated_JSON;
         std::stack<QVariant, std::vector<QVariant>> s;
         s.emplace(tree_model.index(0, 1, {}));
@@ -122,10 +121,8 @@ private:
             } break;
             }
         }
-        qDebug("Completed generating JSON from tree structure.");
 
         // verify
-        qDebug("Comparing reference JSON and generated JSON ...");
         QJsonParseError e[2];
         const QJsonDocument d[2] = {
             QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
@@ -141,7 +138,6 @@ private:
             f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
             return false;
         }
-        qDebug("Congratulations: 2 JSON strings are identical, the tree model worked correctly.");
         return true;
     }
 
@@ -165,7 +161,9 @@ private slots:
             qDebug("Constructing tree structure from reference JSON ...");
             tree_model.FromJSON(QByteArray::fromStdString(test_JSON)); // import JSON
             qDebug("Tree structure constructed.");
+            qDebug("Verifying the equivalence of the tree structure ...");
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
+            qDebug("Congratulations: Reference JSON and generated JSON are equivalent, the tree model worked correctly.");
         }
     }
 
