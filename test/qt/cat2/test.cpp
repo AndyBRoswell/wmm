@@ -31,22 +31,18 @@ private:
             using enum JSON_data_type;
 
             const QVariant data = tree_model.data(index);
+            const auto type = data.typeId();
+            //qDebug(QByteArray::number(type));
             switch (data.typeId()) {
             case QMetaType::Nullptr: return Null;
             case QMetaType::Bool: return Boolean;
             case QMetaType::LongLong: return Signed;
             case QMetaType::ULongLong: return Unsigned;
             case QMetaType::Double: return Double;
-            case QMetaType::QString: {
-                if (index.column() == 0) { return String; }
-                else if (index.column() == 1) {
-                    if (tree_model.rowCount(index) == 0) { return String; }
-                    else { // tree_model.rowCount(index) > 0
-                        if (data.value<QString>() == "<Array>") { return Array; }
-                        else if (data.value<QString>() == "<Object>") { return Object; }
-                    }
-                }
-            } break;
+            case QMetaType::QString: return String;
+            case QMetaType::QByteArray:
+                if (data.value<QByteArray>() == "<Array>") { return Array; }
+                else if (data.value<QByteArray>() == "<Object>") { return Object; }
             }
             return Invalid;
         };
@@ -95,6 +91,7 @@ private:
                     generated_JSON.append('\"');
                     QByteArray string = value.value<QString>().toUtf8();
                     escape(string);
+                    //qDebug(string);
                     generated_JSON.append(string);
                     generated_JSON.append('\"');
                 } break;
@@ -114,7 +111,7 @@ private:
                         s.emplace(tree_model.index(i, 1, index));
                         s.emplace(QByteArray(","));
                     }
-                    s.emplace(tree_model.index(0, 1, index));
+                    if (child_count != 0) { s.emplace(tree_model.index(0, 1, index)); }
                     s.emplace(QByteArray("["));
                 } break;
                 case Object: {
@@ -126,9 +123,11 @@ private:
                         s.emplace(tree_model.index(i, 0, index));
                         s.emplace(QByteArray(","));
                     }
-                    s.emplace(tree_model.index(0, 1, index));
-                    s.emplace(QByteArray(":"));
-                    s.emplace(tree_model.index(0, 0, index));
+                    if (child_count != 0) {
+                        s.emplace(tree_model.index(0, 1, index));
+                        s.emplace(QByteArray(":"));
+                        s.emplace(tree_model.index(0, 0, index));
+                    }
                     s.emplace(QByteArray("{"));
                 } break;
                 }
@@ -189,7 +188,7 @@ private slots:
 
         for (auto i = 0; i < test_file_entry.size(); ++i) {
             const auto& file_name = test_file_entry[i];
-            qDebug("[" + QByteArray::number(i) + "]" + "testing " + file_name.toUtf8());
+            qDebug("[" + QByteArray::number(i) + "] " + "testing " + file_name.toUtf8());
             auto suffix_pos = file_name.lastIndexOf('.');
             if (suffix_pos == -1) { suffix_pos = file_name.size(); }
             const QStringList base_name_part = file_name.first(suffix_pos).split('_');
@@ -213,7 +212,12 @@ private slots:
             const QJsonDocument doc = QJsonDocument::fromJson(test_JSON, &JSON_error);
             delete decoder;
             if (JSON_error.error == QJsonParseError::NoError) {
-                QVERIFY(QtTreeModel_test(*reinterpret_cast<wmm::QtTreeModel*>(tree_editor.IntuitiveView->model()), test_JSON.toStdString()));
+                try {
+                    QVERIFY(QtTreeModel_test(*tree_editor.IntuitiveView->model(), test_JSON.toStdString()));
+                }
+                catch (const std::exception& e) {
+                    qFatal(e.what());
+                }
             }
 
             signal_spy_ShouldUpdatePathName.clear();
