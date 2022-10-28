@@ -14,10 +14,10 @@ namespace WritingMaterialsManager {
         explicit DatabaseConsole(QWidget* const Parent = nullptr);
         ~DatabaseConsole() = default;
 
-        void AddAssociatedEditor(TreeEditor* const Editor);
+        void AddAssociatedEditor(TreeEditor* const Editor); // this console takes the ownership of the editor
         void RemoveAssociatedEditor(TreeEditor* const Editor);
         void ClearAssociatedEditor();
-        void mousePressEvent(QMouseEvent* E) override;
+        void mousePressEvent(QMouseEvent* const E) override;
     signals:
         void MouseDown();
     public slots:
