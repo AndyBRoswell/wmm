@@ -141,7 +141,7 @@ private:
             f[0].write(d[0].toJson()); f[1].write(d[1].toJson());
             return false;
         }
-        qDebug("Congratulations: 2 JSON are identical, the tree model worked correctly.");
+        qDebug("Congratulations: 2 JSON strings are identical, the tree model worked correctly.");
         return true;
     }
 
