@@ -215,6 +215,10 @@ private slots:
                 //    std::cout << e.what() << std::endl;
                 //}
             //}
+
+            signal_spy_ShouldUpdatePathName.clear();
+            signal_spy_ShouldUpdateFileType.clear();
+            signal_spy_ShouldUpdateCharset.clear();
         }
     }
 
