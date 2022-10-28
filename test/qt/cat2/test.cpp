@@ -76,7 +76,7 @@ private:
                 const auto index = top_node.value<QModelIndex>();
                 const QVariant value = tree_model.data(index);
                 const auto data_type = get_JSON_data_type(index);
-                assert(data_type != Invalid);
+                if (data_type == Invalid) { return false; }
                 switch (data_type) {
                 case Null:
                     generated_JSON.append("null");
@@ -142,8 +142,7 @@ private:
             QJsonDocument::fromJson(QByteArray::fromStdString(test_JSON), e + 0),
             QJsonDocument::fromJson(generated_JSON, e + 1),
         };
-        assert(e[0].error == QJsonParseError::ParseError::NoError);
-        assert(e[1].error == QJsonParseError::ParseError::NoError);
+        if (e[0].error != QJsonParseError::ParseError::NoError or e[1].error != QJsonParseError::ParseError::NoError) { return false; };
         if (d[0] != d[1]) {
             QDir wd("test/QtTreeModel");
             if (wd.exists() == false) { QDir::current().mkdir(wd.path()); }
