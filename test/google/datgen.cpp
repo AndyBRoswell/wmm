@@ -19,7 +19,7 @@ auto get_high_resolution_tick_count() { return std::chrono::high_resolution_cloc
 
 TEST(TreeEditor, ConvertCharsetForArtificialJSON) {
     //GTEST_SKIP();
-    constexpr const char* const target_charsets[] = { "gb18030", "utf-16", "utf-16be", "utf-16le", "utf-32", "utf-32be", "utf-32le" };
+    constexpr const char* const target_charsets[] = { "gb18030", "utf-16", "utf-16be", "utf-16le", /*"utf-32", "utf-32be", "utf-32le",*/ };
     std::unordered_map<QByteArray, QTextCodec*> codec; // you should not delete codecs yourself: once created they become Qt's responsibility.
     for (const auto charset : target_charsets) {
         codec.emplace(charset, QTextCodec::codecForName(charset));
