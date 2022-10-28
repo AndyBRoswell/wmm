@@ -161,7 +161,7 @@ private slots:
             qDebug("Constructing tree structure from reference JSON ...");
             tree_model.FromJSON(QByteArray::fromStdString(test_JSON)); // import JSON
             qDebug("Tree structure constructed.");
-            qDebug("Verifying the equivalence of the tree structure ...");
+            qDebug("Verifying the equivalence of these 2 tree structures ...");
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
             qDebug("Congratulations: Reference JSON and generated JSON are equivalent, the tree model worked correctly.");
         }
