@@ -45,7 +45,7 @@ set(wmm_root ${CMAKE_CURRENT_SOURCE_DIR})
 set(dep_root "${wmm_root}/3rd/install/${CMAKE_CXX_COMPILER_ID}")
 
 # common dependency: Qt
-find_package(Qt6 6.3 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
+find_package(Qt6 6.4 COMPONENTS Core Gui Widgets Core5Compat PdfWidgets REQUIRED)
 
 # common dependency: JSON libs
 list(APPEND JSON_inc_dir "${dep_root}/rapidjson-1.1.0/${CMAKE_BUILD_TYPE}/include")

@@ -31,7 +31,7 @@ file(GLOB cat2-modules-to-be-tested
 )
 
 # dependency: Qt
-find_package(Qt6 6.3 COMPONENTS Test REQUIRED)
+find_package(Qt6 6.4 COMPONENTS Test REQUIRED)
 
 qt_add_executable(wmmqtest-cat1
     ${cat1-sources}
