@@ -36,7 +36,19 @@ file(GLOB cat2-modules-to-be-tested
     ${wmm_root}/src/TreeView.cpp
 )
 file(GLOB cat3-modules-to-be-tested
+    ${wmm_root}/src/Algorithm.cpp
+    ${wmm_root}/src/DatabaseConsole.cpp
+    ${wmm_root}/src/FileSystemAccessor.cpp
+    ${wmm_root}/src/global.cpp
+    ${wmm_root}/src/JSONFormatter.cpp
+    ${wmm_root}/src/JSONHighlighter.cpp
     ${wmm_root}/src/MongoDBConsole.cpp
+    ${wmm_root}/src/QtTreeModel.cpp
+    ${wmm_root}/src/TextArea.cpp
+    ${wmm_root}/src/TextFormatter.cpp
+    ${wmm_root}/src/TextHighlighter.cpp
+    ${wmm_root}/src/TreeEditor.cpp
+    ${wmm_root}/src/TreeView.cpp
 )
 
 # dependency: Qt
@@ -106,5 +118,6 @@ target_include_directories(wmmqtest-cat3 PUBLIC
     ${mongo_inc_dir}    # dependency: mongo libs
 )
 target_link_libraries(wmmqtest-cat3 PUBLIC
-    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Test
+    ${mongo_libs}
+    Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Test Qt6::Core5Compat
 )
