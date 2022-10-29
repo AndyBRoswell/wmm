@@ -8,6 +8,8 @@
 #include <random>
 #include <stack>
 #include <string>
+#include <unordered_map>
+#include <variant>
 
 namespace tiny_random {
     namespace {
@@ -113,19 +115,6 @@ namespace tiny_random {
                 { state::space, " " }, { state::htab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
 
-            // helpers
-            constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) noexcept {
-                switch (D) {
-                default: return number::integer(m, M);
-                case distribution::exponential:
-                    if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>((number::integer(0, 1) == 0 ? 1 : -1) * number::integer(m, M) * EXP(random_engine)))); }
-                    else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
-                }
-            };
-            constexpr auto next_enum = []<class T>(const T m, const T M) noexcept {
-                return static_cast<T>(number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)));
-            };
-
             // parameters
             const size_t min_arr_size = 0, max_arr_size = 128;
             const size_t min_obj_size = 0, max_obj_size = 128;
@@ -143,6 +132,19 @@ namespace tiny_random {
 
             // common
             static std::exponential_distribution<double> EXP(2);
+
+            // helpers
+            constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) noexcept {
+                switch (D) {
+                default: return number::integer(m, M);
+                case distribution::exponential:
+                    if constexpr (std::is_signed_v<T>) { return std::min(M, std::max(m, static_cast<T>((number::integer(0, 1) == 0 ? 1 : -1) * number::integer(m, M) * EXP(random_engine)))); }
+                    else { return std::min(M, std::max(m, static_cast<T>(number::integer(m, M) * EXP(random_engine)))); }
+                }
+            };
+            constexpr auto next_enum = []<class T>(const T m, const T M) noexcept {
+                return static_cast<T>(number::integer(static_cast<std::underlying_type_t<T>>(m), static_cast<std::underlying_type_t<T>>(M)));
+            };
 
             { // workspace
                 using enum state;
