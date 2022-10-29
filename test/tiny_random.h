@@ -16,6 +16,11 @@ namespace tiny_random {
         std::uniform_int_distribution<intmax_t> max_uniform_int_dist(INTMAX_MIN, INTMAX_MAX);
     }
 
+    enum class distribution { 
+        uniform,        // f(x) = 1/(b-a), a <= b
+        exponential,    // f(x; λ) = λe^(-λx), x >= 0
+    }; // TODO: add "interval linear distribution"
+
     namespace number {
         template<class T> constexpr T mod(const T& N, const T& D) noexcept { // N mod D. Note: mod is different from rem (%).
             const T r = N % D;
@@ -101,7 +106,6 @@ namespace tiny_random {
                 whitespace,                                             // whitespace
                 space, htab, CR, LF,                                    // whitespace
             };
-            enum class distribution { uniform, exponential }; // TODO: add "interval linear distribution"
             static const std::map<state, std::basic_string<T>> direct_input = {
                 { state::True, "true" }, { state::False, "false" }, { state::Null, "null" },
                 { state::comma, "," }, { state::lsquare, "[" }, { state::rsquare, "]" }, { state::lcurly, "{" }, { state::rcurly, "}" }, { state::colon, ":" },
