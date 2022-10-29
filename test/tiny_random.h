@@ -97,6 +97,7 @@ namespace tiny_random {
         }
 
         template<class T = char> typename enable_if_sbs<T> JSON() noexcept { // return a random JSON string which strictly comply the RFC 4627 (Jul 2006) but with random whitespaces
+            // state machine
             enum class state : char {
                 value,                                                  // value
                 object, array,                                          // recursive structures
@@ -111,8 +112,8 @@ namespace tiny_random {
                 { state::comma, "," }, { state::lsquare, "[" }, { state::rsquare, "]" }, { state::lcurly, "{" }, { state::rcurly, "}" }, { state::colon, ":" },
                 { state::space, " " }, { state::htab, "\t" }, { state::CR, "\r" }, { state::LF, "\n" },
             };
-            static std::exponential_distribution<double> EXP(2);
 
+            // helpers
             constexpr auto next_int = []<class T>(const T m, const T M, const distribution D = distribution::uniform) noexcept {
                 switch (D) {
                 default: return number::integer(m, M);
@@ -139,6 +140,10 @@ namespace tiny_random {
             const distribution str_len_dist = distribution::exponential;
             const distribution single_ws_len_dist = distribution::exponential;
             const distribution ws_count_dist = distribution::exponential;
+
+            // common
+            static std::exponential_distribution<double> EXP(2);
+
             { // workspace
                 using enum state;
 
