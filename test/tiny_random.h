@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cinttypes>
+#include <format>
 #include <iostream>
 #include <map>
 #include <random>
