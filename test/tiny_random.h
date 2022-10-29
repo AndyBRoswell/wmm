@@ -66,16 +66,15 @@ namespace tiny_random {
             constexpr char JSON_esc[] = R"("\/fnrt)"; // no \b \u
         }
 
-        template<class T> constexpr bool is_sbc_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
-
-        template<class T> using enable_if_sbc = std::enable_if_t<is_sbc_type_v<T>, T>;  // sbc -> single-byte character
-        template<class T> using enable_if_sbs = std::basic_string<enable_if_sbc<T>>;    // sbs -> single-byte string
+        template<class T> constexpr bool is_supported_chr_type_v = std::is_same_v<T, char> || std::is_same_v<T, signed char> || std::is_same_v<T, unsigned char> || std::is_same_v<T, char8_t>;
+        template<class T> using enable_if_supported_chr_type = std::enable_if_t<is_supported_chr_type_v<T>, T>;  // sbc -> single-byte character
+        template<class T> using enable_if_supported_basic_string = std::basic_string<enable_if_supported_chr_type<T>>;    // sbs -> single-byte string
 
         enum class ASCII_char_type {
             dec = 1, hex, lhex, ucase, lcase, alpha, ualnum, lalnum, alnum, punct, printable,
         };
 
-        template<class T = char> typename enable_if_sbc<T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII character
+        template<class T = char> typename enable_if_supported_chr_type<T> ASCII(const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII character
             using t = ASCII_char_type;
             switch (type) {
             case t::dec: return number::integer('0', '9');
@@ -92,13 +91,15 @@ namespace tiny_random {
             }
         }
 
-        template<class T = char> typename enable_if_sbs<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII string
+        template<class T = char> typename enable_if_supported_basic_string<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII string
             std::basic_string<T> s;
             for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }
 
-        template<class T = char> typename enable_if_sbs<T> JSON() noexcept { // return a random JSON string which strictly comply the RFC 4627 (Jul 2006) but with random whitespaces
+        using JSON_param_t = std::variant<size_t, double, distribution>;
+
+        template<class T = char> typename enable_if_supported_basic_string<T> JSON(const std::unordered_map<std::string, JSON_param_t>& arg = {}) noexcept { // return a random JSON string which strictly comply the RFC 4627 (Jul 2006) but with random whitespaces
             // state machine
             enum class state : char {
                 value,                                                  // value
@@ -116,19 +117,38 @@ namespace tiny_random {
             };
 
             // parameters
-            const size_t min_arr_size = 0, max_arr_size = 128;
-            const size_t min_obj_size = 0, max_obj_size = 128;
-            const size_t min_str_len = 0, max_str_len = 64;
-            const double p_escape = 0.01;
-            const size_t min_single_ws_len = 0, max_single_ws_len = 8;
-            const size_t min_ws_count = 0, max_ws_count = 2;
-            const size_t fp_precision = DBL_DECIMAL_DIG - 2;
-            const size_t max_recursive_depth = 6;
-            const distribution arr_len_dist = distribution::exponential;
-            const distribution obj_size_dist = distribution::exponential;
-            const distribution str_len_dist = distribution::exponential;
-            const distribution single_ws_len_dist = distribution::exponential;
-            const distribution ws_count_dist = distribution::exponential;
+            auto get_param = [&]<class T>(const char* const param) {
+                static const std::unordered_map<std::string, JSON_param_t> default_arg = {
+                    { "min_arr_size", 0ull }, { "max_arr_size", 128ull },
+                    { "min_obj_size", 0ull }, { "max_obj_size", 128ull },
+                    { "min_str_len", 0ull }, { "max_str_len", 64ull },
+                    { "p_escape", 0.01 },
+                    { "min_single_ws_len", 0ull }, { "max_single_ws_len", 8ull },
+                    { "min_ws_count", 0ull }, { "max_ws_count", 2ull },
+                    { "fp_precision", DBL_DECIMAL_DIG - 2ull },
+                    { "max_recursive_depth", 6ull },
+                    { "arr_len_dist", distribution::exponential },
+                    { "obj_size_dist", distribution::exponential },
+                    { "str_len_dist", distribution::exponential },
+                    { "single_ws_len_dist", distribution::exponential },
+                    { "ws_count_dist", distribution::exponential },
+                };
+                try { return std::get<T>(arg.at(param)); }
+                catch (const std::out_of_range&) { return std::get<T>(default_arg.at(param)); }
+            };
+            const size_t min_arr_size = get_param.operator() < size_t > ("min_arr_size"), max_arr_size = get_param.operator() < size_t > ("max_arr_size");
+            const size_t min_obj_size = get_param.operator() < size_t > ("min_obj_size"), max_obj_size = get_param.operator() < size_t > ("max_obj_size");
+            const size_t min_str_len = get_param.operator() < size_t > ("min_str_len"), max_str_len = get_param.operator() < size_t > ("max_str_len");
+            const double p_escape = get_param.operator() < double > ("p_escape");
+            const size_t min_single_ws_len = get_param.operator() < size_t > ("min_single_ws_len"), max_single_ws_len = get_param.operator() < size_t > ("max_single_ws_len");
+            const size_t min_ws_count = get_param.operator() < size_t > ("min_ws_count"), max_ws_count = get_param.operator() < size_t > ("max_ws_count");
+            const size_t fp_precision = get_param.operator() < size_t > ("fp_precision");
+            const size_t max_recursive_depth = get_param.operator() < size_t > ("max_recursive_depth");
+            const distribution arr_len_dist = get_param.operator() < distribution > ("arr_len_dist");
+            const distribution obj_size_dist = get_param.operator() < distribution > ("obj_size_dist");
+            const distribution str_len_dist = get_param.operator() < distribution > ("str_len_dist");
+            const distribution single_ws_len_dist = get_param.operator() < distribution > ("single_ws_len_dist");
+            const distribution ws_count_dist = get_param.operator() < distribution > ("ws_count_dist");
 
             // common
             static std::exponential_distribution<double> EXP(2);
