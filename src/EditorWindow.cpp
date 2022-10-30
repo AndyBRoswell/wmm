@@ -108,8 +108,8 @@ namespace WritingMaterialsManager {
                 thisAtEditorWindow->UpdateFileTypeLabel("MongoDB Extended JSON");
                 thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
             };
-            connect(Editor->IntuitiveView, &TreeView::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
-            connect(Editor->RawView, &TextArea::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor, &TreeEditor::ShouldUpdateCharset, thisAtEditorWindow, UpdateStatusInfo);
+            connect(Editor, &TreeEditor::ShouldUpdateFileType, thisAtEditorWindow, UpdateStatusInfo);
         }
 
         RootView->addWidget(Console);
