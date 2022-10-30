@@ -8,17 +8,9 @@
 #include "TreeEditor.h"
 
 namespace WritingMaterialsManager {
-    EditorWindow::EditorWindow(QWidget* const Parent) : QMainWindow(Parent),
-                                                        centralwidget(new QWidget(this)),
-                                                        MenuBar(new QMenuBar(this)),
-                                                        StatusBar(new QStatusBar(this)),
-                                                        ToolBar(new QToolBar(this)),
-                                                        RootView(new QSplitter(this)) {
+    EditorWindow::EditorWindow(QWidget* const Parent) : 
+        QMainWindow(Parent), centralwidget(new QWidget(this)), MenuBar(new QMenuBar(this)), StatusBar(new QStatusBar(this)), ToolBar(new QToolBar(this)), RootView(new QSplitter(this)) {
         if (objectName().isEmpty() == true) setObjectName(QString::fromUtf8("WritingMaterialsManager__EditorWindow"));
-        resize(1280, 720);
-
-        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        setCentralWidget(centralwidget);
 
         MenuBar->setObjectName(QString::fromUtf8("MenuBar"));
         MenuBar->setGeometry(QRect(0, 0, 1280, 21));
@@ -31,15 +23,16 @@ namespace WritingMaterialsManager {
         ToolBar->setWindowTitle(QCoreApplication::translate("WritingMaterialsManager::EditorWindow", "ToolBar", nullptr));
         addToolBar(Qt::TopToolBarArea, ToolBar);
 
-        QTabWidget* const TabView = new QTabWidget;
-        auto* const MDBCPage = new MongoConAndEditorPage(this);
-        auto* const AMDBCPage = new AnotherMongoConAndEditorPage(this);
-        auto* const EditorPage = new EditorOnlyPage(this);
-        auto* const PyInteractorPage = new PythonInteractorPage(this);
-        TabView->addTab(MDBCPage, "MongoDB Console");
-        TabView->addTab(AMDBCPage, "Another MongoDB Console");
-        TabView->addTab(EditorPage, "TreeEditor Only");
-        TabView->addTab(PyInteractorPage, "Python Interactor");
+        QTabWidget* const TabView = new QTabWidget; {
+            auto* const MDBCPage = new MongoConAndEditorPage(this);
+            auto* const AMDBCPage = new AnotherMongoConAndEditorPage(this);
+            auto* const EditorPage = new EditorOnlyPage(this);
+            auto* const PyInteractorPage = new PythonInteractorPage(this);
+            TabView->addTab(MDBCPage, "MongoDB Console");
+            TabView->addTab(AMDBCPage, "Another MongoDB Console");
+            TabView->addTab(EditorPage, "TreeEditor Only");
+            TabView->addTab(PyInteractorPage, "Python Interactor");
+        }
         RootView->addWidget(TabView);
 
         FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
@@ -47,10 +40,13 @@ namespace WritingMaterialsManager {
         StatusBar->addPermanentWidget(CharsetLabel);
         StatusBar->addPermanentWidget(FileTypeLabel);
 
+        centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setLayout(new QGridLayout);
+        centralwidget->layout()->setContentsMargins(0, 0, 0, 0);
+        centralwidget->layout()->addWidget(RootView);
+        setCentralWidget(centralwidget);
+
         setWindowTitle(tr(DefaultWindowTitle));
-        centralWidget()->setLayout(new QGridLayout);
-        centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
-        centralWidget()->layout()->addWidget(RootView);
     }
 
     EditorWindow::~EditorWindow() {}
