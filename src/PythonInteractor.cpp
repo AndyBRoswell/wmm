@@ -5,12 +5,9 @@
 #include <QVBoxLayout>
 
 namespace WritingMaterialsManager {
-    PythonInteractor::PythonInteractor(const QString& PythonCommand, QWidget* const Parent) : QWidget(Parent),
-                                                                                              PyAccessor(PythonCommand),
-                                                                                              PyCommandForm(new TextField(PythonCommand)),
-                                                                                              ExecuteButton(new QPushButton("▶")),
-                                                                                              CodeArea(new TextArea("import this\n")),
-                                                                                              ResultArea(new TextArea) {
+    PythonInteractor::PythonInteractor(const QString& PythonCommand, QWidget* const Parent) : 
+        QWidget(Parent), PyAccessor(PythonCommand), PyCommandForm(new TextField(PythonCommand)), ExecuteButton(new QPushButton("▶")), CodeArea(new TextArea("import this\n")), ResultArea(new TextArea) {
+        // event handlers regarding Python accessor
         PyAccessor.moveToThread(&PyAccessThread);
         connect(&PyAccessThread, &QThread::finished, &PyAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &PythonInteractor::ExecuteCode);
@@ -19,27 +16,30 @@ namespace WritingMaterialsManager {
         connect(&PyAccessor, &PythonAccessor::MoreResult, ResultArea, &TextArea::appendPlainText);
         PyAccessThread.start();
 
-        QWidget* const ControlArea = new QWidget;
-        ControlArea->setLayout(new QHBoxLayout);
-        ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
-        ControlArea->layout()->setSpacing(2);
-        ControlArea->layout()->addWidget(PyCommandForm);
-        ControlArea->layout()->addWidget(ExecuteButton);
+        QWidget* const ControlArea = new QWidget; {
+            ControlArea->setLayout(new QHBoxLayout);
+            ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
+            ControlArea->layout()->setSpacing(2);
+            ControlArea->layout()->addWidget(PyCommandForm);
+            ControlArea->layout()->addWidget(ExecuteButton);
+        }
 
-        QSplitter* const InputArea = new QSplitter;
-        InputArea->setOrientation(Qt::Vertical);
-        InputArea->setContentsMargins(0, 0, 0, 0);
-        InputArea->addWidget(CodeArea);
-        InputArea->addWidget(ResultArea);
-        InputArea->setStretchFactor(0, 0);
-        InputArea->setStretchFactor(1, 4);
+        QSplitter* const InputArea = new QSplitter; {
+            InputArea->setOrientation(Qt::Vertical);
+            InputArea->setContentsMargins(0, 0, 0, 0);
+            InputArea->addWidget(CodeArea);
+            InputArea->addWidget(ResultArea);
+            InputArea->setStretchFactor(0, 0);
+            InputArea->setStretchFactor(1, 4);
+        }
 
-        setLayout(new QVBoxLayout);
-        layout()->setContentsMargins(0, 0, 0, 0);
-        layout()->setSpacing(2);
-        layout()->addWidget(ControlArea);
-        layout()->addWidget(InputArea);
-        static_cast<QVBoxLayout*>(layout())->setStretch(0, 0);
+        QVBoxLayout* const MainLayout = new QVBoxLayout; {
+            MainLayout->setContentsMargins(0, 0, 0, 0);
+            MainLayout->setSpacing(2);
+            MainLayout->addWidget(ControlArea);
+            MainLayout->addWidget(InputArea);
+            MainLayout->setStretch(0, 0);
+        }
     }
 
     PythonInteractor::~PythonInteractor() {
