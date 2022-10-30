@@ -16,6 +16,10 @@ namespace WritingMaterialsManager {
         MenuBar->setGeometry(QRect(0, 0, 1280, 21));
         setMenuBar(MenuBar);
 
+        FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
+        CharsetLabel->setStyleSheet(DefaultQLabelStyleSheet);
+        StatusBar->addPermanentWidget(CharsetLabel);
+        StatusBar->addPermanentWidget(FileTypeLabel);
         StatusBar->setObjectName(QString::fromUtf8("StatusBar"));
         setStatusBar(StatusBar);
 
@@ -34,11 +38,6 @@ namespace WritingMaterialsManager {
             TabView->addTab(PyInteractorPage, "Python Interactor");
         }
         RootView->addWidget(TabView);
-
-        FileTypeLabel->setStyleSheet(DefaultQLabelStyleSheet);
-        CharsetLabel->setStyleSheet(DefaultQLabelStyleSheet);
-        StatusBar->addPermanentWidget(CharsetLabel);
-        StatusBar->addPermanentWidget(FileTypeLabel);
 
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setLayout(new QGridLayout);
@@ -67,11 +66,10 @@ namespace WritingMaterialsManager {
         if (focusWidget() == sender()) CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset());
     }
     void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
-
 /// ----------------------------------------------------------------
 
-    EditorWindow::Page::Page(EditorWindow* const OuterInstance, QWidget* const Parent) : thisAtEditorWindow(OuterInstance),
-                                                                                         RootView(new QSplitter(this)) {
+    EditorWindow::Page::Page(EditorWindow* const OuterInstance, QWidget* const Parent) : 
+        thisAtEditorWindow(OuterInstance), RootView(new QSplitter(this)) {
         RootView->setOrientation(Qt::Vertical);
 
         setLayout(new QGridLayout);
@@ -80,7 +78,6 @@ namespace WritingMaterialsManager {
     }
 
     EditorWindow::Page::~Page() {}
-
 /// ----------------------------------------------------------------
 
     EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
@@ -120,7 +117,6 @@ namespace WritingMaterialsManager {
         RootView->setStretchFactor(0, 1);
         RootView->setStretchFactor(1, 4);
     }
-
 /// ----------------------------------------------------------------
 
     EditorWindow::AnotherMongoConAndEditorPage::AnotherMongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
@@ -133,7 +129,6 @@ namespace WritingMaterialsManager {
         RootView->setStretchFactor(0, 1);
         RootView->setStretchFactor(1, 4);
     }
-
 /// ----------------------------------------------------------------
 
     EditorWindow::EditorOnlyPage::EditorOnlyPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
@@ -154,7 +149,6 @@ namespace WritingMaterialsManager {
 
         RootView->addWidget(Editor);
     }
-
 /// ----------------------------------------------------------------
 
     EditorWindow::PythonInteractorPage::PythonInteractorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
