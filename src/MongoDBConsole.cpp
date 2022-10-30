@@ -32,14 +32,15 @@ namespace WritingMaterialsManager {
         ControlArea->layout()->addWidget(CtrlParamArea);
         ControlArea->layout()->addWidget(ExecuteButton);
 
-        QVBoxLayout* const MainLayout = new QVBoxLayout;
-        MainLayout->setContentsMargins(0, 0, 0, 0);
-        MainLayout->setSpacing(2);
+        QVBoxLayout* const MainLayout = new QVBoxLayout; {
+            MainLayout->setContentsMargins(0, 0, 0, 0);
+            MainLayout->setSpacing(2);
+            MainLayout->addWidget(ControlArea);
+            MainLayout->addWidget(CommandForm);
+            MainLayout->setStretch(0, 0);
+            MainLayout->setStretch(1, 1);
+        }
         setLayout(MainLayout);
-        MainLayout->addWidget(ControlArea);
-        MainLayout->addWidget(CommandForm);
-        MainLayout->setStretch(0, 0);
-        MainLayout->setStretch(1, 1);
 
         emit NewShellCommand("");
     }
