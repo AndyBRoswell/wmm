@@ -35,6 +35,7 @@ namespace WritingMaterialsManager {
         std::shared_ptr<QProcess> mongoshProcess = std::make_shared<QProcess>();
     };
 
+    // NOTE: MongoDBConsole doesn't have integrated TreeEditor instances.
     class MongoDBConsole : public DatabaseConsole {
     Q_OBJECT
     public:

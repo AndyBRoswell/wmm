@@ -21,13 +21,14 @@ namespace WritingMaterialsManager {
 
         ControlArea->setLayout(new QHBoxLayout);
         ControlArea->layout()->setContentsMargins(0, 0, 0, 0);
-        QWidget* const CtrlParamArea = new QWidget;
-        QVBoxLayout* const CtrlParamAreaLayout = new QVBoxLayout;
-        CtrlParamAreaLayout->setContentsMargins(0, 0, 0, 0);
-        CtrlParamAreaLayout->setSpacing(2);
-        CtrlParamAreaLayout->addWidget(URLForm);
-        CtrlParamAreaLayout->addWidget(mongoshCommandForm);
-        CtrlParamArea->setLayout(CtrlParamAreaLayout);
+        QWidget* const CtrlParamArea = new QWidget; {
+            QVBoxLayout* const CtrlParamAreaLayout = new QVBoxLayout;
+            CtrlParamAreaLayout->setContentsMargins(0, 0, 0, 0);
+            CtrlParamAreaLayout->setSpacing(2);
+            CtrlParamAreaLayout->addWidget(URLForm);
+            CtrlParamAreaLayout->addWidget(mongoshCommandForm);
+            CtrlParamArea->setLayout(CtrlParamAreaLayout);
+        }
         ControlArea->layout()->addWidget(CtrlParamArea);
         ControlArea->layout()->addWidget(ExecuteButton);
 
