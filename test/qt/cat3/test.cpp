@@ -18,12 +18,23 @@ private slots:
         using namespace std::chrono_literals;
 
         wmm::MongoShAccessor mongosh_accessor;
+        mongosh_accessor.Execute("");
         { // show dbs
             QSignalSpy MoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::MoreResult);
             QSignalSpy NoMoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::NoMoreResult);
-            
-
-            mongosh_accessor.Execute("show dbs");
+            QString result;
+            QObject::connect(&mongosh_accessor, &wmm::MongoShAccessor::MoreResult, [&](const QString& result_fragment) {
+                result += result_fragment;
+                });
+            QObject::connect(&mongosh_accessor, &wmm::MongoShAccessor::NoMoreResult, [&]() {
+                QCOMPARE_GE(MoreResult_signal_spy.count(), 0);
+                QCOMPARE(NoMoreResult_signal_spy.count(), 1);
+                qDebug(result.toUtf8());
+                QCOMPARE_NE(result.indexOf("admin"), -1);
+                QCOMPARE_NE(result.indexOf("config"), -1);
+                QCOMPARE_NE(result.indexOf("local"), -1);
+                });
+            mongosh_accessor.Execute("show dbs\n");
         }
     }
 
@@ -46,7 +57,7 @@ private slots:
     void PythonInteractor__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        wmm::PythonInteractor Python_interactor;
+        //wmm::PythonInteractor Python_interactor;
     }
 
     void cleanupTestCase() {
