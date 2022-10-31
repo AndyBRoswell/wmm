@@ -29,9 +29,9 @@ private slots:
                 QCOMPARE_GT(MoreResult_signal_spy.count(), 0);
                 QCOMPARE(NoMoreResult_signal_spy.count(), 1);
                 QCOMPARE_GT(result.size(), 0);
-                QCOMPARE_NE(result.indexOf("admin"), -1);
-                QCOMPARE_NE(result.indexOf("config"), -1);
-                QCOMPARE_NE(result.indexOf("local"), -1);
+                QCOMPARE_GT(result.indexOf("admin"), -1);
+                QCOMPARE_GT(result.indexOf("config"), -1);
+                QCOMPARE_GT(result.indexOf("local"), -1);
                 });
             mongosh_accessor.Execute("show dbs\n");
         }
