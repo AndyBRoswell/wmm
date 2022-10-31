@@ -15,14 +15,20 @@ private slots:
 
     void MongoShAccessor__basic() {
         namespace wmm = WritingMaterialsManager;
+        using namespace std::chrono_literals;
 
         wmm::MongoShAccessor mongosh_accessor;
+        { // show dbs
+            mongosh_accessor.Execute("show dbs");
+            QSignalSpy MoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::MoreResult);
+            QSignalSpy NoMoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::NoMoreResult);
+        }
     }
 
     void MongoDBConsole__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        wmm::MongoDBConsole MongoDB_console;
+        //wmm::MongoDBConsole MongoDB_console;
         //wmm::TreeEditor tree_editor;
         //MongoDB_console.AddAssociatedEditor(&tree_editor);
         { // show dbs
