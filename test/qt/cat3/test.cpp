@@ -4,12 +4,19 @@
 
 // files to be tested
 #include "src/MongoDBConsole.h"
+#include "src/PythonInteractor.h"
 
 class test : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 3");
+    }
+
+    void MongoShAccessor__basic() {
+        namespace wmm = WritingMaterialsManager;
+
+        wmm::MongoShAccessor mongosh_accessor;
     }
 
     void MongoDBConsole__basic() {
@@ -26,6 +33,12 @@ private slots:
         { // JSON operations
 
         }
+    }
+
+    void PythonInteractor__basic() {
+        namespace wmm = WritingMaterialsManager;
+
+        wmm::PythonInteractor Python_interactor;
     }
 
     void cleanupTestCase() {

@@ -22,7 +22,7 @@ namespace WritingMaterialsManager {
     class MongoShAccessor : public QObject {
     Q_OBJECT
     public:
-        explicit MongoShAccessor(const QString& mongoshCommand, const QString& MongoDBURL);
+        explicit MongoShAccessor(const QString& mongoshCommand = "mongosh", const QString& MongoDBURL = MongoDBAccessor::LocalMongoDBURI);
         ~MongoShAccessor();
 
         void SendResult();

@@ -100,6 +100,7 @@ file(GLOB cat3-modules-to-be-tested
     ${wmm_root}/src/JSONFormatter.cpp
     ${wmm_root}/src/JSONHighlighter.cpp
     ${wmm_root}/src/MongoDBConsole.cpp
+    ${wmm_root}/src/PythonInteractor.cpp
     ${wmm_root}/src/QtTreeModel.cpp
     ${wmm_root}/src/TextArea.cpp
     ${wmm_root}/src/TextFormatter.cpp
