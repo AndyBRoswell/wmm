@@ -35,6 +35,9 @@ private slots:
                 });
             mongosh_accessor.Execute("show dbs\n");
         }
+        { // JSON operations
+
+        }
     }
 
     void MongoDBConsole__basic() {
