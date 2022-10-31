@@ -19,9 +19,11 @@ private slots:
 
         wmm::MongoShAccessor mongosh_accessor;
         { // show dbs
-            mongosh_accessor.Execute("show dbs");
             QSignalSpy MoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::MoreResult);
             QSignalSpy NoMoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::NoMoreResult);
+            
+
+            mongosh_accessor.Execute("show dbs");
         }
     }
 
