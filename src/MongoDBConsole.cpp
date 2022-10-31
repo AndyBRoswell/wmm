@@ -41,8 +41,6 @@ namespace WritingMaterialsManager {
             MainLayout->setStretch(1, 1);
         }
         setLayout(MainLayout);
-
-        emit NewShellCommand("");
     }
 
     MongoDBConsole::~MongoDBConsole() {
