@@ -18,7 +18,6 @@ private slots:
         using namespace std::chrono_literals;
 
         wmm::MongoShAccessor mongosh_accessor;
-        mongosh_accessor.Execute("");
         { // show dbs
             QSignalSpy MoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::MoreResult);
             QSignalSpy NoMoreResult_signal_spy(&mongosh_accessor, &wmm::MongoShAccessor::NoMoreResult);
