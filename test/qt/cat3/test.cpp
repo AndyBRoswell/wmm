@@ -97,7 +97,7 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
+                    const QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
                 p->Execute(
@@ -125,7 +125,7 @@ private slots:
                     QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                     QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                        QRegularExpression re("/");
+                        const QRegularExpression re("/");
                         QVERIFY(re.match(result).hasMatch());
                         for (const auto c : text) { QVERIFY(result.contains(c)); }
                         });
@@ -188,7 +188,8 @@ private slots:
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
                         const auto lines = result.split(QRegularExpression(R"((\r|\n|\r\n))"));
                         for (const auto& line : lines) {
-
+                            const QRegularExpression re(R"([0-9]+\s+[0-9.]+)");
+                            const auto match = re.match(line);
                         }
                         });
                     p->Execute(code);
