@@ -25,7 +25,7 @@ Usage
         } `
         -CommonLibs synonyms, jiagu, textrank4zh, jieba
     [2]
-        `$BuildTypes = @(Debug, Release, RelWithDebInfo, MinSizeRel)
+        `$BuildTypes = 'Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'
         foreach (`$BuiltType in `$BuildTypes) {
             .\py-deploy -PythonInterpreterPrefix "C:\Program Files" -venvPrefix "out\build\x64-`$BuildType/bin/py/venv" ``
             -tasks ``
