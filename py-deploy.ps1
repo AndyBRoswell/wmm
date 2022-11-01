@@ -40,16 +40,3 @@ foreach ($task in $tasks) {
 }
 
 cd $cwd
-
-# ./py-sample -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
-# -tasks `
-# @{
-#     srcdir = "Python";
-#     dstdir = "latest"
-# },
-# @{
-#     srcdir = "Python3.8"
-#     dstdir = "3.8"
-#     libs = "jionlp"
-# } `
-# -CommonLibs synonyms, jiagu, textrank4zh, jieba
