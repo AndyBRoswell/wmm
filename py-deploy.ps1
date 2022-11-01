@@ -2,13 +2,32 @@ param(
     [switch] $help,
     [string] $PythonInterpreterPrefix = "C:\Program Files",
     [string] $venvPrefix = "",
-    [hashtable[]] $tasks,
-    [string[]] $CommonLibs
+    [string[]] $CommonLibs,
+    [hashtable[]] $tasks
 )
 
 set usage -option constant -value @"
 
 Usage
+    Deploy Python venv.
+
+    Parameters:
+        help
+            View this help.
+        PythonInterpreterPrefix
+            (Default: C:\Program Files)
+            If Python interpreters that are using to create venvs have a common path prefix, then you can specify it to reduce the char count when typing subsequent arguments.
+        venvPrefix
+            (Default: "")
+            if venv destination paths have a common path prefix, then you can specify it to reduce the char count when typing subsequent arguments.
+        CommonLibs
+            
+        tasks
+            The format of tasks are hashtables which have the following keys:
+                srcdir
+                    The directory where Python interpreter locates.
+                dstdir
+                    The venv destination path.
     
     Examples:
     [1]
