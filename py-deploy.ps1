@@ -22,7 +22,7 @@ Usage
             srcdir = "Python3.8"
             dstdir = "3.8"
             libs = "jionlp"
-        } `
+        } ``
         -CommonLibs synonyms, jiagu, textrank4zh, jieba
     [2]
         `$BuildTypes = 'Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'
@@ -37,7 +37,7 @@ Usage
                 srcdir = "Python3.8"
                 dstdir = "3.8"
                 libs = "jionlp"
-            } `
+            } ``
             -CommonLibs synonyms, jiagu, textrank4zh, jieba
         }
 "@
