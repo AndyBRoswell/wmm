@@ -88,6 +88,7 @@ private slots:
                     });
                 p->Execute(R"(print("Hello, World!"))");
                 QObject::disconnect(conn);
+                result.clear();
             }
         }
         { // NLP libraries
@@ -105,6 +106,7 @@ private slots:
                     "print(synonyms.nearby('动听',10))\n"
                 );
                 QObject::disconnect(conn);
+                result.clear();
             }
 
             for (const auto& e : Python_accessor) {
@@ -126,6 +128,7 @@ private slots:
                     "print('/'.join(l))\n"
                 );
                 QObject::disconnect(conn);
+                result.clear();
             }
 
             for (const auto& e : Python_accessor) {
@@ -150,6 +153,7 @@ private slots:
                     "print(jiagu.keywords(s,5))\n"
                 );
                 QObject::disconnect(conn);
+                result.clear();
             }
 
             for (const auto& e : Python_accessor) {
@@ -175,6 +179,7 @@ private slots:
                     " print(item.index, item.weight, item.sentence)\n"
                 );
                 QObject::disconnect(conn);
+                result.clear();
             }
             
             { // jionlp doesn't support Python 3.9 and later
