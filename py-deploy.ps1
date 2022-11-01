@@ -1,4 +1,5 @@
 param(
+    [switch] $help,
     [string] $PythonInterpreterPrefix = "C:\Program Files",
     [string] $venvPrefix = "",
     [hashtable[]] $tasks,
@@ -10,7 +11,8 @@ set usage -option constant -value @"
 Usage
     
     Examples:
-        .\py-deploy -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
+    [1]
+        ./py-deploy -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
         -tasks `
         @{
             srcdir = "Python";
@@ -22,8 +24,28 @@ Usage
             libs = "jionlp"
         } `
         -CommonLibs synonyms, jiagu, textrank4zh, jieba
-
+    [2]
+        `$BuildTypes = @(Debug, Release, RelWithDebInfo, MinSizeRel)
+        foreach (`$BuiltType in `$BuildTypes) {
+            .\py-deploy -PythonInterpreterPrefix "C:\Program Files" -venvPrefix "out\build\x64-`$BuildType/bin/py/venv" `
+            -tasks `
+            @{
+                srcdir = "Python";
+                dstdir = "latest"
+            },
+            @{
+                srcdir = "Python3.8"
+                dstdir = "3.8"
+                libs = "jionlp"
+            } `
+            -CommonLibs synonyms, jiagu, textrank4zh, jieba
+        }
 "@
+
+if ($help -eq $true) {
+    echo $usage
+    exit
+}
 
 $cwd = $pwd
 
