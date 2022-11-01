@@ -164,51 +164,61 @@ private slots:
                     result.clear();
                 }
             }
-            for (const auto& e : Python_accessor) {
-                const auto p = e.second.get();
-                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
-                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
-                const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
-                    QVERIFY(re.match(result).hasMatch());
-                    });
-                p->Execute(
-                    "import textrank4zh\n"
-                    "s = '所有人都有一种紧迫感，因为没被灾难波及的区域已经越来越小了，再这样下去，现代文明将会毁灭殆尽，人类社会很快就要全面退回到中世纪。"
+            {
+                const QString text = 
+                    "所有人都有一种紧迫感，因为没被灾难波及的区域已经越来越小了，再这样下去，现代文明将会毁灭殆尽，人类社会很快就要全面退回到中世纪。"
                     "在没有电流的情况下，最好的情况也就是重新进入蒸汽时代，事实上已经有很多人在着手制造大型蒸汽机了。"
                     "有人甚至断言，再过几十年，或许用蒸汽驱动的计算机也会被制造出来，"
                     "毕竟人类已经完全知道了计算机的工作原理，现在需要的只是将各种电子逻辑门用机械装置替代而已。"
                     "那时，天上也会重新出现各式飞艇，而燃煤所产生的滚滚黑烟也将重新笼罩在所有城市的上空。"
-                    "而这笨重污浊、不可持续的文明，恐怕也将是人类文明最后的回光返照了吧。当燃煤和所有的化石能源耗尽，一切都将戛然而止。'\n"
+                    "而这笨重污浊、不可持续的文明，恐怕也将是人类文明最后的回光返照了吧。当燃煤和所有的化石能源耗尽，一切都将戛然而止。"
+                    ;
+                const QString code =
+                    "import textrank4zh\n"
+                    "s = '" + text + "'\n"
                     "summarizer = textrank4zh.TextRank4Sentence()\n"
                     "summarizer.analyze(text = s, lower = True, source = 'all_filters')\n"
                     "for item in summarizer.get_key_sentences(num = 3) :\n"
                     " print(item.index, item.weight, item.sentence)\n"
-                );
-                QObject::disconnect(conn);
-                result.clear();
-            }
-            
+                    ;
+                for (const auto& e : Python_accessor) {
+                    const auto p = e.second.get();
+                    QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
+                    QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
+                    const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
+                        const auto lines = result.split(QRegularExpression(R"((\r|\n|\r\n))"));
+                        for (const auto& line : lines) {
+
+                        }
+                        });
+                    p->Execute(code);
+                    QObject::disconnect(conn);
+                    result.clear();
+                }
+            }            
             { // jionlp doesn't support Python 3.9 and later
-                const auto p = Python_accessor.at("3.8").get();
-                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
-                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
-                const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
-                    QVERIFY(re.match(result).hasMatch());
-                    });
-                p->Execute(
-                    "import jionlp\n"
-                    "s = '这是金融危机的第二年，人们本来以为危机已快要结束了，没想到只是开始，"
+                const QString text = 
+                    "这是金融危机的第二年，人们本来以为危机已快要结束了，没想到只是开始，"
                     "所以社会处于一种焦躁的情绪中，每个人都需要发泄，并积极创造发泄的方式，诅咒的诞生也许与这种氛围有关。"
                     "诅咒的作者是一个女孩儿，18岁至28岁之间，关于她后来的IT考古学家们能知道的就这么多。"
                     "诅咒的对象是一个男孩儿，20岁，他的情况却都记载的很清楚，他叫撒碧，在太原工业大学上大四。"
                     "他和那女孩儿之间发生的事儿没什么特别的，也就是少男少女之间每天都在发生的那些个事儿，"
                     "后来有上千个版本，这里面可能有一个版本是真实的，但人们不知道是哪一个。"
-                    "反正他们之间的事情都结束后，那女孩儿对那男孩儿是恨透了，于是编写了诅咒1.0。'\n"
+                    "反正他们之间的事情都结束后，那女孩儿对那男孩儿是恨透了，于是编写了诅咒1.0。"
+                    ;
+                const QString code =
+                    "import jionlp\n"
+                    "s = '" + text + "'\n"
                     "sentiment_analyzer = jionlp.sentiment.LexiconSentiment()\n"
                     "print(sentiment_analyzer(s))\n"
-                );
+                    ;
+                const auto p = Python_accessor.at("3.8").get();
+                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
+                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
+                const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
+
+                    });
+                p->Execute(code);
                 QObject::disconnect(conn);
                 result.clear();
             }
