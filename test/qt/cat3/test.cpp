@@ -127,36 +127,43 @@ private slots:
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
                         QRegularExpression re("/");
                         QVERIFY(re.match(result).hasMatch());
+                        for (const auto c : text) { QVERIFY(result.contains(c)); }
                         });
                     p->Execute(code);
                     QObject::disconnect(conn);
                     result.clear();
                 }
             }
-            for (const auto& e : Python_accessor) {
-                const auto p = e.second.get();
-                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
-                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
-                const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
-                    QVERIFY(re.match(result).hasMatch());
-                    });
-                p->Execute(
-                    "import jiagu\n"
-                    "s='一般認為，粵語的發展經歷了五個時期。"
+            {
+                const QString text =
+                    "一般認為，粵語的發展經歷了五個時期。"
                     "一、雛形期出現於秦漢，中原漢語開始進入嶺南地區。"
                     "二、成長期出現於魏晉南北朝，中原人第一次大規模南遷，拉近了古粵語與中原漢語的差別。"
                     "三、定型期出現於唐宋。隨着中原人第二次大規模南遷，粵語開始成為一種既能對應中古漢語發音（如《廣韻》）而又擁有獨立語言體系的語言。"
                     "四、獨立發展期始於清初。中原漢語急劇地向北方官話的方向發展而處在南方的粵語則繼續平穩而緩慢地按照自己獨特的規律發展。"
                     "滿清中末期，粵語首次逆向傳播到中原，這是由於當時的廣州成為唯一能接觸外來的人和物的地區。"
                     "於此同時，粵人大量移民海外，致使粵語開始向外傳播。"
-                    "五、平行發展期出現於上世紀中葉，粵語開始演變為廣州粵語和香港粵語等方言片。'\n"
+                    "五、平行發展期出現於上世紀中葉，粵語開始演變為廣州粵語和香港粵語等方言片。"
+                    ;
+                const QString code =
+                    "import jiagu\n"
+                    "s='" + text + "'\n"
                     "print(jiagu.keywords(s,5))\n"
-                );
-                QObject::disconnect(conn);
-                result.clear();
+                    ;
+                for (const auto& e : Python_accessor) {
+                    const auto p = e.second.get();
+                    QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
+                    QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
+                    const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
+                        result.remove(QRegularExpression(R"([\[\]'])"));
+                        const auto words = result.split(',');
+                        for (const auto& word : words) { QVERIFY(text.contains(word)); }
+                        });
+                    p->Execute(code);
+                    QObject::disconnect(conn);
+                    result.clear();
+                }
             }
-
             for (const auto& e : Python_accessor) {
                 const auto p = e.second.get();
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
