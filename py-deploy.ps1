@@ -12,8 +12,8 @@ Usage
     
     Examples:
     [1]
-        ./py-deploy -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
-        -tasks `
+        ./py-deploy -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" ``
+        -tasks ``
         @{
             srcdir = "Python";
             dstdir = "latest"
@@ -27,8 +27,8 @@ Usage
     [2]
         `$BuildTypes = @(Debug, Release, RelWithDebInfo, MinSizeRel)
         foreach (`$BuiltType in `$BuildTypes) {
-            .\py-deploy -PythonInterpreterPrefix "C:\Program Files" -venvPrefix "out\build\x64-`$BuildType/bin/py/venv" `
-            -tasks `
+            .\py-deploy -PythonInterpreterPrefix "C:\Program Files" -venvPrefix "out\build\x64-`$BuildType/bin/py/venv" ``
+            -tasks ``
             @{
                 srcdir = "Python";
                 dstdir = "latest"
