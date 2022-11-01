@@ -97,7 +97,6 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
                     QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
@@ -108,35 +107,37 @@ private slots:
                 QObject::disconnect(conn);
                 result.clear();
             }
-
-            for (const auto& e : Python_accessor) {
-                const auto p = e.second.get();
-                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
-                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
-                const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
-                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
-                    QVERIFY(re.match(result).hasMatch());
-                    });
-                p->Execute(
-                    "import jieba\n"
-                    "s='　　走到桥上，桥下，流水汤汤，一张落叶正飘下来，擦着水皮掠过一阵，又象被吸住了一样贴在水面上，顺水流去。"
+            {
+                const QString text =
+                    "　　走到桥上，桥下，流水汤汤，一张落叶正飘下来，擦着水皮掠过一阵，又象被吸住了一样贴在水面上，顺水流去。"
                     "这条河本来被污染得很厉害，淤泥积得几乎要堵塞河道。这些天来，水量倒增加了。"
                     "我把烟头扔进河里，又摸出一支烟，刚凑到嘴边，忽然肩头被撞了一下，那支烟也掉在地上。"
-                    "我扭头一看，是个醉醺醺的流浪汉，手上拎了一瓶酒。他见我看了他一眼，瞪大了眼，道：“看什么看，我是感染者。”'\n"
+                    "我扭头一看，是个醉醺醺的流浪汉，手上拎了一瓶酒。他见我看了他一眼，瞪大了眼，道：“看什么看，我是感染者。”"
+                    ;
+                const QString code =
+                    "import jieba\n"
+                    "s='" + text + "'\n"
                     "l=jieba.cut(s)\n"
                     "print('/'.join(l))\n"
-                );
-                QObject::disconnect(conn);
-                result.clear();
+                    ;
+                for (const auto& e : Python_accessor) {
+                    const auto p = e.second.get();
+                    QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
+                    QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
+                    const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
+                        QRegularExpression re("/");
+                        QVERIFY(re.match(result).hasMatch());
+                        });
+                    p->Execute(code);
+                    QObject::disconnect(conn);
+                    result.clear();
+                }
             }
-
             for (const auto& e : Python_accessor) {
                 const auto p = e.second.get();
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
                     QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
@@ -161,7 +162,6 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
                     QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
@@ -187,7 +187,6 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
                     QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
@@ -204,6 +203,7 @@ private slots:
                     "print(sentiment_analyzer(s))\n"
                 );
                 QObject::disconnect(conn);
+                result.clear();
             }
         }
     }
