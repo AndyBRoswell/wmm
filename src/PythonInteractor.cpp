@@ -51,7 +51,6 @@ namespace WritingMaterialsManager {
         ResultArea->setPlainText(""); // clear() will also delete the undo/redo history.
         emit NewCode(CodeArea->toPlainText());
     }
-
 /// ----------------------------------------------------------------
 
     PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonCommand(PythonCommand) {}
@@ -84,8 +83,6 @@ namespace WritingMaterialsManager {
     void PythonAccessor::Execute(const QString& Code) {
         PythonProcess = std::make_shared<QProcess>();
         PythonProcess->start(PythonCommand, { "-c", Code });
-        qDebug() << PythonProcess->program() << PythonProcess->arguments();
-        qDebug() << PythonProcess->waitForStarted(-1);
         PythonProcess->waitForReadyRead(-1);
         SendResult();
         PythonProcess = nullptr;
