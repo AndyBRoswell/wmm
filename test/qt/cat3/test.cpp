@@ -1,3 +1,6 @@
+// std
+#include <unordered_map>
+
 // Qt
 #include <QSignalSpy>
 #include <QTest>
@@ -60,26 +63,34 @@ private slots:
     void PythonAccessor__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        wmm::PythonAccessor Python_accessor;
-        QSignalSpy MoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::MoreResult);
-        QSignalSpy NoMoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::NoMoreResult);
+        wmm::PythonAccessor latest_Python_accessor("py/venv/latest/Scripts/python");
+        QString result;
+
+        QSignalSpy MoreResult_signal_spy(&latest_Python_accessor, &wmm::PythonAccessor::MoreResult);
+        QSignalSpy NoMoreResult_signal_spy(&latest_Python_accessor, &wmm::PythonAccessor::NoMoreResult);
+        QObject::connect(&latest_Python_accessor, &wmm::PythonAccessor::MoreResult, [&](const QString& result_fragment) {
+            result += result_fragment;
+            });
+        auto clear = [&]() {
+            result.clear();
+            MoreResult_signal_spy.clear();
+            NoMoreResult_signal_spy.clear();
+        };
+
         { // hello world
-            QString result;
-            QObject::connect(&Python_accessor, &wmm::PythonAccessor::MoreResult, [&](const QString& result_fragment) {
-                result += result_fragment;
-                });
-            QObject::connect(&Python_accessor, &wmm::PythonAccessor::NoMoreResult, [&]() {
+            const auto conn = QObject::connect(&latest_Python_accessor, &wmm::PythonAccessor::NoMoreResult, [&]() {
                 QCOMPARE_GT(MoreResult_signal_spy.count(), 0);
                 QCOMPARE(NoMoreResult_signal_spy.count(), 1);
                 QCOMPARE(result.trimmed(), "Hello, World!");
                 });
-            Python_accessor.Execute(R"(print("Hello, World!"))");
-            MoreResult_signal_spy.clear();
-            NoMoreResult_signal_spy.clear();
+            latest_Python_accessor.Execute(R"(print("Hello, World!"))");
+            clear();
+            QObject::disconnect(conn);
         } 
         { // NLP libraries
             const QString test_code[][2] = {
-                { "synonyms", "print(synonyms.nearby('动听',10))\n" },
+                { "synonyms", 
+                "print(synonyms.nearby('动听',10))\n" },
 
                 { "jieba",
                 "s='　　走到桥上，桥下，流水汤汤，一张落叶正飘下来，擦着水皮掠过一阵，又象被吸住了一样贴在水面上，顺水流去。"
@@ -122,6 +133,46 @@ private slots:
                 "反正他们之间的事情都结束后，那女孩儿对那男孩儿是恨透了，于是编写了诅咒1.0。'\n"
                 "sentiment_analyzer = jionlp.sentiment.LexiconSentiment()\n"
                 "print(sentiment_analyzer(s))\n" }
+            };
+            {
+                const auto conn = QObject::connect(&latest_Python_accessor, &wmm::PythonAccessor::NoMoreResult, [&]() {
+                    qDebug(result.toUtf8());
+                    QRegularExpression re(R"(\['动听.+\[1\.0,)");
+                    QVERIFY(re.match(result).hasMatch());
+                    });
+                latest_Python_accessor.Execute(
+                    "import synonyms\n"
+                    "print(synonyms.nearby('动听',10))\n"
+                );
+                QObject::disconnect(conn);
+            }
+            {
+
+            }
+            {
+
+            }
+            {
+
+            }
+            {
+
+            }
+        }
+        {
+            const std::unordered_map<QByteArray, std::shared_ptr<wmm::PythonAccessor>> Python_accessor = {
+                { "latest", std::make_shared<wmm::PythonAccessor>("py/venv/latest/Scripts/python") },
+                { "3.8", std::make_shared<wmm::PythonAccessor>("py/venv/3.8/Scripts/python") },
+            };
+            auto execute = [&](const QByteArray& venv, const QString& code, const std::function<void(void)>& chk_fn) {
+                const auto p = Python_accessor.at(venv).get();
+                QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
+                QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
+                QString result;
+                QObject::connect(p, &wmm::PythonAccessor::MoreResult, [&](const QString& result_fragment) {
+                    result += result_fragment;
+                    });
+                QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, chk_fn);
             };
         }
     }
