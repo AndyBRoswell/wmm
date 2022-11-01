@@ -74,7 +74,6 @@ namespace WritingMaterialsManager {
 //        }
         PythonProcess->waitForFinished(-1);
         const QByteArray Result = PythonProcess->readAllStandardOutput();
-//        qDebug() << Result;
         emit MoreResult(QString::fromLocal8Bit(Result));
         qDebug() << "No more return from Python.";
         emit NoMoreResult();
