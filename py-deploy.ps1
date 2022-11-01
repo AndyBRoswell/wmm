@@ -10,7 +10,7 @@ set usage -option constant -value @"
 Usage
     
     Examples:
-        .\py-sample -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
+        .\py-deploy -PythonInterpreterPrefix "C:/Program Files" -venvPrefix "out/build/x64-Release/bin/py/venv" `
         -tasks `
         @{
             srcdir = "Python";
