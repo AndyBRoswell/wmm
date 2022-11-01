@@ -21,13 +21,15 @@ Usage
             (Default: "")
             if venv destination paths have a common path prefix, then you can specify it to reduce the char count when typing subsequent arguments.
         CommonLibs
-            
+            Libraries which should be installed in every venv
         tasks
             The format of tasks are hashtables which have the following keys:
                 srcdir
                     The directory where Python interpreter locates.
                 dstdir
                     The venv destination path.
+                libs
+                    Libraries that should be installed in this venv
     
     Examples:
     [1]
@@ -47,6 +49,7 @@ Usage
         `$BuildTypes = 'Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel'
         foreach (`$BuildType in `$BuildTypes) {
             .\py-deploy -PythonInterpreterPrefix "C:\Program Files" -venvPrefix "out\build\x64-`$BuildType/bin/py/venv" ``
+            -CommonLibs synonyms, jiagu, textrank4zh, jieba ``
             -tasks ``
             @{
                 srcdir = "Python";
@@ -56,8 +59,7 @@ Usage
                 srcdir = "Python3.8"
                 dstdir = "3.8"
                 libs = "jionlp"
-            } ``
-            -CommonLibs synonyms, jiagu, textrank4zh, jieba
+            }
         }
 "@
 
