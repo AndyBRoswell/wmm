@@ -60,9 +60,9 @@ private slots:
         namespace wmm = WritingMaterialsManager;
 
         wmm::PythonAccessor Python_accessor;
+        QSignalSpy MoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::MoreResult);
+        QSignalSpy NoMoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::NoMoreResult);
         { // hello world
-            QSignalSpy MoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::MoreResult);
-            QSignalSpy NoMoreResult_signal_spy(&Python_accessor, &wmm::PythonAccessor::NoMoreResult);
             QString result;
             QObject::connect(&Python_accessor, &wmm::PythonAccessor::MoreResult, [&](const QString& result_fragment) {
                 result += result_fragment;
@@ -73,6 +73,11 @@ private slots:
                 QCOMPARE(result.trimmed(), "Hello, World!");
                 });
             Python_accessor.Execute(R"(print("Hello, World!"))");
+            MoreResult_signal_spy.clear();
+            NoMoreResult_signal_spy.clear();
+        } 
+        { // NLP libraries
+
         }
     }
 
