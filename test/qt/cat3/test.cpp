@@ -92,7 +92,7 @@ private slots:
             }
         }
         { // NLP libraries
-            for (const auto& e : Python_accessor) {
+            for (const auto& e : Python_accessor) { // synonyms
                 const auto p = e.second.get();
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
@@ -107,7 +107,7 @@ private slots:
                 QObject::disconnect(conn);
                 result.clear();
             }
-            {
+            { // jieba
                 const QString text =
                     "　　走到桥上，桥下，流水汤汤，一张落叶正飘下来，擦着水皮掠过一阵，又象被吸住了一样贴在水面上，顺水流去。"
                     "这条河本来被污染得很厉害，淤泥积得几乎要堵塞河道。这些天来，水量倒增加了。"
@@ -132,7 +132,7 @@ private slots:
                     result.clear();
                 }
             }
-            {
+            { // jiagu
                 const QString text =
                     "一般認為，粵語的發展經歷了五個時期。"
                     "一、雛形期出現於秦漢，中原漢語開始進入嶺南地區。"
@@ -152,7 +152,7 @@ private slots:
                     QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
                         result.remove(QRegularExpression(R"([\[\]'])"));
-                        const auto words = result.split(',');
+                        const auto words = result.split(QRegularExpression(R"(,\s*)"));
                         for (const auto& word : words) { QVERIFY(text.contains(word)); }
                         });
                     p->Execute(code);
@@ -160,7 +160,7 @@ private slots:
                     result.clear();
                 }
             }
-            {
+            { // texkrank4zh
                 const QString text =
                     "所有人都有一种紧迫感，因为没被灾难波及的区域已经越来越小了，再这样下去，现代文明将会毁灭殆尽，人类社会很快就要全面退回到中世纪。"
                     "在没有电流的情况下，最好的情况也就是重新进入蒸汽时代，事实上已经有很多人在着手制造大型蒸汽机了。"
