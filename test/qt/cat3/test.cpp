@@ -187,9 +187,12 @@ private slots:
                             //qDebug(QByteArray::number(line.size()));
                             //qDebug(QByteArray::number(match.capturedStart()));
                             //qDebug(QByteArray::number(match.capturedEnd()));
-                            const QStringView corresponding_sentence(line.sliced(match.capturedEnd()));
+                            const QString corresponding_sentence(line.sliced(match.capturedEnd()));
                             //qDebug(line.toUtf8());
                             //qDebug(corresponding_sentence.toUtf8());
+                            //for (auto i = 0; i <= match.capturedEnd(); ++i) {
+                            //    qDebug(line.sliced(i).toUtf8());
+                            //}
                             QVERIFY(text.contains(corresponding_sentence));
                         }
                         });
