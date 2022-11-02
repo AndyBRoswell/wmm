@@ -97,7 +97,6 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                    qDebug(result.toUtf8());
                     const QRegularExpression re(R"(\['动听.+\[1\.0,)");
                     QVERIFY(re.match(result).hasMatch());
                     });
