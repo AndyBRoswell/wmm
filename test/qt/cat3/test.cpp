@@ -180,7 +180,7 @@ private slots:
                     QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                     QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                        const auto lines = result.split(QRegularExpression(R"((\r|\n|\r\n))"));
+                        const auto lines = result.split(QRegularExpression(R"((\r\n|\r|\n))"));
                         for (const auto& line : lines) {
                             const QRegularExpression re(R"([0-9]+\s*+[0-9\.]+\s*)");
                             const auto match = re.match(line);
@@ -188,7 +188,7 @@ private slots:
                             //qDebug(QByteArray::number(match.capturedStart()));
                             //qDebug(QByteArray::number(match.capturedEnd()));
                             const QString corresponding_sentence(line.sliced(match.capturedEnd()));
-                            //qDebug(line.toUtf8());
+                            qDebug(line.toUtf8());
                             //qDebug(corresponding_sentence.toUtf8());
                             //for (auto i = 0; i <= match.capturedEnd(); ++i) {
                             //    qDebug(line.sliced(i).toUtf8());
