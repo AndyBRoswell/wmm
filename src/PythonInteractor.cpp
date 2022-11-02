@@ -23,7 +23,6 @@ namespace WritingMaterialsManager {
             ControlArea->layout()->addWidget(PyCommandForm);
             ControlArea->layout()->addWidget(ExecuteButton);
         }
-
         QSplitter* const InputArea = new QSplitter; {
             InputArea->setOrientation(Qt::Vertical);
             InputArea->setContentsMargins(0, 0, 0, 0);
@@ -32,7 +31,6 @@ namespace WritingMaterialsManager {
             InputArea->setStretchFactor(0, 0);
             InputArea->setStretchFactor(1, 4);
         }
-
         QVBoxLayout* const MainLayout = new QVBoxLayout; {
             MainLayout->setContentsMargins(0, 0, 0, 0);
             MainLayout->setSpacing(2);
@@ -40,6 +38,7 @@ namespace WritingMaterialsManager {
             MainLayout->addWidget(InputArea);
             MainLayout->setStretch(0, 0);
         }
+        setLayout(MainLayout);
     }
 
     PythonInteractor::~PythonInteractor() {
