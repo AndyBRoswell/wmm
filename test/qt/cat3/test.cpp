@@ -184,7 +184,12 @@ private slots:
                         for (const auto& line : lines) {
                             const QRegularExpression re(R"([0-9]+\s*+[0-9\.]+\s*)");
                             const auto match = re.match(line);
-                            const QStringView corresponding_sentence(line.right(match.capturedEnd()));
+                            //qDebug(QByteArray::number(line.size()));
+                            //qDebug(QByteArray::number(match.capturedStart()));
+                            //qDebug(QByteArray::number(match.capturedEnd()));
+                            const QStringView corresponding_sentence(line.sliced(match.capturedEnd()));
+                            //qDebug(line.toUtf8());
+                            //qDebug(corresponding_sentence.toUtf8());
                             QVERIFY(text.contains(corresponding_sentence));
                         }
                         });
