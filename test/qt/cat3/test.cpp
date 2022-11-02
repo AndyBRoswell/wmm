@@ -190,6 +190,8 @@ private slots:
                         for (const auto& line : lines) {
                             const QRegularExpression re(R"([0-9]+\s+[0-9.]+)");
                             const auto match = re.match(line);
+                            const QStringView corresponding_sentence(&line[match.capturedStart()], &line[match.capturedEnd()]);
+
                         }
                         });
                     p->Execute(code);
