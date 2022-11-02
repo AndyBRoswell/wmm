@@ -151,7 +151,7 @@ private slots:
                     QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                     QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
-                        result.remove(QRegularExpression(R"([\[\]'])"));
+                        result.remove(QRegularExpression(R"([\[\]'\r\n])"));
                         const auto words = result.split(QRegularExpression(R"(,\s*)"));
                         for (const auto& word : words) { QVERIFY(text.contains(word)); }
                         });
