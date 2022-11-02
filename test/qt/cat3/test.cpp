@@ -211,6 +211,7 @@ private slots:
                 QSignalSpy MoreResult_signal_spy(p, &wmm::PythonAccessor::MoreResult);
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
+                    result.remove(R"(#\s*jio.+(\r\n|\r|\n))"); // remove warnings jionlp produced
                     const auto segs = result.split(QRegularExpression(R"(\s)"));
                     for (const auto& seg : segs) {
                         bool is_double;
