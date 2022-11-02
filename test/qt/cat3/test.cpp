@@ -212,7 +212,11 @@ private slots:
                 QSignalSpy NoMoreResult_signal_spy(p, &wmm::PythonAccessor::NoMoreResult);
                 const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
                     const auto segs = result.split(QRegularExpression(R"(\s)"));
-
+                    for (const auto& seg : segs) {
+                        bool is_double;
+                        seg.toDouble(&is_double);
+                        if (is_double == false) { QVERIFY(text.contains(seg)); }
+                    }
                     });
                 p->Execute(code);
                 QObject::disconnect(conn);
