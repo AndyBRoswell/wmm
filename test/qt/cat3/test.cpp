@@ -182,7 +182,7 @@ private slots:
                     const auto conn = QObject::connect(p, &wmm::PythonAccessor::NoMoreResult, [&]() {
                         const auto lines = result.split(QRegularExpression(R"((\r|\n|\r\n))"));
                         for (const auto& line : lines) {
-                            const QRegularExpression re(R"([0-9]+\s*+[0-9.]+\s*)");
+                            const QRegularExpression re(R"([0-9]+\s*+[0-9\.]+\s*)");
                             const auto match = re.match(line);
                             const QStringView corresponding_sentence(line.right(match.capturedEnd()));
                             QVERIFY(text.contains(corresponding_sentence));
