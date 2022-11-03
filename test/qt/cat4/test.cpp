@@ -33,7 +33,7 @@ private slots:
         wmm::DocumentExtractPage doc_extract_page;
         for (size_t i = 0; i < nf; ++i) {
             QString expected_text;
-            const auto file_name = QString::number(get_high_resolution_tick_count()) + ".docx";
+            const auto file_name = wd.path() + QString::number(get_high_resolution_tick_count()) + ".docx";
             duckx::Document test_doc(file_name.toStdString());
             for (size_t j = 0; j < np; ++j) {
                 duckx::Paragraph p = test_doc.paragraphs();
