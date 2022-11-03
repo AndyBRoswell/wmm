@@ -36,8 +36,9 @@ private slots:
             QString expected_text;
             const auto file_name = wd.path() + "/" + QString::number(get_high_resolution_tick_count()) + ".docx";
             duckx::Document test_doc(file_name.toStdString());
+            test_doc.open(); // at present this test will fail at this line
             for (size_t j = 0; j < np; ++j) {
-                duckx::Paragraph p = test_doc.paragraphs().insert_paragraph_after("");
+                duckx::Paragraph p = test_doc.paragraphs();
                 for (size_t k = 0; k < nr; ++k) {
                     const auto s = tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, lmax));
                     p.add_run(s);
