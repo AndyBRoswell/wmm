@@ -28,6 +28,7 @@ private slots:
             constexpr size_t nE = 1e4;  // E = editor
             wmm::DatabaseConsole database_console;
             std::vector<wmm::TreeEditor*> editor_list;
+            editor_list.reserve(nE);
             for (size_t i = 1; i <= nE; ++i) { // add
                 auto* e = new wmm::TreeEditor;
                 editor_list.emplace_back(e);
