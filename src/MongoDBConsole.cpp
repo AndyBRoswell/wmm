@@ -107,14 +107,11 @@ namespace WritingMaterialsManager {
         }
         const QByteArray Result = mongoshProcess->readAllStandardOutput();
         emit MoreResult(Result);
-        qDebug() << "No more mongosh result.";
         emit NoMoreResult();
     }
 
     void MongoShAccessor::Execute(const QString& Command) {
-        qDebug() << "MongoDBShellAccessor received mongosh command" << Command;
         mongoshProcess->write(Command.toUtf8());
-        qDebug() << "MongoDBShellAccessor sent the received mongosh command.";
         SendResult();
     }
 /// ----------------------------------------------------------------
