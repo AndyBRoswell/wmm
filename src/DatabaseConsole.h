@@ -17,6 +17,7 @@ namespace WritingMaterialsManager {
         void AddAssociatedEditor(TreeEditor* const Editor); // this console takes the ownership of the editor
         void RemoveAssociatedEditor(TreeEditor* const Editor);
         void ClearAssociatedEditor();
+        size_t AssociatedEditorCount();
         void mousePressEvent(QMouseEvent* const E) override;
     signals:
         void MouseDown();

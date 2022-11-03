@@ -6,7 +6,11 @@
 #include <QTest>
 #include <QWaitCondition>
 
+// this software
+#include "tiny_random.h"
+
 // files to be tested
+#include "src/DatabaseConsole.h"
 #include "src/MongoDBConsole.h"
 #include "src/PythonInteractor.h"
 
@@ -15,6 +19,27 @@ class test : public QObject {
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 3");
+    }
+
+    void DatabaseConsole__basic() {
+        namespace wmm = WritingMaterialsManager;
+
+        constexpr size_t nA = 1e6;      // A = action
+        constexpr qsizetype lmax = 1e3;
+
+        { // add & del associated editors
+            constexpr size_t nE = 1e7;  // E = editor
+            wmm::DatabaseConsole database_console;
+            std::set<wmm::TreeEditor*> editor_list;
+            for (size_t i = 1; i <= nE; ++i) { // add
+                auto* e = new wmm::TreeEditor;
+                database_console.AddAssociatedEditor(e);
+                QCOMPARE(database_console.AssociatedEditorCount(), i);
+            }
+            { // del
+
+            }
+        }
     }
 
     void MongoShAccessor__basic() {
