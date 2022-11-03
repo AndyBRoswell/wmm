@@ -55,6 +55,10 @@ namespace WritingMaterialsManager {
         const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
     }
 
+    QString DocumentExtractPage::GetPlainTextFromOpenDocument() {
+        return DocumentDisplayArea->toPlainText();
+    }
+
     DocumentExtractPage::DocumentDisplayArea::DocumentDisplayArea() {
         static std::once_flag StaticInitialized;
         std::call_once(StaticInitialized, []() {

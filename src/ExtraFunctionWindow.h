@@ -32,6 +32,7 @@ namespace WritingMaterialsManager {
         inline static const char* DefaultPageTitleSuffix = "DOCX/PDF提取 - ";
 
         explicit DocumentExtractPage(QWidget* const Parent = nullptr);
+        QString GetPlainTextFromOpenDocument() const;
     signals:
         void DocumentOpened(const QString& FileName);
     private:
