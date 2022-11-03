@@ -112,18 +112,19 @@ private slots:
     void MongoDBConsole__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        //wmm::MongoDBConsole MongoDB_console;
-        //wmm::TreeEditor tree_editor;
-        //MongoDB_console.AddAssociatedEditor(&tree_editor);
+        QSKIP("");
+        wmm::MongoDBConsole MongoDB_console;
+        wmm::TreeEditor tree_editor;
+        MongoDB_console.AddAssociatedEditor(&tree_editor);
         { // show dbs
-            //MongoDB_console.ExecuteShellCommand();
-            //QSignalSpy spy(&MongoDB_console, &wmm::MongoDBConsole::NewShellCommand);
-            //QVERIFY(spy.isValid());
+            MongoDB_console.ExecuteShellCommand();
+            QSignalSpy spy(&MongoDB_console, &wmm::MongoDBConsole::NewShellCommand);
+            QVERIFY(spy.isValid());
         }
         { // JSON operations
 
         }
-    }
+    } // at present this test will crash at here
 
     // NOTE: run py-deploy script in the root dir with its sample (call it with "-help" argument) of WMM before running this test.
     void PythonAccessor__basic() {
@@ -295,7 +296,8 @@ private slots:
     void PythonInteractor__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        //wmm::PythonInteractor Python_interactor;
+        QSKIP("");
+        wmm::PythonInteractor Python_interactor;  // at present this test will crash at here
     }
 
     void cleanupTestCase() {
