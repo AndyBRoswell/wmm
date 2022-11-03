@@ -230,7 +230,7 @@ private slots:
     void PythonInteractor__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        //wmm::PythonInteractor Python_interactor;
+        wmm::PythonInteractor Python_interactor;
     }
 
     void cleanupTestCase() {
