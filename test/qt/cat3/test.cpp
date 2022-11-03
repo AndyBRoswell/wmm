@@ -27,12 +27,13 @@ private slots:
         constexpr size_t nA = 1e6;      // A = action
         constexpr qsizetype lmax = 1e3;
 
-        { // add & del associated editors
+        { // add & del & clr associated editors
             constexpr size_t nE = 1e7;  // E = editor
             wmm::DatabaseConsole database_console;
             std::set<wmm::TreeEditor*> editor_list;
             for (size_t i = 1; i <= nE; ++i) { // add
                 auto* e = new wmm::TreeEditor;
+                editor_list.emplace(e);
                 database_console.AddAssociatedEditor(e);
                 QCOMPARE(database_console.AssociatedEditorCount(), i);
             }
@@ -45,6 +46,8 @@ private slots:
                     if (nA == nE / 2) { break; }
                 }
             }
+            database_console.ClearAssociatedEditor();
+            QCOMPARE(database_console.AssociatedEditorCount(), 0);
         }
     }
 
