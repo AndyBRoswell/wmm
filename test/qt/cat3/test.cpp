@@ -47,33 +47,37 @@ private slots:
             database_console.ClearAssociatedEditor(); // clr
             QCOMPARE(database_console.AssociatedEditorCount(), 0);
         }
-        //{ // actions of text editing
-        //    enum class action {
-        //        set, append,
-        //    };
+        { // actions of text editing
+            enum class action {
+                set, append,
+            };
 
-        //    constexpr size_t nE = 1e3;  // E = editor
-        //    constexpr size_t na = 1e3; // a = action
-        //    constexpr qsizetype lmax = 1e3;
+            constexpr size_t nE = 1e3; // E = editor
+            constexpr size_t na = 1e3; // a = action
+            constexpr qsizetype lmax = 1e3;
 
-        //    wmm::DatabaseConsole database_console;
-        //    std::vector<wmm::TreeEditor*> editor_list;
-        //    for (size_t i = 0; i < nE; ++i) { 
-        //        auto* e = new wmm::TreeEditor;
-        //        editor_list.emplace_back(e);
-        //        database_console.AddAssociatedEditor(e);
-        //    }
-        //    for (size_t i = 0; i < na; ++i) {
-        //        const action a = static_cast<action>(tiny_random::number::integer(0, 1));
-        //        switch (a) {
-        //        case action::set:
-        //            
-        //            break;
-        //        case action::append:
-        //            break;
-        //        }
-        //    }
-        //}
+            wmm::DatabaseConsole database_console;
+            std::vector<wmm::TreeEditor*> editor;
+            for (size_t i = 0; i < nE; ++i) { 
+                auto* e = new wmm::TreeEditor;
+                editor.emplace_back(e);
+                database_console.AddAssociatedEditor(e);
+            }
+            for (size_t i = 0; i < na; ++i) {
+                const action a = static_cast<action>(tiny_random::number::integer(0, 1));
+                switch (a) {
+                case action::set: {
+                    const auto s = QString::fromStdString(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ll, lmax)));
+                    database_console.SetTextForAssociatedEditors(s);
+                    for (size_t i = 0; i < nE; ++i) {
+                        QCOMPARE(editor[i]->RawView->toPlainText(), s);
+                    }
+                } break;
+                case action::append: {
+                } break;
+                }
+            }
+        }
     }
 
     void MongoShAccessor__basic() {
