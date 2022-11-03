@@ -37,7 +37,13 @@ private slots:
                 QCOMPARE(database_console.AssociatedEditorCount(), i);
             }
             { // del
-
+                size_t nA = 0;
+                for (const auto e : editor_list) {
+                    database_console.RemoveAssociatedEditor(e);
+                    ++nA;
+                    QCOMPARE(database_console.AssociatedEditorCount(), nE - nA);
+                    if (nA == nE / 2) { break; }
+                }
             }
         }
     }
