@@ -4,7 +4,6 @@
 // Qt
 #include <QSignalSpy>
 #include <QTest>
-#include <QWaitCondition>
 
 // this software
 #include "tiny_random.h"

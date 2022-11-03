@@ -23,7 +23,6 @@ qt_add_executable(wmmqtest-cat1
 )
 
 set_target_properties(wmmqtest-cat1 PROPERTIES
-    # WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 target_compile_definitions(wmmqtest-cat1 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -68,7 +67,6 @@ qt_add_executable(wmmqtest-cat2
 )
 
 set_target_properties(wmmqtest-cat2 PROPERTIES
-    # WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 target_compile_definitions(wmmqtest-cat2 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -116,7 +114,6 @@ qt_add_executable(wmmqtest-cat3
 )
 
 set_target_properties(wmmqtest-cat3 PROPERTIES
-    # WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 target_compile_definitions(wmmqtest-cat3 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -131,4 +128,40 @@ target_include_directories(wmmqtest-cat3 PUBLIC
 target_link_libraries(wmmqtest-cat3 PUBLIC
     ${mongo_libs}
     Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Test Qt6::Core5Compat
+)
+# ----------------------------------------------------------------
+
+file(GLOB_RECURSE cat4-sources
+    cat4/*.c*
+)
+file(GLOB_RECURSE cat4-headers
+    cat4/*.h*
+)
+
+file(GLOB cat4-modules-to-be-tested
+    ${wmm_root}/src/ExtraFunctionWindow.cpp
+    ${wmm_root}/src/global.cpp
+    ${wmm_root}/src/TextArea.cpp
+)
+
+qt_add_executable(wmmqtest-cat4
+    ${cat4-sources}
+    ${cat4-headers}
+    ${cat4-modules-to-be-tested}
+)
+
+set_target_properties(wmmqtest-cat4 PROPERTIES
+    MACOSX_BUNDLE TRUE
+)
+target_compile_definitions(wmmqtest-cat4 PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+
+target_include_directories(wmmqtest-cat4 PUBLIC
+    ${wmm_root}
+    ${wmm_root}/src
+    ${wmm_root}/test
+    ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include # dependency: docx
+)
+target_link_libraries(wmmqtest-cat4 PUBLIC
+    ${DuckX}
+    Qt6::Core Qt6::Test Qt6::PdfWidgets
 )
