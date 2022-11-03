@@ -22,9 +22,6 @@ set(Qt_ts_Files # Qt translation files
 # dependency: Qt
 find_package(Qt6 6.3 COMPONENTS Gui Widgets Core5Compat PdfWidgets REQUIRED)
 
-# dependency: DuckX
-find_library(DuckX duckx "${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/lib")
-
 qt_add_executable(wmm
     ${code_files}
 )
@@ -44,9 +41,9 @@ if (QT_VERSION_MAJOR EQUAL 6)
 endif ()
 
 target_include_directories(wmm PUBLIC
-    ${JSON_inc_dir}                                     # dependency: JSON libs
-    ${mongo_inc_dir}                                    # dependency: mongo libs
-    ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include # dependency: docx
+    ${JSON_inc_dir}     # dependency: JSON libs
+    ${mongo_inc_dir}    # dependency: mongo libs
+    ${duckx_inc_dir}    # dependency: docx
 )
 target_link_libraries(wmm PUBLIC
     ${mongo_libs}

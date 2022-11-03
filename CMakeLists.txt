@@ -66,6 +66,10 @@ list(APPEND mongo_libs ${mongoc})
 list(APPEND mongo_libs ${bsoncxx})
 list(APPEND mongo_libs ${mongocxx})
 
+# common dependency: DuckX
+set(duckx_inc_dir ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include)
+find_library(DuckX duckx "${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/lib")
+
 add_subdirectory(src)
 add_subdirectory(test/google)
 add_subdirectory(test/qt)

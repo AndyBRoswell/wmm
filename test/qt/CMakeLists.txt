@@ -159,7 +159,7 @@ target_include_directories(wmmqtest-cat4 PUBLIC
     ${wmm_root}
     ${wmm_root}/src
     ${wmm_root}/test
-    ${dep_root}/duckx-1.2.2/${CMAKE_BUILD_TYPE}/include # dependency: docx
+    ${duckx_inc_dir} # dependency: docx
 )
 target_link_libraries(wmmqtest-cat4 PUBLIC
     ${DuckX}
