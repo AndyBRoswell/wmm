@@ -28,7 +28,7 @@ private slots:
         constexpr qsizetype lmax = 1e3;
 
         { // add & del & clr associated editors
-            constexpr size_t nE = 1e7;  // E = editor
+            constexpr size_t nE = 1e4;  // E = editor
             wmm::DatabaseConsole database_console;
             std::set<wmm::TreeEditor*> editor_list;
             for (size_t i = 1; i <= nE; ++i) { // add
@@ -46,7 +46,7 @@ private slots:
                     if (nA == nE / 2) { break; }
                 }
             }
-            database_console.ClearAssociatedEditor();
+            database_console.ClearAssociatedEditor(); // clr
             QCOMPARE(database_console.AssociatedEditorCount(), 0);
         }
     }
