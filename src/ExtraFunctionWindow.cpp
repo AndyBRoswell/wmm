@@ -12,46 +12,46 @@ namespace WritingMaterialsManager {
     ExtraFunctionWindow::ExtraFunctionWindow(QWidget* const Parent) : QMainWindow(Parent) {
         // initialize basic components
         if (objectName().isEmpty()) setObjectName("WritingMaterialsManager__ExtraFunctionWindow");
-        resize(1280, 720);
 
         CentralWidget->setObjectName("CentralWidget");
         setCentralWidget(CentralWidget);
+
         MenuBar->setObjectName("MenuBar");
         MenuBar->setGeometry(0, 0, 1280, 21);
         setMenuBar(MenuBar);
+        
         StatusBar->setObjectName("StatusBar");
         setStatusBar(StatusBar);
+        
         ToolBar->setObjectName("ToolBar");
+        ToolBar->setWindowTitle(QCoreApplication::translate("WritingMaterialsManager::ExtraFunctionWindow", "ToolBar", nullptr));
         addToolBar(Qt::TopToolBarArea, ToolBar);
 
         setWindowTitle(tr(DefaultWindowTitle));
-        ToolBar->setWindowTitle(QCoreApplication::translate("WritingMaterialsManager::ExtraFunctionWindow", "ToolBar", nullptr));
 
         QMetaObject::connectSlotsByName(this);
 
         // initialize demo pages
-        DocumentExtractPage* const DocumentExtractPage = new class DocumentExtractPage(this);
-        RootView->addTab(DocumentExtractPage, tr(DocumentExtractPage::DefaultPageTitle));
-        connect(DocumentExtractPage, &DocumentExtractPage::DocumentOpened, [=](const QString& FileName) {
-//            qDebug() << "sender() ==" << sender();
-//            qDebug() << "currentWidget() ==" << RootView->currentWidget();
-//            RootView->setTabText(RootView->indexOf(static_cast<QWidget*>(sender())), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
-            RootView->setTabText(RootView->indexOf(DocumentExtractPage), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
-        });
+        DocumentExtractPage* const DocumentExtractPage = new class DocumentExtractPage(this); {
+            RootView->addTab(DocumentExtractPage, tr(DocumentExtractPage::DefaultPageTitle));
+            connect(DocumentExtractPage, &DocumentExtractPage::DocumentOpened, [=](const QString& FileName) {
+                RootView->setTabText(RootView->indexOf(DocumentExtractPage), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
+                });
+        }
 
-        QGridLayout* const MainLayout = new QGridLayout;
+        QGridLayout* const MainLayout = new QGridLayout; {
+            MainLayout->setContentsMargins(0, 0, 0, 0);
+            MainLayout->addWidget(RootView);
+        }
         CentralWidget->setLayout(MainLayout);
-        MainLayout->setContentsMargins(0, 0, 0, 0);
-        MainLayout->addWidget(RootView);
     }
-
 /// ----------------------------------------------------------------
 
     DocumentExtractPage::DocumentExtractPage(QWidget* const Parent) : QWidget(Parent) {
-
-        setLayout(new QGridLayout);
-        layout()->setContentsMargins(0, 0, 0, 0);
-        layout()->addWidget(DocumentDisplayArea);
+        setLayout(new QGridLayout); {
+            layout()->setContentsMargins(0, 0, 0, 0);
+            layout()->addWidget(DocumentDisplayArea);
+        }
 
         const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
     }
@@ -68,10 +68,11 @@ namespace WritingMaterialsManager {
     }
 
     void DocumentExtractPage::DocumentDisplayArea::contextMenuEvent(QContextMenuEvent* const E) {
-        QMenu* const ContextMenu = createStandardContextMenu();
-        ContextMenu->addSeparator();
-        ContextMenu->addAction(Open);
-        ContextMenu->exec(E->globalPos());
+        QMenu* const ContextMenu = createStandardContextMenu(); {
+            ContextMenu->addSeparator();
+            ContextMenu->addAction(Open);
+            ContextMenu->exec(E->globalPos());
+        }
     }
 
     void DocumentExtractPage::OpenFile() {
