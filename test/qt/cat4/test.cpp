@@ -24,6 +24,7 @@ private slots:
         namespace wmm = WritingMaterialsManager;
         
         const QDir wd("test/ExtraFunctionWindow");
+        if (wd.exists() == false) { QDir("test").mkdir("ExtraFunctionWindow"); }
 
         constexpr size_t nf = 100;      // file count
         constexpr size_t np = 100;      // paragraph count of each file
