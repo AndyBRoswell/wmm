@@ -32,12 +32,11 @@ namespace WritingMaterialsManager {
         QMetaObject::connectSlotsByName(this);
 
         // initialize demo pages
-        DocumentExtractPage* const DocumentExtractPage = new class DocumentExtractPage(this); {
-            RootView->addTab(DocumentExtractPage, tr(DocumentExtractPage::DefaultPageTitle));
-            connect(DocumentExtractPage, &DocumentExtractPage::DocumentOpened, [=](const QString& FileName) {
-                RootView->setTabText(RootView->indexOf(DocumentExtractPage), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
-                });
-        }
+        DocumentExtractPage* const DocumentExtractPage = new class DocumentExtractPage(this);
+        RootView->addTab(DocumentExtractPage, tr(DocumentExtractPage::DefaultPageTitle));
+        connect(DocumentExtractPage, &DocumentExtractPage::DocumentOpened, [=](const QString& FileName) {
+            RootView->setTabText(RootView->indexOf(DocumentExtractPage), DocumentExtractPage::DefaultPageTitleSuffix + FileName);
+            });
 
         QGridLayout* const MainLayout = new QGridLayout; {
             MainLayout->setContentsMargins(0, 0, 0, 0);
