@@ -5,7 +5,6 @@
 
 // files to be tested
 #include "src/global.h"
-#include "src/TreeView.h"
 #include "src/TextArea.h"
 
 class test : public QObject {
@@ -16,23 +15,6 @@ private:
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 1"); // cat. 1 for relatively simpler GUI components
-    }
-
-    void TreeView__basic() {
-        namespace wmm = WritingMaterialsManager;
-
-        wmm::TreeView tree_view;
-
-        // signals
-        qRegisterMetaType<wmm::TreeView>();
-        QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
-        for (const auto m : mouse_keys) {
-            QTest::mouseClick(tree_view.viewport(), m);
-            QTest::mouseDClick(tree_view.viewport(), m);
-            QTest::mousePress(tree_view.viewport(), m);
-            QTest::mouseRelease(tree_view.viewport(), m);
-        }
-        QCOMPARE(spy.count(), 6);
     }
 
     void TextField__basic() {

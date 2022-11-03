@@ -20,10 +20,13 @@
 
 // files to be tested
 #include "src/TreeEditor.h"
+#include "src/TreeView.h"
 
 class test : public QObject {
     Q_OBJECT
 private:
+    static constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
+
     bool QtTreeModel_test(QAbstractItemModel& tree_model, const std::string& test_JSON) {
         enum class JSON_data_type { Invalid, Null, Boolean, String, Signed, Unsigned, Double, Array, Object, };
 
@@ -144,6 +147,23 @@ private:
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 2");
+    }
+
+    void TreeView__basic() {
+        namespace wmm = WritingMaterialsManager;
+
+        wmm::TreeView tree_view;
+
+        // signals
+        qRegisterMetaType<wmm::TreeView>();
+        QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
+        for (const auto m : mouse_keys) {
+            QTest::mouseClick(tree_view.viewport(), m);
+            QTest::mouseDClick(tree_view.viewport(), m);
+            QTest::mousePress(tree_view.viewport(), m);
+            QTest::mouseRelease(tree_view.viewport(), m);
+        }
+        QCOMPARE(spy.count(), 6);
     }
 
     void QtTreeModel__construct_from_JSON() {
