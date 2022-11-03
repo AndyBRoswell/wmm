@@ -4,6 +4,7 @@
 
 #include <QApplication>
 #include <QGridLayout>
+#include <QtGlobal>
 #include <QtPdf/QPdfDocument>
 
 #include "duckx.hpp"
@@ -52,7 +53,7 @@ namespace WritingMaterialsManager {
             layout()->addWidget(DocumentDisplayArea);
         }
 
-        const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
+        const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, qOverload<>(&DocumentExtractPage::OpenFile));
     }
 
     QString DocumentExtractPage::GetPlainTextFromOpenDocument() const {
