@@ -55,7 +55,7 @@ namespace WritingMaterialsManager {
         const auto Connection = connect(DocumentDisplayArea::Open, &QAction::triggered, this, &DocumentExtractPage::OpenFile);
     }
 
-    QString DocumentExtractPage::GetPlainTextFromOpenDocument() {
+    QString DocumentExtractPage::GetPlainTextFromOpenDocument() const {
         return DocumentDisplayArea->toPlainText();
     }
 
@@ -80,22 +80,25 @@ namespace WritingMaterialsManager {
 
     void DocumentExtractPage::OpenFile() {
         const QString FileName = QFileDialog::getOpenFileName(this, tr("打开文件"), QDir::currentPath(), tr("Microsoft DOCX (*.docx);;Portable Document Format(*.pdf)"));
-        if (FileName.isEmpty() == false) { // selected a file
-            const QFileInfo FileInfo(FileName);
-            DocumentDisplayArea->clear();
-            if (FileInfo.suffix() == "docx") {
-                duckx::Document Doc(FileName.toUtf8().constData());
-                Doc.open();
-                for (auto p = Doc.paragraphs(); p.has_next(); p.next())
-                    for (auto r = p.runs(); r.has_next(); r.next()) DocumentDisplayArea->appendPlainText(r.get_text().c_str());
-            }
-            else if (FileInfo.suffix() == "pdf") {
-                QPdfDocument Doc;
-                Doc.load(FileName);
-                for (int i = 0; i < Doc.pageCount(); ++i) DocumentDisplayArea->appendPlainText(Doc.getAllText(i).text());
-                Doc.close();
-            }
+        if (FileName.isEmpty() == false) { OpenFile(FileName); } // selected a file
+    }
+    
+    void DocumentExtractPage::OpenFile(const QString& FileName) {
+        const QFileInfo FileInfo(FileName);
+        DocumentDisplayArea->clear();
+        if (FileInfo.suffix() == "docx") {
+            duckx::Document Doc(FileName.toUtf8().constData());
+            Doc.open();
+            for (auto p = Doc.paragraphs(); p.has_next(); p.next())
+                for (auto r = p.runs(); r.has_next(); r.next()) DocumentDisplayArea->appendPlainText(r.get_text().c_str());
         }
+        else if (FileInfo.suffix() == "pdf") {
+            QPdfDocument Doc;
+            Doc.load(FileName);
+            for (int i = 0; i < Doc.pageCount(); ++i) DocumentDisplayArea->appendPlainText(Doc.getAllText(i).text());
+            Doc.close();
+        }
+
         emit DocumentOpened(FileName);
     }
 } // WritingMaterialsManager

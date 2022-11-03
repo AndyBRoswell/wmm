@@ -1,6 +1,12 @@
+// duckx
+#include <duckx.hpp>
+
 // Qt
 #include <QSignalSpy>
 #include <QTest>
+
+// this software
+#include "tiny_random.h"
 
 // files to be tested
 #include "src/ExtraFunctionWindow.h"
@@ -25,7 +31,19 @@ private slots:
         constexpr size_t lmax = 100;    // max length of random strings
 
         wmm::DocumentExtractPage doc_extract_page;
+        for (size_t i = 0; i < nf; ++i) {
+            const auto file_name = QString::number(get_high_resolution_tick_count()) + ".docx";
+            duckx::Document test_doc(file_name.toStdString());
+            for (size_t j = 0; j < np; ++j) {
+                duckx::Paragraph p = test_doc.paragraphs();
+                for (size_t k = 0; k < nr; ++k) {
+                    p.add_run(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, lmax)));
+                }
+                test_doc.save();
+            }
 
+            doc_extract_page.OpenFile(file_name);
+        }
     }
 
     void cleanupTestCase() {
