@@ -24,16 +24,13 @@ private slots:
     void DatabaseConsole__basic() {
         namespace wmm = WritingMaterialsManager;
 
-        constexpr size_t nA = 1e6;      // A = action
-        constexpr qsizetype lmax = 1e3;
-
         { // add & del & clr associated editors
             constexpr size_t nE = 1e4;  // E = editor
             wmm::DatabaseConsole database_console;
-            std::set<wmm::TreeEditor*> editor_list;
+            std::vector<wmm::TreeEditor*> editor_list;
             for (size_t i = 1; i <= nE; ++i) { // add
                 auto* e = new wmm::TreeEditor;
-                editor_list.emplace(e);
+                editor_list.emplace_back(e);
                 database_console.AddAssociatedEditor(e);
                 QCOMPARE(database_console.AssociatedEditorCount(), i);
             }
@@ -49,6 +46,33 @@ private slots:
             database_console.ClearAssociatedEditor(); // clr
             QCOMPARE(database_console.AssociatedEditorCount(), 0);
         }
+        //{ // actions of text editing
+        //    enum class action {
+        //        set, append,
+        //    };
+
+        //    constexpr size_t nE = 1e3;  // E = editor
+        //    constexpr size_t na = 1e3; // a = action
+        //    constexpr qsizetype lmax = 1e3;
+
+        //    wmm::DatabaseConsole database_console;
+        //    std::vector<wmm::TreeEditor*> editor_list;
+        //    for (size_t i = 0; i < nE; ++i) { 
+        //        auto* e = new wmm::TreeEditor;
+        //        editor_list.emplace_back(e);
+        //        database_console.AddAssociatedEditor(e);
+        //    }
+        //    for (size_t i = 0; i < na; ++i) {
+        //        const action a = static_cast<action>(tiny_random::number::integer(0, 1));
+        //        switch (a) {
+        //        case action::set:
+        //            
+        //            break;
+        //        case action::append:
+        //            break;
+        //        }
+        //    }
+        //}
     }
 
     void MongoShAccessor__basic() {
