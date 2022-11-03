@@ -25,7 +25,7 @@ private slots:
         namespace wmm = WritingMaterialsManager;
 
         { // add & del & clr associated editors
-            constexpr size_t nE = 1e4;  // E = editor
+            constexpr size_t nE = 1e3;  // E = editor
             wmm::DatabaseConsole database_console;
             std::vector<wmm::TreeEditor*> editor_list;
             editor_list.reserve(nE);
@@ -52,9 +52,9 @@ private slots:
                 set, append,
             };
 
-            constexpr size_t nE = 1e3; // E = editor
-            constexpr size_t na = 1e3; // a = action
-            constexpr qsizetype lmax = 1e3;
+            constexpr size_t nE = 100; // E = editor
+            constexpr size_t na = 100; // a = action
+            constexpr qsizetype lmax = 100;
 
             wmm::DatabaseConsole database_console;
             std::vector<wmm::TreeEditor*> editor;
@@ -69,11 +69,14 @@ private slots:
                 case action::set: {
                     const auto s = QString::fromStdString(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ll, lmax)));
                     database_console.SetTextForAssociatedEditors(s);
-                    for (size_t i = 0; i < nE; ++i) {
-                        QCOMPARE(editor[i]->RawView->toPlainText(), s);
-                    }
+                    for (size_t i = 0; i < nE; ++i) { QCOMPARE(editor[i]->RawView->toPlainText(), s); }
                 } break;
                 case action::append: {
+                    const auto s_before = editor[tiny_random::number::integer(0ull, nE - 1)]->RawView->toPlainText();
+                    const auto s_extra = QString::fromStdString(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ll, lmax)));
+                    const auto s_after = s_before + s_extra;
+                    database_console.AppendTextForAssociatedEditors(s_extra);
+                    for (size_t i = 0; i < nE; ++i) { QCOMPARE(editor[i]->RawView->toPlainText(), s_after); }
                 } break;
                 }
             }
