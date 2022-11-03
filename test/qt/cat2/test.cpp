@@ -163,7 +163,7 @@ private slots:
             QTest::mousePress(tree_view.viewport(), m);
             QTest::mouseRelease(tree_view.viewport(), m);
         }
-        QCOMPARE(spy.count(), 6);
+        QCOMPARE(spy.count(), 6); // click, press
     }
 
     void QtTreeModel__construct_from_JSON() {

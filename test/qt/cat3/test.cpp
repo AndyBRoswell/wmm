@@ -51,11 +51,22 @@ private slots:
                 set, append,
             };
 
-            constexpr size_t nE = 1e3; // E = editor
-            constexpr size_t na = 1e3; // a = action
-            constexpr qsizetype lmax = 1e3;
+            constexpr size_t nE = 1e3;      // E = editor
+            constexpr size_t na = 1e3;      // a = action
+            constexpr qsizetype lmax = 1e3; // max length of random string
 
             wmm::DatabaseConsole database_console;
+            { // signal test
+                static constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
+                QSignalSpy spy(&database_console, SIGNAL(MouseDown()));
+                for (const auto m : mouse_keys) {
+                    QTest::mouseClick(&database_console, m);
+                    QTest::mouseDClick(&database_console, m);
+                    QTest::mousePress(&database_console, m);
+                    QTest::mouseRelease(&database_console, m);
+                }
+                QCOMPARE(spy.count(), 9); // click, dclick, press
+            }
             std::vector<wmm::TreeEditor*> editor;
             for (size_t i = 0; i < nE; ++i) { 
                 auto* e = new wmm::TreeEditor;
