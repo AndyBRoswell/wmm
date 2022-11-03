@@ -32,17 +32,22 @@ private slots:
 
         wmm::DocumentExtractPage doc_extract_page;
         for (size_t i = 0; i < nf; ++i) {
+            QString expected_text;
             const auto file_name = QString::number(get_high_resolution_tick_count()) + ".docx";
             duckx::Document test_doc(file_name.toStdString());
             for (size_t j = 0; j < np; ++j) {
                 duckx::Paragraph p = test_doc.paragraphs();
                 for (size_t k = 0; k < nr; ++k) {
-                    p.add_run(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, lmax)));
+                    const auto s = tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, lmax));
+                    p.add_run(s);
+                    expected_text.append(s.c_str()).append("\n");
                 }
-                test_doc.save();
             }
+            test_doc.save();
+            expected_text.remove(expected_text.size() - 1, 1); // remove the trailing newline char
 
             doc_extract_page.OpenFile(file_name);
+            QCOMPARE(doc_extract_page.GetPlainTextFromOpenDocument(), expected_text);
         }
     }
 
