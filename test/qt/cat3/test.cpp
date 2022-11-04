@@ -24,7 +24,7 @@ private slots:
         namespace wmm = WritingMaterialsManager;
 
         { // add & del & clr associated editors
-            constexpr size_t nE = 1e3;  // E = editor
+            constexpr size_t nE = 2e3;  // E = editor
             wmm::DatabaseConsole database_console;
             std::vector<wmm::TreeEditor*> editor_list;
             editor_list.reserve(nE);
@@ -51,9 +51,9 @@ private slots:
                 set, append,
             };
 
-            constexpr size_t nE = 1e3;      // E = editor
-            constexpr size_t na = 1e3;      // a = action
-            constexpr qsizetype lmax = 1e3; // max length of random string
+            constexpr size_t nE = 2e3;      // E = editor
+            constexpr size_t na = 2e3;      // a = action
+            constexpr qsizetype lmax = 2e3; // max length of random string
 
             wmm::DatabaseConsole database_console;
             { // signal test
