@@ -17,7 +17,7 @@ class test : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase() {
-        qDebug("GUI Test Cat. 3");
+        qDebug("GUI Test Cat. 4");
     }
 
     void DocumentExtractPage__view_docx() {
@@ -55,7 +55,7 @@ private slots:
     }
 
     void cleanupTestCase() {
-        qDebug("End GUI Test Cat. 3");
+        qDebug("End GUI Test Cat. 4");
     }
 };
 
