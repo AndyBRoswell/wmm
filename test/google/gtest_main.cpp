@@ -39,8 +39,8 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     };
 
     { // case-insensitive hasher
-        constexpr size_t g = 1e6;       // group count of test data
-        constexpr size_t lmax = 1e3;    // max length of test strings
+        constexpr size_t g = 1e7;       // group count of test data
+        constexpr size_t lmax = 1e4;    // max length of test strings
 
         constexpr wmm::CaseInsensitiveHasher hasher;
         for (size_t i = 0; i < g; ++i) { // verify the hasher
@@ -132,7 +132,7 @@ TEST(FileSystemAccessor, Read) {
 
     constexpr size_t N = 1024;                      // number of test files
     constexpr size_t Lu = 16;                       // u means unit
-    constexpr size_t Lmin = Lu, Lmax = 8ull << 20;  // min/max length of test files
+    constexpr size_t Lmin = Lu, Lmax = 16ull << 20; // min/max length of test files
 
     std::set<uintmax_t> basenames;
     std::unordered_set<QByteArray> contents;
@@ -174,6 +174,7 @@ TEST(FileSystemAccessor, Read) {
 TEST(JSONFormatter, Default) {
     using fsa = WritingMaterialsManager::FileSystemAccessor;
 
+    GTEST_SKIP();
     // create test files
     std::filesystem::create_directory("test");
     std::filesystem::create_directory("test/JSON");
