@@ -46,7 +46,7 @@ TEST(TestAlgorithm, Mod) {
             else { EXPECT_NE(A, B); }
         }
     }
-    constexpr size_t n = 1e8; // test count
+    constexpr size_t n = 1e9; // test count
     for (size_t i = 0; i < n; ++i) {
         auto a = U(R), b = U(R), c = U(R); // signed
         while (c == 0) { c = U(R); } // division by zero is not allowed
@@ -86,27 +86,10 @@ TEST(TestAlgorithm, Integer) {
         constexpr size_t N = 1e3; // test count
         constexpr size_t n = 1e6; // sub-test count
 
-        std::mt19937_64& RE = tiny_random::random_engine;
-        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
-        std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
-        for (size_t i = 0; i < N; ++i) {
-            const auto p = std::minmax(US(RE), US(RE));
-            const auto m = p.first, M = p.second;
-            for (size_t j = 0; j < n; ++j) {
-                const auto x = integer(m, M);
-                EXPECT_GE(x, m); EXPECT_LE(x, M);
-            }
-            const auto q = std::minmax(UU(RE), UU(RE));
-            const auto mu = q.first, Mu = q.second;
-            for (size_t j = 0; j < n; ++j) {
-                const auto x = integer(mu, Mu);
-                EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
-            }
-        }
         { // special cases
             constexpr intmax_t b[][2] = { // B/b means bound
                 { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
-                { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 }, 
+                { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 },
             };
             constexpr uintmax_t B[][2] = {
                 { 0, 0 }, { 1, 1 },
@@ -125,6 +108,23 @@ TEST(TestAlgorithm, Integer) {
                     const auto x = integer(mu, Mu);
                     EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
                 }
+            }
+        }
+        std::mt19937_64& RE = tiny_random::random_engine;
+        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
+        std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
+        for (size_t i = 0; i < N; ++i) {
+            const auto p = std::minmax(US(RE), US(RE));
+            const auto m = p.first, M = p.second;
+            for (size_t j = 0; j < n; ++j) {
+                const auto x = integer(m, M);
+                EXPECT_GE(x, m); EXPECT_LE(x, M);
+            }
+            const auto q = std::minmax(UU(RE), UU(RE));
+            const auto mu = q.first, Mu = q.second;
+            for (size_t j = 0; j < n; ++j) {
+                const auto x = integer(mu, Mu);
+                EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
             }
         }
     }
@@ -185,7 +185,7 @@ TEST(TestAlgorithm, Integer) {
 }
 
 TEST(TestAlgorithm, JSON) {
-    constexpr size_t n = 100; // test count
+    constexpr size_t n = 200; // test count
     
     for (size_t i = 0; i < n; ++i) {
         const auto json = QByteArray::fromStdString(tiny_random::chr::JSON());
