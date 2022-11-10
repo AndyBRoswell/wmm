@@ -150,17 +150,21 @@ TEST(TestAlgorithm, Integer) {
             }
         }
     }
-    { // ASCII
+    { // ASCII & ASCII_string
         using namespace tiny_random;
+
         using tiny_random::chr::ASCII_char_type;
         using tiny_random::chr::ASCII;
         using tiny_random::chr::ASCII_string;
+        
         using enum ASCII_char_type;
 
         const std::set<int> shex(chr::hex, chr::hex + sizeof(chr::hex) - 1);
         const std::set<int> slhex(chr::lhex, chr::lhex + sizeof(chr::lhex) - 1);
         const std::set<int> sualnum(chr::ualnum, chr::ualnum + sizeof(chr::ualnum) - 1);
         const std::set<int> slalnum(chr::lalnum, chr::lalnum + sizeof(chr::lalnum) - 1);
+
+        // this is a table: col 0 -> ASCII char type, col 1 -> decision function, col 2 -> buffer of generated characters, col 3 -> expected character count
         const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>, size_t>> f = {
             { dec, [](int c) { return isdigit(c); }, {}, 10, },
             { hex, [&shex](int c) { return shex.contains(c); }, {}, 16, },
@@ -175,29 +179,27 @@ TEST(TestAlgorithm, Integer) {
             { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, 0x7e - 0x20 + 1 },
         };
 
-        for (bool ok;;) { // single ASCII character
-            for (size_t i = 0; i < 100; ++i) {
+        for (bool ok = true;; ok = true) { // single ASCII character
+            for (size_t i = 0; i < 100; ++i) { // verify 1 time every 100 iterations
                 for (size_t j = 0; j < f.size(); ++j) {
-                    const auto c = ASCII(std::get<0>(f[j]));
-                    EXPECT_TRUE(std::get<1>(f[j])(c)); // char c is in the specified range, judged by the corresponding lambda
+                    const auto char_type = ASCII(std::get<0>(f[j]));
+                    EXPECT_TRUE(std::get<1>(f[j])(char_type)); // char c is in the specified range, judged by the corresponding lambda
                 }
             }
-            ok = true;
-            for (size_t i = 0; i < f.size(); ++i) {
-                if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { break; } // check if all chars in the specified range have been generated at least only once
-                std::cout << "<" << i << ", " << std::get<3>(f[i]) << ">" << std::endl;
+            for (size_t i = 0; i < f.size(); ++i) { // verify if every generated character belongs to the specified ASCII char type
+                if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { ok = false; break; } // check if all chars in the specified range have been generated at least only once
             }
             if (ok == true) { break; }
         }
 
         constexpr size_t n = 1e6; // test count
-        constexpr size_t lmax = 256; // default max string length
+        constexpr size_t lmax = 1e3; // default max string length
 
-        for (size_t i = 0; i < n; ++i) {
+        for (size_t i = 0; i < n; ++i) { // ASCII string
             const auto tid = number::integer(0ull, f.size() - 1);
-            const auto t = std::get<0>(f[tid]);
-            const size_t l = number::integer(1ull, lmax);
-            const auto s = ASCII_string(l, t);
+            const auto char_type = std::get<0>(f[tid]);
+            const auto l = number::integer(1ull, lmax);
+            const auto s = ASCII_string(l, char_type);
             EXPECT_EQ(s.size(), l);
             for (const auto c : s) {
                 EXPECT_TRUE(std::get<1>(f[tid])(c)); // expect that every char is of the specified type
