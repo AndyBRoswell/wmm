@@ -12,6 +12,8 @@
 // this software
 #include "tiny_random.h"
 
+// Some of the statements are like GRE Q test: Which quantity is greater, A or B?
+
 // Tests for tests begins here
 TEST(TestAlgorithm, Rem) {
     GTEST_SKIP();
@@ -33,29 +35,36 @@ TEST(TestAlgorithm, Mod) {
 
     std::mt19937_64& R = tiny_random::random_engine;
     std::uniform_int_distribution<intmax_t> U(INTMAX_MIN / 2, INTMAX_MAX / 2); // limit the range of random numbers to avert overflow
-    std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
     std::uniform_int_distribution<uintmax_t> V(0, UINTMAX_MAX / 2);
+    std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
     std::uniform_int_distribution<uintmax_t> v(0, UINT_MAX);
+    
+    //(a + b) mod c = ((a mod c) + (b mod c)) mod c
+    //(a - b) mod c = ((a mod c) - (b mod c)) mod c
+    //(ab) mod c = ((a mod c)(b mod c)) mod c
+
     { // a very simple demo of overflow
-        constexpr intmax_t x[][3] = { { 10, -20, -1e10 }, { -1e6, -2e6, -1e10 }, { 1e9, 2e9, -5e9 }, { 1e9, 2e9, -1e10 }, };
+        constexpr size_t opd_count = 3; // opd -> operand
+        constexpr intmax_t x[][opd_count] = { { 10, -20, -1e10 }, { -1e6, -2e6, -1e10 }, { 1e9, 2e9, -5e9 }, { 1e9, 2e9, -1e10 }, };
         constexpr bool expect_eq[] = { true, true, false, false, };
-        for (size_t i = 0; i < sizeof(x) / (3 * sizeof(intmax_t)); ++i) {
+        for (size_t i = 0; i < sizeof(x) / (opd_count * sizeof(intmax_t)); ++i) {
             const auto a = x[i][0], b = x[i][1], c = x[i][2];
             const intmax_t A = mod(a * b, c), B = mod(mod(a, c) * mod(b, c), c);
             if (expect_eq[i]) { EXPECT_EQ(A, B); }
             else { EXPECT_NE(A, B); }
         }
     }
-    constexpr size_t n = 1e9; // test count
+    constexpr size_t n = 2e9; // test count
     for (size_t i = 0; i < n; ++i) {
-        auto a = U(R), b = U(R), c = U(R); // signed
+        auto a = U(R), b = U(R), c = U(R); // Part 1: Signed
         while (c == 0) { c = U(R); } // division by zero is not allowed
         EXPECT_EQ(mod(a + b, c), mod(mod(a, c) + mod(b, c), c));
         EXPECT_EQ(mod(a - b, c), mod(mod(a, c) - mod(b, c), c));
         a = u(R), b = u(R), c = u(R);
-        while (c == 0) { c = u(R); }
+        while (c == 0) { c = u(R); }// division by zero is not allowed
         EXPECT_EQ(mod(a * b, c), mod(mod(a, c) * mod(b, c), c));
-        auto A = V(R), B = V(R), C = V(R); // unsigned
+
+        auto A = V(R), B = V(R), C = V(R); // Part 2: Unsigned
         while (C == 0) { C = V(R); }
         EXPECT_EQ(mod(A + B, C), mod(mod(A, C) + mod(B, C), C));
         { // skip the test cases with overflow in intermediate steps
@@ -72,7 +81,7 @@ TEST(TestAlgorithm, Integer) {
     using tiny_random::number::integer;
 
     { // integer()
-        constexpr size_t n = 1e3; // test count
+        constexpr size_t n = 1e6; // test count
 
         size_t nonneg = 0, neg = 0;
         while (nonneg < n || neg < n) {
@@ -83,48 +92,61 @@ TEST(TestAlgorithm, Integer) {
         static_assert(std::is_same_v<std::remove_const_t<decltype(x)>, uintmax_t>);
     }
     { // <class T> integer(const T, const T)
-        constexpr size_t N = 1e3; // test count
-        constexpr size_t n = 1e6; // sub-test count
-
         { // special cases
-            constexpr intmax_t b[][2] = { // B/b means bound
+            constexpr size_t n = 1e6; // test count
+
+            constexpr intmax_t b[][2] = { // b means bound
                 { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
                 { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 },
             };
-            constexpr uintmax_t B[][2] = {
-                { 0, 0 }, { 1, 1 },
-                { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX },
-            };
-            for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) {
-                for (size_t j = 0; j < n; ++j) {
-                    const auto m = b[i][0], M = b[i][1];
+            for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) { // Part 1: Signed
+                const auto m = b[i][0], M = b[i][1];
+                const auto na = std::min(M - m + 1, static_cast<intmax_t>(n)); // a = amended
+                for (auto j = 0; j < na; ++j) {
                     const auto x = integer(m, M);
                     EXPECT_GE(x, m); EXPECT_LE(x, M);
                 }
             }
-            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) {
-                for (size_t j = 0; j < n; ++j) {
-                    const auto mu = b[i][0], Mu = b[i][1];
+
+            constexpr uintmax_t B[][2] = { // B means bound
+                { 0, 0 }, { 1, 1 },
+                { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX },
+            };
+            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) { // Part 2: Unsigned
+                const auto mu = B[i][0], Mu = B[i][1];
+                const auto na = std::min(Mu - mu + 1, n); // a = amended
+                for (auto j = 0; j < na; ++j) {
                     const auto x = integer(mu, Mu);
                     EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
                 }
             }
         }
-        std::mt19937_64& RE = tiny_random::random_engine;
-        std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
-        std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
-        for (size_t i = 0; i < N; ++i) {
-            const auto p = std::minmax(US(RE), US(RE));
-            const auto m = p.first, M = p.second;
-            for (size_t j = 0; j < n; ++j) {
-                const auto x = integer(m, M);
-                EXPECT_GE(x, m); EXPECT_LE(x, M);
-            }
-            const auto q = std::minmax(UU(RE), UU(RE));
-            const auto mu = q.first, Mu = q.second;
-            for (size_t j = 0; j < n; ++j) {
-                const auto x = integer(mu, Mu);
-                EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
+        { // general tests
+            constexpr size_t N = 1e4; // test count
+            constexpr size_t n = 1e6; // sub-test count
+
+            std::mt19937_64& RE = tiny_random::random_engine;
+            std::uniform_int_distribution<intmax_t> US(INTMAX_MIN / 2, INTMAX_MAX / 2);
+            std::uniform_int_distribution<uintmax_t> UU(0, UINTMAX_MAX);
+            for (size_t i = 0; i < N; ++i) {
+                { // Part 1: Signed
+                    const auto p = std::minmax(US(RE), US(RE));
+                    const auto m = p.first, M = p.second;
+                    const auto na = std::min(M - m + 1, static_cast<intmax_t>(n)); // a = amended
+                    for (auto j = 0; j < na; ++j) {
+                        const auto x = integer(m, M);
+                        EXPECT_GE(x, m); EXPECT_LE(x, M);
+                    }
+                }
+                { // Part 2: Unsigned
+                    const auto q = std::minmax(UU(RE), UU(RE));
+                    const auto mu = q.first, Mu = q.second;
+                    const auto na = std::min(Mu - mu + 1, n); // a = amended, u = unsigned
+                    for (auto j = 0; j < na; ++j) {
+                        const auto x = integer(mu, Mu);
+                        EXPECT_GE(x, mu); EXPECT_LE(x, Mu);
+                    }
+                }
             }
         }
     }
@@ -185,7 +207,7 @@ TEST(TestAlgorithm, Integer) {
 }
 
 TEST(TestAlgorithm, JSON) {
-    constexpr size_t n = 200; // test count
+    constexpr size_t n = 400; // test count
     
     for (size_t i = 0; i < n; ++i) {
         const auto json = QByteArray::fromStdString(tiny_random::chr::JSON());
