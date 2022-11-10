@@ -102,7 +102,7 @@ TEST(TestAlgorithm, Integer) {
             };
             for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) { // Part 1: Signed
                 const auto m = b[i][0], M = b[i][1];
-                const auto na = std::min(M - m + 1, static_cast<intmax_t>(n)); // a = amended
+                const auto na = std::max(10ll, std::min(M - m + 1, static_cast<intmax_t>(n))); // a = amended
                 for (auto j = 0; j < na; ++j) {
                     const auto x = integer(m, M);
                     EXPECT_GE(x, m); EXPECT_LE(x, M);
@@ -115,7 +115,7 @@ TEST(TestAlgorithm, Integer) {
             };
             for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) { // Part 2: Unsigned
                 const auto mu = B[i][0], Mu = B[i][1];
-                const auto na = std::min(Mu - mu + 1, n); // a = amended
+                const auto na = std::max(10ull, std::min(Mu - mu + 1, n)); // a = amended
                 for (auto j = 0; j < na; ++j) {
                     const auto x = integer(mu, Mu);
                     EXPECT_GE(x, mu); EXPECT_LE(x, Mu);

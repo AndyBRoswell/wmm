@@ -164,10 +164,10 @@ namespace WritingMaterialsManager {
 
         // Fetch data dynamically:
 
-//        bool hasChildren(const QModelIndex& Parent = QModelIndex()) const override;
-//
-//        bool canFetchMore(const QModelIndex& Parent) const override;
-//        void fetchMore(const QModelIndex& Parent) override;
+        //bool hasChildren(const QModelIndex& Parent = QModelIndex()) const override;
+
+        //bool canFetchMore(const QModelIndex& Parent) const override;
+        //void fetchMore(const QModelIndex& Parent) override;
 
         QVariant data(const QModelIndex& Index, int Role = Qt::DisplayRole) const override;
 
