@@ -113,7 +113,7 @@ TEST(TestAlgorithm, Integer) {
 
             constexpr uintmax_t B[][opd_count] = { // B means bound
                 { 0, 0 }, { 1, 1 },
-                { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX },
+                { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX - 1 },
             };
             for (size_t i = 0; i < sizeof(B) / (opd_count * sizeof(uintmax_t)); ++i) { // Part 2: Unsigned
                 const auto mu = B[i][0], Mu = B[i][1];
