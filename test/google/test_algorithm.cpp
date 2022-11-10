@@ -15,6 +15,11 @@
 // Some of the statements are like GRE Q test: Which quantity is greater, A or B?
 
 // Tests for tests begins here
+
+//(a + b) mod c = ((a mod c) + (b mod c)) mod c
+//(a - b) mod c = ((a mod c) - (b mod c)) mod c
+//(ab) mod c = ((a mod c)(b mod c)) mod c
+
 TEST(TestAlgorithm, Rem) {
     GTEST_SKIP();
     std::mt19937_64& random_engine = tiny_random::random_engine;
@@ -38,10 +43,6 @@ TEST(TestAlgorithm, Mod) {
     std::uniform_int_distribution<uintmax_t> V(0, UINTMAX_MAX / 2);
     std::uniform_int_distribution<intmax_t> u(INT_MIN, INT_MAX);
     std::uniform_int_distribution<uintmax_t> v(0, UINT_MAX);
-    
-    //(a + b) mod c = ((a mod c) + (b mod c)) mod c
-    //(a - b) mod c = ((a mod c) - (b mod c)) mod c
-    //(ab) mod c = ((a mod c)(b mod c)) mod c
 
     { // a very simple demo of overflow
         constexpr size_t opd_count = 3; // opd -> operand
