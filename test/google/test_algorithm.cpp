@@ -96,11 +96,13 @@ TEST(TestAlgorithm, Integer) {
         { // special cases
             constexpr size_t n = 1e6; // test count
 
-            constexpr intmax_t b[][2] = { // b means bound
+            constexpr size_t opd_count = 2; // opd -> operand
+
+            constexpr intmax_t b[][opd_count] = { // b means bound
                 { 0, 0 } , { -1, 0 }, { 0, 1 }, { -1, 1 }, { -2, 1 }, { -1, 2 },
                 { INTMAX_MIN / 2, INTMAX_MIN / 2 }, { INTMAX_MAX / 2, INTMAX_MAX / 2 }, { INTMAX_MIN / 2 + 1, INTMAX_MAX / 2 },
             };
-            for (size_t i = 0; i < sizeof(b) / (2 * sizeof(intmax_t)); ++i) { // Part 1: Signed
+            for (size_t i = 0; i < sizeof(b) / (opd_count * sizeof(intmax_t)); ++i) { // Part 1: Signed
                 const auto m = b[i][0], M = b[i][1];
                 const auto na = std::max(10ll, std::min(M - m + 1, static_cast<intmax_t>(n))); // a = amended
                 for (auto j = 0; j < na; ++j) {
@@ -109,11 +111,11 @@ TEST(TestAlgorithm, Integer) {
                 }
             }
 
-            constexpr uintmax_t B[][2] = { // B means bound
+            constexpr uintmax_t B[][opd_count] = { // B means bound
                 { 0, 0 }, { 1, 1 },
                 { UINTMAX_MAX, UINTMAX_MAX }, { 0, UINTMAX_MAX },
             };
-            for (size_t i = 0; i < sizeof(B) / (2 * sizeof(uintmax_t)); ++i) { // Part 2: Unsigned
+            for (size_t i = 0; i < sizeof(B) / (opd_count * sizeof(uintmax_t)); ++i) { // Part 2: Unsigned
                 const auto mu = B[i][0], Mu = B[i][1];
                 const auto na = std::max(10ull, std::min(Mu - mu + 1, n)); // a = amended
                 for (auto j = 0; j < na; ++j) {
