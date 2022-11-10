@@ -164,7 +164,7 @@ TEST(TestAlgorithm, Integer) {
         const std::set<int> sualnum(chr::ualnum, chr::ualnum + sizeof(chr::ualnum) - 1);
         const std::set<int> slalnum(chr::lalnum, chr::lalnum + sizeof(chr::lalnum) - 1);
 
-        // this is a table: col 0 -> ASCII char type, col 1 -> decision function, col 2 -> buffer of generated characters, col 3 -> expected character count
+        // this is a table: col 0 -> ASCII char type, col 1 -> decision function, col 2 -> buffer of generated chars, col 3 -> expected char count
         const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>, size_t>> f = {
             { dec, [](int c) { return isdigit(c); }, {}, 10, },
             { hex, [&shex](int c) { return shex.contains(c); }, {}, 16, },
@@ -182,7 +182,7 @@ TEST(TestAlgorithm, Integer) {
         for (bool ok = true;; ok = true) { // single ASCII character
             for (size_t i = 0; i < 100; ++i) { // verify 1 time every 100 iterations
                 for (size_t j = 0; j < f.size(); ++j) {
-                    const auto char_type = ASCII(std::get<0>(f[j]));
+                    const auto char_type = ASCII(std::get<0>(f[j])); // verify for each ASCII char type
                     EXPECT_TRUE(std::get<1>(f[j])(char_type)); // char c is in the specified range, judged by the corresponding lambda
                 }
             }
@@ -197,7 +197,7 @@ TEST(TestAlgorithm, Integer) {
 
         for (size_t i = 0; i < n; ++i) { // ASCII string
             const auto tid = number::integer(0ull, f.size() - 1);
-            const auto char_type = std::get<0>(f[tid]);
+            const auto char_type = std::get<0>(f[tid]); // verify for each ASCII char type
             const auto l = number::integer(1ull, lmax);
             const auto s = ASCII_string(l, char_type);
             EXPECT_EQ(s.size(), l);
