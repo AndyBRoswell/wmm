@@ -94,6 +94,7 @@ namespace tiny_random {
 
         template<class T = char> typename enable_if_supported_basic_string<T> ASCII_string(const size_t length, const ASCII_char_type type = ASCII_char_type::printable) noexcept { // return an ASCII string
             std::basic_string<T> s;
+            s.reserve(length);
             for (size_t i = 0; i < length; ++i) { s.push_back(ASCII(type)); }
             return s;
         }

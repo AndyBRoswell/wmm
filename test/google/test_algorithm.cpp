@@ -168,44 +168,46 @@ TEST(TestAlgorithm, ASCII) {
     const std::set<int> slhex(chr::lhex, chr::lhex + sizeof(chr::lhex) - 1);
     const std::set<int> sualnum(chr::ualnum, chr::ualnum + sizeof(chr::ualnum) - 1);
     const std::set<int> slalnum(chr::lalnum, chr::lalnum + sizeof(chr::lalnum) - 1);
-    const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, std::set<int>, size_t>> f = { // 0 -> ASCII char type, 1 -> decision function, 2 -> buffer of generated chars, 3 -> expected char count
-        { dec, [](int c) { return isdigit(c); }, {}, 10, },
-        { hex, [&shex](int c) { return shex.contains(c); }, {}, 16, },
-        { lhex, [&slhex](int c) { return slhex.contains(c); }, {}, 16, },
-        { ucase, [](int c) { return isupper(c); }, {}, 26, },
-        { lcase, [](int c) { return islower(c); }, {}, 26, },
-        { alpha, [](int c) { return isalpha(c); }, {}, 52, },
-        { ualnum, [&sualnum](int c) { return sualnum.contains(c); }, {}, 36, },
-        { lalnum, [&slalnum](int c) { return slalnum.contains(c); }, {}, 36, },
-        { alnum, [](int c) { return isalnum(c); }, {}, 62, },
-        { punct, [](int c) { return ispunct(c); }, {}, sizeof(chr::punct) - 1, },
-        { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, {}, 0x7e - 0x20 + 1 },
+    const std::vector<std::tuple<ASCII_char_type, std::function<bool(int)>, size_t>> f = { // 0 -> ASCII char type, 1 -> decision function, 2 -> expected char count
+        { dec, [](int c) { return isdigit(c); }, 10, },
+        { hex, [&shex](int c) { return shex.contains(c); }, 16, },
+        { lhex, [&slhex](int c) { return slhex.contains(c); }, 16, },
+        { ucase, [](int c) { return isupper(c); }, 26, },
+        { lcase, [](int c) { return islower(c); }, 26, },
+        { alpha, [](int c) { return isalpha(c); }, 52, },
+        { ualnum, [&sualnum](int c) { return sualnum.contains(c); }, 36, },
+        { lalnum, [&slalnum](int c) { return slalnum.contains(c); }, 36, },
+        { alnum, [](int c) { return isalnum(c); }, 62, },
+        { punct, [](int c) { return ispunct(c); }, sizeof(chr::punct) - 1, },
+        { printable, [](int c) { return c >= 0x20 and c <= 0x7e; }, 0x7e - 0x20 + 1 },
     };
+    std::vector<std::set<char>> buf(f.size()); // buffer of generated chars
 
     for (bool ok = true;; ok = true) { // single ASCII character
         for (size_t i = 0; i < 100; ++i) { // verify 1 time every 100 iterations
-            for (size_t j = 0; j < f.size(); ++j) {
-                const auto char_type = ASCII(std::get<0>(f[j])); // verify for each ASCII char type
-                EXPECT_TRUE(std::get<1>(f[j])(char_type)); // char c is in the specified range, judged by the corresponding lambda
+            for (size_t j = 0; j < f.size(); ++j) { // verify for each ASCII char type
+                const auto c = ASCII(std::get<0>(f[j]));
+                EXPECT_TRUE(std::get<1>(f[j])(c)); // char c is in the specified range, judged by the corresponding lambda
+                buf[j].emplace(c); // put char c into the corresponding buffer
             }
         }
         for (size_t i = 0; i < f.size(); ++i) { // verify if every generated character belongs to the specified ASCII char type
-            if (std::get<2>(f[i]).size() < std::get<3>(f[i])) { ok = false; break; } // check if all chars in the specified range have been generated at least only once
+            if (buf[i].size() < std::get<2>(f[i])) { ok = false; break; } // check if all chars in the specified range have been generated at least only once
         }
         if (ok == true) { break; }
     }
 
-    constexpr size_t n = 1e6; // test count
+    constexpr size_t n = 1e7; // test count
     constexpr size_t lmax = 1e3; // default max string length
 
     for (size_t i = 0; i < n; ++i) { // ASCII string
-        const auto tid = number::integer(0ull, f.size() - 1);
-        const auto char_type = std::get<0>(f[tid]); // verify for each ASCII char type
+        const auto type_no = number::integer(0ull, f.size() - 1); // type no.
+        const auto char_type = std::get<0>(f[type_no]); // verify for each ASCII char type
         const auto l = number::integer(1ull, lmax);
         const auto s = ASCII_string(l, char_type);
         EXPECT_EQ(s.size(), l);
         for (const auto c : s) {
-            EXPECT_TRUE(std::get<1>(f[tid])(c)); // expect that every char is of the specified type
+            EXPECT_TRUE(std::get<1>(f[type_no])(c)); // expect that every char is of the specified type
         }
     }
 }
