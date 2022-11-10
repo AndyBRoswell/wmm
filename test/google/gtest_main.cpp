@@ -39,7 +39,7 @@ TEST(Algorithm, StringIeq) { // ieq is from powershell
     };
 
     { // case-insensitive hasher
-        constexpr size_t g = 1e7;       // group count of test data
+        constexpr size_t g = 5e6;       // group count of test data
         constexpr size_t lmax = 1e3;    // max length of test strings
 
         constexpr wmm::CaseInsensitiveHasher hasher;

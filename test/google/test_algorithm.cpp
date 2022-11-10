@@ -213,7 +213,7 @@ TEST(TestAlgorithm, ASCII) {
 }
 
 TEST(TestAlgorithm, JSON) {
-    constexpr size_t n = 400; // test count
+    constexpr size_t n = 500; // test count
     
     for (size_t i = 0; i < n; ++i) {
         const auto json = QByteArray::fromStdString(tiny_random::chr::JSON());
