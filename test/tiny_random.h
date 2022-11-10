@@ -37,9 +37,9 @@ namespace tiny_random {
             else return max_uniform_uint_dist(random_engine);
         }
 
-        /* Return a random integer between[a, b], a <= b.
-        If a, b are of signed types, then b - a <= INTMAX_MAX / 2 - INTMAX_MIN / 2 = pow(2, 63) - 1; 
-        If a, b are of unsigned types, then b - a <= UINTMAX_MAX - 0 = pow(2, 64) - 1. */
+        //Return a random integer between[a, b], a <= b.
+        //If a, b are of signed types, then b - a < INTMAX_MAX / 2 - INTMAX_MIN / 2 = pow(2, 63) - 1; 
+        //If a, b are of unsigned types, then b - a < UINTMAX_MAX - 0 = pow(2, 64) - 1.
         template<class T = uintmax_t> T integer(const T a, const T b) noexcept {
             static_assert(std::is_integral_v<T>, "Only built-in integral types are allowed.");
             const T L = b - a + 1;
