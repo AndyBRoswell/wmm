@@ -39,12 +39,16 @@ namespace WritingMaterialsManager {
         QtTreeModel* MongoDBInfoTree = new QtTreeModel(MongoDBPage);
         MongoDBInfoTree->FromJSON(MongoDBAccessor.GetDBsAndCollsInfo());
         MongoDBPage->TreeView->setModel(MongoDBInfoTree);
+        MongoDBPage->TreeView->expandAll();
+        for (int i = 0; i < 2; ++i) { MongoDBPage->TreeView->resizeColumnToContents(i); }
 
         Page* const FileSystemPage = new Page(centralWidget());
         QFileSystemModel* FileSystemTree = new QFileSystemModel(FileSystemPage);
         FileSystemTree->setRootPath(QDir::currentPath());
         FileSystemTree->setFilter(QDir::AllDirs);
         FileSystemPage->TreeView->setModel(FileSystemTree);
+        FileSystemPage->TreeView->expandAll();
+        for (int i = 0; i < 4; ++i) { FileSystemPage->TreeView->resizeColumnToContents(i); }
 
         DataSourceTab->addTab(MongoDBPage, "MongoDB");
         DataSourceTab->addTab(FileSystemPage, "File System");
