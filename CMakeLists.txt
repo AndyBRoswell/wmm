@@ -13,6 +13,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
+
 # If language is enabled by project() or enable_language(), CMAKE_<LANG>_COMPILER_LOADED is 1.
 project(wmm VERSION 0.1 LANGUAGES CXX)		# Writing Materials Manager (WMM)
 project(wmmgtest VERSION 0.1 LANGUAGES CXX)	# Tests for WMM using Google Test
