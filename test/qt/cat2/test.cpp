@@ -169,7 +169,7 @@ private slots:
     void QtTreeModel__construct_from_JSON() {
         namespace wmm = WritingMaterialsManager;
 
-        constexpr size_t n = 100; // test count
+        constexpr size_t n = 200; // test count
 
         wmm::QtTreeModel tree_model;
 
