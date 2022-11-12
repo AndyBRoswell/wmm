@@ -24,6 +24,6 @@ namespace WritingMaterialsManager {
         return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0; // QAnyStringView only has static member compare
     }
     bool CaseInsensitiveStringComparator::operator()(const QUtf8StringView LHS, const QUtf8StringView RHS) const noexcept {
-        return false;
+        return QByteArrayView(LHS.data()).compare(QByteArrayView(RHS.data()), Qt::CaseInsensitive) == 0; // QUtf8StringView doesn't have static/instance member compare
     }
 }

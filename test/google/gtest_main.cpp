@@ -198,14 +198,17 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                     case Type::QAnyStringView: verify.operator() < std::string, QAnyStringView > (s); break;
                     }
                 } break;
-                //case Type::const_char8_t_star: case Type::QUtf8StringView: {
-                //    std::array<std::u8string, 3> s;
-                //    for (auto& str : s) {
-                //        const auto t = next_str(next_int(1ull, lmax));
-                //        str.reserve(t.size());
-                //        for (const auto c : t) { str.push_back(c); }
-                //    }
-                //} break;
+                case Type::const_char8_t_star: case Type::QUtf8StringView: {
+                    std::array<std::u8string, 3> s;
+                    for (auto& str : s) {
+                        const auto t = next_str(next_int(1ull, lmax));
+                        str.reserve(t.size());
+                        for (const auto c : t) { str.push_back(c); }
+                    }
+                    switch (T) {
+                    case Type::const_char8_t_star: verify(s); break;
+                    }
+                } break;
                 }
             }
         }
