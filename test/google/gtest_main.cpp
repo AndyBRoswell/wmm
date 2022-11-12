@@ -33,6 +33,13 @@ constexpr auto next_int = [](const auto a, const auto b) noexcept -> auto {
 constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) noexcept {
     return tiny_random::chr::ASCII_string(l, t);
 };
+constexpr auto random_case = []<class T>(const T & s) {
+    T t;
+    t.reserve(s.size());
+    if constexpr (std::is_same_v<T, QString>) { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); } }
+    else { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(toupper(c)) : t.push_back(tolower(c)); } }
+    return t;
+};
 
 // Tests of WMM begin here.
 TEST(Algorithm, CaseInsensitiveHasher) {
@@ -40,14 +47,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
     constexpr size_t g = 2e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
-
-    auto random_case = []<class T>(const T & s) {
-        T t;
-        t.reserve(s.size());
-        if constexpr (std::is_same_v<T, QString>) { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); } }
-        else { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(toupper(c)) : t.push_back(tolower(c)); } }
-        return t;
-    };
 
     for (size_t i = 0; i < g; ++i) {
         { // string views and primitive char arrays
