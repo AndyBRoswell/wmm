@@ -44,61 +44,60 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         {
-            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, };
+            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, };
+
+            static constexpr wmm::CaseInsensitiveHasher hasher;
+            auto verify = [&]<class Ty>(std::array<Ty, 3>&t, const std::array<size_t, 2>&H) {
+                EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
+                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
+            };
 
             constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
-            for (const auto T: types) {
-                std::array<std::string, 3> s;
-                std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-                std::string t[3] = { s[0], s[1], s[2] };
-                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                std::array<size_t, 2> H;
-                switch (T) {
-                case Type::const_char_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
-                case Type::QByteArrayView: H = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) }; break;
-                case Type::QLatin1StringView: H = { hasher((QLatin1StringView(s[0].c_str()))), hasher(QLatin1StringView(t[0].c_str())) }; break;
-                case Type::QAnyStringView: H = { hasher(QAnyStringView(s[0].c_str())), hasher(QAnyStringView(t[0].c_str())) }; break;
-                }
-                EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-                else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
-            }
-        }
-        {
-            enum class Type{ const_char8_t_star, QUtf8StringView, };
-
-            constexpr Type types[] = {Type::const_char8_t_star, Type::QUtf8StringView,};
             for (const auto T : types) {
-                std::vector<std::u8string> s(3);
-                for (auto& str : s) {
-                    const auto t = next_str(next_int(1ull, lmax));
-                    str.reserve(t.size());
-                    for (const auto c : t) { str.push_back(c); }
-                }
-
-                std::u8string t[3] = { s[0], s[1], s[2] };
-                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                std::array<size_t, 2> H;
                 switch (T) {
-                case Type::const_char8_t_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
-                case Type::QUtf8StringView: H = { hasher(QUtf8StringView(s[0].c_str())), hasher(QUtf8StringView(t[0].c_str())) }; break;
+                case Type::const_char_star: case Type::QByteArrayView: case Type::QLatin1StringView: case Type::QAnyStringView: {
+                    std::array<std::string, 3> s;
+                    std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
+
+                    std::array<std::string, 3> t = { s[0], s[1], s[2] };
+                    next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+                    std::array<size_t, 2> H;
+                    switch (T) {
+                    case Type::const_char_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
+                    case Type::QByteArrayView: H = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) }; break;
+                    case Type::QLatin1StringView: H = { hasher((QLatin1StringView(s[0].c_str()))), hasher(QLatin1StringView(t[0].c_str())) }; break;
+                    case Type::QAnyStringView: H = { hasher(QAnyStringView(s[0].c_str())), hasher(QAnyStringView(t[0].c_str())) }; break;
+                    }
+                    verify(t, H);
+                } break;
+                case Type::const_char8_t_star: case Type::QUtf8StringView: {
+                    std::array<std::u8string, 3> s;
+                    for (auto& str : s) {
+                        const auto t = next_str(next_int(1ull, lmax));
+                        str.reserve(t.size());
+                        for (const auto c : t) { str.push_back(c); }
+                    }
+                    
+                    std::array<std::u8string, 3> t = { s[0], s[1], s[2] };
+                    next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+                    std::array<size_t, 2> H;
+                    switch (T) {
+                    case Type::const_char8_t_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
+                    case Type::QUtf8StringView: H = { hasher(QUtf8StringView(s[0].c_str())), hasher(QUtf8StringView(t[0].c_str())) }; break;
+                    }
+                    verify(t, H);
+                } break;
                 }
-                EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-                else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
             }
         }
         {
             enum class Type { QByteArray, QString, };
 
-            auto verify = []<class T>(const std::array<T, 3>&s) {
-                static constexpr wmm::CaseInsensitiveHasher hasher;
-
+            static constexpr wmm::CaseInsensitiveHasher hasher;
+            auto verify = [&]<class T>(const std::array<T, 3>&s) {
                 const T t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
                 const size_t H[2] = { hasher(s[0]), hasher(t) };
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
