@@ -48,7 +48,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
             const std::vector<Type> types{ Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
             for (const auto T: types) {
-                std::vector<std::string> s(3);
+                std::array<std::string, 3> s;
                 std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
 
                 std::string t[3] = { s[0], s[1], s[2] };
@@ -72,12 +72,25 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
             const std::vector<Type> types{ Type::const_char8_t_star, Type::QUtf8StringView, };
             for (const auto T : types) {
-                std::vector<std::u8string> str(3);
-                for (auto& s : str) {
+                std::vector<std::u8string> s(3);
+                for (auto& str : s) {
                     const auto t = next_str(next_int(1ull, lmax));
-                    s.reserve(t.size());
-                    for (const auto c : t) { s.push_back(c); }
+                    str.reserve(t.size());
+                    for (const auto c : t) { str.push_back(c); }
                 }
+
+                std::u8string t[3] = { s[0], s[1], s[2] };
+                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+                std::array<size_t, 2> H;
+                switch (T) {
+                case Type::const_char8_t_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
+                case Type::QUtf8StringView: H = { hasher(QUtf8StringView(s[0].c_str())), hasher(QUtf8StringView(t[0].c_str())) }; break;
+                }
+                EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
+                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
             }
         }
         {
