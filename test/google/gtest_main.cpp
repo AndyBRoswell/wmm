@@ -160,15 +160,25 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             };
 
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
-            auto verify = [&]<class Ty>(const std::array<Ty, 3>&s) {
-                std::array<std::string, 3> t = { s[0], s[1], s[2] };
+            auto verify = [&]<class StrT, class DestT = void>(const std::array<StrT, 3>&s) {
+                std::array<StrT, 3> t = { s[0], s[1], s[2] };
                 next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
-                EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
-                EXPECT_TRUE(comparator(t[0].c_str(), t[0].c_str()));
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
-                if (t[1] != t[2]) { EXPECT_FALSE(comparator(s[1].c_str(), s[2].c_str())); } // these 2 strings converted to the same case are not identical
-                else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
+                if constexpr (std::is_same_v<DestT, void>) {
+                    EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
+                    EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
+                    EXPECT_TRUE(comparator(t[0].c_str(), t[0].c_str()));
+                    for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
+                    if (t[1] != t[2]) { EXPECT_FALSE(comparator(s[1].c_str(), s[2].c_str())); } // these 2 strings converted to the same case are not identical
+                    else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
+                }
+                else {
+                    EXPECT_TRUE(comparator(DestT(s[0].c_str()), DestT(t[0].c_str())));  // this should yield equal because 2 strings are equal when ignoring the case
+                    EXPECT_TRUE(comparator(DestT(s[0].c_str()), DestT(s[0].c_str())));  // comparison of 2 identical strings should yield equal
+                    EXPECT_TRUE(comparator(DestT(t[0].c_str()), DestT(t[0].c_str())));
+                    for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
+                    if (t[1] != t[2]) { EXPECT_FALSE(comparator(DestT(s[1].c_str()), DestT(s[2].c_str()))); } // these 2 strings converted to the same case are not identical
+                    else { EXPECT_TRUE(comparator(DestT(s[1].c_str()), DestT(s[2].c_str()))); }
+                }
             };
 
             constexpr Type types[] = { 
@@ -181,11 +191,21 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                 case Type::const_char_star: case Type::QByteArrayView: case Type::QLatin1StringView: case Type::QAnyStringView: {
                     std::array<std::string, 3> s;
                     std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-                    verify(s);
+                    switch (T) {
+                    case Type::const_char_star: verify(s); break;
+                    //case Type::QByteArrayView: verify.operator() < std::string, QByteArrayView > (s); break;
+                    //case Type::QLatin1StringView: verify.operator() < std::string, QLatin1StringView > (s); break;
+                    //case Type::QAnyStringView: verify.operator() < std::string, QAnyStringView > (s); break;
+                    }
                 } break;
-                case Type::const_char8_t_star: case Type::QUtf8StringView: {
-
-                } break;
+                //case Type::const_char8_t_star: case Type::QUtf8StringView: {
+                //    std::array<std::u8string, 3> s;
+                //    for (auto& str : s) {
+                //        const auto t = next_str(next_int(1ull, lmax));
+                //        str.reserve(t.size());
+                //        for (const auto c : t) { str.push_back(c); }
+                //    }
+                //} break;
                 }
             }
         }

@@ -34,24 +34,23 @@ namespace WritingMaterialsManager {
         template<class T> struct supported_but_should_be_by_ref : std::integral_constant<bool, supported_but_should_be_by_ref_f<T>()> {};
         template<class T> static constexpr bool supported_but_should_be_by_ref_v = supported_but_should_be_by_ref<T>::value;
         
-        template<class T> consteval static bool supported_but_no_static_compare_f() {
-            return std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView> || std::is_same_v<T, QUtf8StringView>
+        template<class T> consteval static bool supported_but_only_member_compare_f() {
+            return std::is_same_v<T, QByteArrayView> || std::is_same_v<T, QLatin1StringView> || std::is_same_v<T, QStringView>
                 // types which may have implicit conversions to the types above; hint by qt
                 || std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_same_v<std::remove_cvref_t<T>, const char8_t*>
                 || std::is_same_v<std::remove_cvref_t<T>, const char16_t*> || std::is_same_v<std::remove_cvref_t<T>, const uint16_t*> || std::is_same_v<std::remove_cvref_t<T>, const QChar*>;
         }
-        template<class T> struct supported_but_no_static_compare : std::integral_constant<bool, supported_but_no_static_compare_f<T>()> {};
-        template<class T> static constexpr bool supported_but_no_static_compare_v = supported_but_no_static_compare<T>::value;
+        template<class T> struct supported_but_only_member_compare : std::integral_constant<bool, supported_but_only_member_compare_f<T>()> {};
+        template<class T> static constexpr bool supported_but_only_member_compare_v = supported_but_only_member_compare<T>::value;
         
         bool operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept; // Qt recommends pass string views by value
-        template<class T = QByteArrayView> typename std::enable_if_t<supported_but_no_static_compare_v<T>, bool> operator()(const T LHS, const T RHS) const noexcept {
+        //bool operator()(const QUtf8StringView LHS, const QUtf8StringView RHS) const noexcept;
+        template<class T = QByteArrayView> typename std::enable_if_t<supported_but_only_member_compare_v<T>, bool> operator()(const T LHS, const T RHS) const noexcept {
             if constexpr (std::is_class_v<T>) { return LHS.compare(RHS, Qt::CaseInsensitive) == 0; }
-            else {
-                if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*> || std::is_same_v<std::remove_cvref_t<T>, const char8_t*>) {
+                if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*>) {
                     return QByteArrayView(LHS).compare(QByteArrayView(RHS), Qt::CaseInsensitive) == 0;
                 }
                 else { return QStringView(LHS).compare(QStringView(RHS), Qt::CaseInsensitive) == 0; }
-            }
         }
         template<class T = QByteArray> typename std::enable_if_t<supported_but_should_be_by_ref_v<T>, bool> operator()(const T& LHS, const T& RHS) {
             return LHS.compare(RHS, Qt::CaseInsensitive) == 0;
