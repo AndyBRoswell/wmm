@@ -118,10 +118,10 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
             auto verify = []<class T>(const std::vector<T>&s) {
                 constexpr wmm::CaseInsensitiveHasher hasher;
 
-                const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                const size_t h[2] = { hasher(s[0]), hasher(t) };
-                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+                const T t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+                const size_t H[2] = { hasher(s[0]), hasher(t) };
+                EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
                 if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
                 else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             };
