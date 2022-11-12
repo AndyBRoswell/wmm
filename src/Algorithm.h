@@ -21,8 +21,9 @@ namespace WritingMaterialsManager {
         size_t operator()(const QAnyStringView Str) const noexcept; // Qt recommends pass string views by value
         size_t operator()(const QStringView Str) const noexcept;
         template<class T = QByteArrayView> typename std::enable_if_t<is_UTF_8_compatible_charset_v<T>, size_t> operator()(const T Str) const noexcept {
-            if constexpr (std::is_class_v<T>) { return this->operator()(QByteArray(Str.constData(), Str.size())); }
-            else { return this->operator()(QByteArray(Str)); }
+            if constexpr (std::is_class_v<T>) { return this->operator()(QByteArray::fromRawData(Str.data(), Str.size())); } // data() returns const ptr
+            else if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*>) { return this->operator()(QByteArrayView(Str)); }
+            else { return this->operator()(QUtf8StringView(Str)); }
         }
     };
 

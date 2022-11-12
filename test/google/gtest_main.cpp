@@ -53,7 +53,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
                 std::string t[3] = { s[0], s[1], s[2] };
                 next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                std::vector<size_t> H;
+                std::array<size_t, 2> H;
                 switch (T) {
                 case Type::const_char_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
                 case Type::QByteArrayView: H = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) }; break;
@@ -68,10 +68,23 @@ TEST(Algorithm, CaseInsensitiveHasher) {
             }
         }
         {
+            enum class Type{ const_char8_t_star, QUtf8StringView, };
+
+            const std::vector<Type> types{ Type::const_char8_t_star, Type::QUtf8StringView, };
+            for (const auto T : types) {
+                std::vector<std::u8string> str(3);
+                for (auto& s : str) {
+                    const auto t = next_str(next_int(1ull, lmax));
+                    s.reserve(t.size());
+                    for (const auto c : t) { s.push_back(c); }
+                }
+            }
+        }
+        {
             enum class Type { QByteArray, QString, };
 
-            auto verify = []<class T>(const std::vector<T>&s) {
-                constexpr wmm::CaseInsensitiveHasher hasher;
+            auto verify = []<class T>(const std::array<T, 3>&s) {
+                static constexpr wmm::CaseInsensitiveHasher hasher;
 
                 const T t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
                 const size_t H[2] = { hasher(s[0]), hasher(t) };
@@ -85,12 +98,12 @@ TEST(Algorithm, CaseInsensitiveHasher) {
             for (const auto T : types) {
                 switch (T) {
                 case Type::QByteArray: {
-                    std::vector<QByteArray> s(3);
+                    std::array<QByteArray, 3> s;
                     std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
                     verify(s);
                 } break;
                 case Type::QString: {
-                    std::vector<QString> s(3);
+                    std::array<QString, 3> s;
                     std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
                     verify(s);
                 } break;
