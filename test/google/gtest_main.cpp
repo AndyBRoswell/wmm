@@ -38,7 +38,7 @@ constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_
 TEST(Algorithm, CaseInsensitiveHasher) {
     namespace wmm = WritingMaterialsManager;
 
-    constexpr size_t g = 1e6;       // group count of test data
+    constexpr size_t g = 2e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     for (size_t i = 0; i < g; ++i) {
@@ -54,7 +54,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
             };
 
-            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, };
+            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, Type::QStringView, };
             for (const auto T : types) {
                 switch (T) {
                 case Type::const_char_star: case Type::QByteArrayView: case Type::QLatin1StringView: case Type::QAnyStringView: {
