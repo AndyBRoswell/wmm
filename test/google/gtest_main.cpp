@@ -33,7 +33,7 @@ constexpr auto next_int = [](const auto a, const auto b) noexcept -> auto {
 constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) noexcept {
     return tiny_random::chr::ASCII_string(l, t);
 };
-constexpr auto random_case = []<class T>(const T & s) {
+constexpr auto random_case = []<class T>(const T & s) noexcept {
     T t;
     t.reserve(s.size());
     if constexpr (std::is_same_v<T, QString>) { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); } }
