@@ -42,8 +42,8 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     for (size_t i = 0; i < g; ++i) {
-        {
-            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, };
+        { // string views and primitive char arrays
+            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, QStringView, };
 
             static constexpr wmm::CaseInsensitiveHasher hasher;
             auto verify = [&]<class Ty>(std::array<Ty, 3>&t, const std::array<size_t, 2>&H) {
@@ -54,7 +54,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
             };
 
-            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
+            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, };
             for (const auto T : types) {
                 switch (T) {
                 case Type::const_char_star: case Type::QByteArrayView: case Type::QLatin1StringView: case Type::QAnyStringView: {
@@ -92,7 +92,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 }
             }
         }
-        {
+        { // objects instead of string views or primitive char arrays
             enum class Type { QByteArray, QString, };
 
             static constexpr wmm::CaseInsensitiveHasher hasher;
