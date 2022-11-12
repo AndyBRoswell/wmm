@@ -166,16 +166,31 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
         }
         {
-            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, QStringView, };
+            enum class Type { 
+                const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, 
+                const_char8_t_star, QUtf8StringView,
+                const_char16_t_star, const_uint16_t_star, const_QChar_star, QStringView, 
+            };
 
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
             auto verify = [&]<class Ty>() {
 
             };
 
-            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, Type::QStringView, };
+            constexpr Type types[] = { 
+                Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, 
+                Type::const_char8_t_star, Type::QUtf8StringView, 
+                Type::const_char16_t_star, Type::const_uint16_t_star, Type::const_QChar_star, Type::QStringView,
+            };
             for (const auto T : types) {
+                switch (T) {
+                case Type::const_char_star: case Type::QByteArrayView: case Type::QLatin1StringView: case Type::QAnyStringView: {
 
+                } break;
+                case Type::const_char8_t_star: case Type::QUtf8StringView: {
+
+                } break;
+                }
             }
         }
         {
