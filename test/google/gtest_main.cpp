@@ -151,7 +151,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     for (size_t i = 0; i < g; ++i) { // verify the comparator
-        {
+        { // string views and primitive char arrays
             enum class Type { 
                 const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, 
                 const_char8_t_star, QUtf8StringView,
@@ -220,7 +220,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                 }
             }
         }
-        {
+        { // objects instead of string views or primitive char arrays
             enum class Type { QByteArray, QString, };
 
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
@@ -262,20 +262,19 @@ TEST(FileSystemAccessor, Read) {
     constexpr size_t Lu = 16;                       // u means unit
     constexpr size_t Lmin = Lu, Lmax = 16ull << 20; // min/max length of test files
 
-    std::set<uintmax_t> basenames;
-    std::unordered_set<QByteArray> contents;
+    std::set<uintmax_t> basenames;              // basenames of test files
+    std::unordered_set<QByteArray> contents;    // contents of test files
 
-    // regular file
     std::mt19937_64& R = tiny_random::random_engine;
     std::exponential_distribution E(0.001);
-    for (size_t i = 0; i < N; ++i) {
+    for (size_t i = 0; i < N; ++i) { // generate N regular files
         const uintmax_t basename = tiny_random::number::integer();
         std::ofstream f(pwd + '/' + std::to_string(basename) + ".txt", std::ios::out | std::ios::trunc | std::ios::binary);
         basenames.emplace(basename);
         const size_t L = std::min(Lmax, std::max(Lmin, static_cast<size_t>(Lu * E(R)))); // most files are small and a few of them are big.
         QByteArray content;
-        for (size_t j = 0; j < L; j += sizeof(uintmax_t)) {
-            const uintmax_t n[2] = { tiny_random::number::integer(), 0 };
+        for (size_t j = 0; j < L; j += sizeof(uintmax_t)) { // fill the content in random for this test file
+            const uintmax_t n[2] = { tiny_random::number::integer(), 0 }; // with null terminator
             const char* const raw = reinterpret_cast<const char*>(n);
             content.append(QByteArray::fromRawData(raw, sizeof(uintmax_t)));
         }
@@ -286,12 +285,12 @@ TEST(FileSystemAccessor, Read) {
     // interface test: read
     for (const auto& basename: basenames) { // regular files
         const std::shared_ptr<QFile> f = fsa::Open(QString::fromLocal8Bit(pwd + '/' + std::to_string(basename) + ".txt"));
-        const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);
+        const std::shared_ptr<QFileInfo> fi = fsa::GetFileInfo(f);      // read file info
         EXPECT_TRUE(basenames.contains(fi->baseName().toULongLong()));
-        EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));
+        EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));      // read file content
     }
     bool has_open_exception = false; // open exception test
-    try { fsa::Open(QString::fromLocal8Bit(pwd+"/open-exception-test.t")); } // deliberately open a non-existing file
+    try { fsa::Open(QString::fromLocal8Bit(pwd + "/open-exception-test.t")); } // deliberately open a non-existing file
     catch (const std::runtime_error& e) {
         has_open_exception = true;
         EXPECT_EQ(std::string(e.what()).substr(0, 10), std::string("Open file "));
