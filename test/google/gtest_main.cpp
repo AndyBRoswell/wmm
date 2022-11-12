@@ -44,12 +44,8 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     auto random_case = []<class T>(const T & s) {
         T t;
         t.reserve(s.size());
-        if constexpr (std::is_same_v<T, QString>) {
-            for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); }
-        }
-        else {
-            for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(toupper(c)) : t.push_back(tolower(c)); }
-        }
+        if constexpr (std::is_same_v<T, QString>) { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); } }
+        else { for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(toupper(c)) : t.push_back(tolower(c)); } }
         return t;
     };
 
