@@ -166,6 +166,19 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
         }
         {
+            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, QStringView, };
+
+            static constexpr wmm::CaseInsensitiveStringComparator comparator;
+            auto verify = [&]<class Ty>() {
+
+            };
+
+            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, Type::QStringView, };
+            for (const auto T : types) {
+
+            }
+        }
+        {
             enum class Type { QByteArray, QString, };
 
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
