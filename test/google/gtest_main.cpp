@@ -41,6 +41,18 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     constexpr size_t g = 2e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
+    auto random_case = []<class T>(const T & s) {
+        T t;
+        t.reserve(s.size());
+        if constexpr (std::is_same_v<T, QString>) {
+            for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(c.toUpper()) : t.push_back(c.toLower()); }
+        }
+        else {
+            for (const auto c : s) { next_int(0, 1) == 0 ? t.push_back(toupper(c)) : t.push_back(tolower(c)); }
+        }
+        return t;
+    };
+
     for (size_t i = 0; i < g; ++i) {
         { // string views and primitive char arrays
             enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, QStringView, };
@@ -52,23 +64,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].begin(), ::toupper); }
                 if (s[1] != s[2]) { EXPECT_NE(hasher(s[1].c_str()), hasher(s[2].c_str())); } // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
                 else { EXPECT_EQ(hasher(s[1].c_str()), hasher(s[2].c_str())); }
-            };
-            auto random_case = []<class T>(const T & s) {
-                T t;
-                t.reserve(s.size());
-                if constexpr (std::is_same_v<T, QString>) {
-                    for (const auto c : s) {
-                        if (next_int(0, 1) == 0) { t.push_back(c.toUpper()); }
-                        else { t.push_back(c.toLower()); }
-                    }
-                }
-                else {
-                    for (const auto c : s) {
-                        if (next_int(0, 1) == 0) { t.push_back(toupper(c)); }
-                        else { t.push_back(tolower(c)); }
-                    }
-                }
-                return t;
             };
 
             constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, Type::const_char8_t_star, Type::QUtf8StringView, Type::QStringView, };
@@ -124,20 +119,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
             static constexpr wmm::CaseInsensitiveHasher hasher;
             auto verify = [&]<class T>(const std::array<T, 3>&s) {
-                T t;
-                t.reserve(s[0].size());
-                if constexpr (std::is_same_v<T, QByteArray>) {
-                    for (const auto c : s[0]) {
-                        if (next_int(0, 1) == 0) { t.push_back(toupper(c)); }
-                        else { t.push_back(tolower(c)); }
-                    }
-                }
-                else {
-                    for (const auto c : s[0]) {
-                        if (next_int(0, 1) == 0) { t.push_back(c.toUpper()); }
-                        else { t.push_back(c.toLower()); }
-                    }
-                }
+                const T t = random_case(s[0]);
                 const size_t H[2] = { hasher(s[0]), hasher(t) };
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
