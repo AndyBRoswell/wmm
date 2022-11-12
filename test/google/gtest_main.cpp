@@ -89,6 +89,20 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                     }
                     verify(t, H);
                 } break;
+                case Type::QStringView: {
+                    std::array<QString, 3> s;
+                    std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+
+                    std::array<QString, 3> t = { s[0], s[1], s[2] };
+                    if (next_int(0, 1) == 0) { for (auto& c : t[0]) { c = c.toUpper(); } }
+                    else { for (auto& c : t[0]) { c = c.toLower(); } }
+                    const std::array<size_t, 2> H = { hasher(QStringView(s[0].constData())), hasher(QStringView(t[0].constData())) };
+                    EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                    EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
+                    for (size_t i = 1; i <= 2; ++i) { t[i] = t[i].toUpper(); } // t[i] = s[i].toUpper()
+                    if (t[1] != t[2]) { EXPECT_NE(hasher(QStringView(t[1].constData())), hasher(QStringView(t[2].constData()))); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                    else { EXPECT_EQ(hasher(QStringView(t[1].constData())), hasher(QStringView(t[2].constData()))); }
+                } break;
                 }
             }
         }
