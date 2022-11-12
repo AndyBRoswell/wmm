@@ -166,22 +166,31 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
         }
         {
-            std::array<QByteArray, 3> s;
-            std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+            enum class Type { QByteArray, QString, };
 
-            const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-            EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
-            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
-            else { EXPECT_TRUE(comparator(s[1], s[2])); }
-        }
-        {
-            std::array<QString, 3> s;
-            std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+            static constexpr wmm::CaseInsensitiveStringComparator comparator;
+            auto verify = [&]<class T>(const std::array<T, 3>&s) {
+                const T t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+                EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
+                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
+                else { EXPECT_TRUE(comparator(s[1], s[2])); }
+            };
 
-            const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-            EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
-            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
-            else { EXPECT_TRUE(comparator(s[1], s[2])); }
+            constexpr Type types[] = { Type::QByteArray, Type::QString, };
+            for (const auto T : types) {
+                switch (T) {
+                case Type::QByteArray: {
+                    std::array<QByteArray, 3> s;
+                    std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+                    verify(s);
+                } break;
+                case Type::QString: {
+                    std::array<QString, 3> s;
+                    std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+                    verify(s);
+                } break;
+                }
+            }
         }
     }
 }
