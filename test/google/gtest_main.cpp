@@ -56,8 +56,12 @@ TEST(Algorithm, CaseInsensitiveHasher) {
             auto verify = [&]<class Ty>(std::array<Ty, 3>&s, const std::array<size_t, 2>&H) {
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
-                for (size_t i = 1; i <= 2; ++i) { std::transform(s[i].cbegin(), s[i].cend(), s[i].begin(), ::toupper); }
-                if (s[1] != s[2]) { EXPECT_NE(hasher(s[1].c_str()), hasher(s[2].c_str())); } // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+                std::array<Ty, 2> t;
+                for (size_t i = 1; i <= 2; ++i) {
+                    t[i - 1].reserve(s[i].size());
+                    for (const auto c : s[i]) { t[i - 1].push_back(toupper(c)); }
+                }
+                if (t[0] != t[1]) { EXPECT_NE(hasher(s[1].c_str()), hasher(s[2].c_str())); } // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
                 else { EXPECT_EQ(hasher(s[1].c_str()), hasher(s[2].c_str())); }
             };
 
@@ -102,8 +106,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                     const std::array<size_t, 2> H = { hasher(QStringView(s[0].constData())), hasher(QStringView(t.constData())) };
                     EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                     EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
-                    for (size_t i = 1; i <= 2; ++i) { s[i] = s[i].toUpper(); } // t[i] = s[i].toUpper()
-                    if (s[1] != s[2]) { EXPECT_NE(hasher(QStringView(s[1].constData())), hasher(QStringView(s[2].constData()))); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                    if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(QStringView(s[1].constData())), hasher(QStringView(s[2].constData()))); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
                     else { EXPECT_EQ(hasher(QStringView(s[1].constData())), hasher(QStringView(s[2].constData()))); }
                 } break;
                 }
