@@ -88,14 +88,9 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         {
-            enum class Type {
-                const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView,
-            };
+            enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, };
 
-            const std::vector<Type> types{
-                Type::const_char_star,
-                Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView,
-            };
+            const std::vector<Type> types{ Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
             for (const auto T: types) {
                 std::vector<std::string> s(3);
                 std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
@@ -118,12 +113,10 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
 
         }
         {
-            enum class Type {
-                QByteArray, QString,
-            };
+            enum class Type { QByteArray, QString, };
 
             auto verify = []<class T>(const std::vector<T>&s) {
-                static constexpr wmm::CaseInsensitiveHasher hasher;
+                constexpr wmm::CaseInsensitiveHasher hasher;
 
                 const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
                 const size_t h[2] = { hasher(s[0]), hasher(t) };
@@ -133,9 +126,7 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
                 else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             };
 
-            const std::vector<Type> types{
-                Type::QByteArray, Type::QString,
-            };
+            const std::vector<Type> types{ Type::QByteArray, Type::QString, };
             for (const auto T : types) {
                 switch (T) {
                 case Type::QByteArray: {
