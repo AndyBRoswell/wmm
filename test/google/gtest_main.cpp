@@ -63,8 +63,8 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
                 for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-                else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
             }
         }
         {
@@ -89,8 +89,8 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
                 for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-                else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
+                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+                else { EXPECT_EQ(hasher(t[1].c_str()), hasher(t[2].c_str())); }
             }
         }
         {
