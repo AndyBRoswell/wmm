@@ -23,7 +23,7 @@ namespace WritingMaterialsManager {
     bool CaseInsensitiveStringComparator::operator()(const QAnyStringView LHS, const QAnyStringView RHS) const noexcept {
         return QAnyStringView::compare(LHS, RHS, Qt::CaseInsensitive) == 0; // QAnyStringView only has static member compare
     }
-    //bool CaseInsensitiveStringComparator::operator()(const QUtf8StringView LHS, const QUtf8StringView RHS) const noexcept {
-    //    return false;
-    //}
+    bool CaseInsensitiveStringComparator::operator()(const QUtf8StringView LHS, const QUtf8StringView RHS) const noexcept {
+        return false;
+    }
 }

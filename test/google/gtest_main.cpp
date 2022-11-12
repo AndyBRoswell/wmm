@@ -215,9 +215,9 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
             auto verify = [&]<class T>(const std::array<T, 3>&s) {
                 const T t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
-                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
-                else { EXPECT_TRUE(comparator(s[1], s[2])); }
+                EXPECT_TRUE(comparator.operator() < T > (s[0], t)); EXPECT_TRUE(comparator.operator() < T > (s[0], s[0])); EXPECT_TRUE(comparator.operator() < T > (t, t));
+                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator.operator() < T > (s[1], s[2])); }
+                else { EXPECT_TRUE(comparator.operator() < T > (s[1], s[2])); }
             };
 
             constexpr Type types[] = { Type::QByteArray, Type::QString, };
