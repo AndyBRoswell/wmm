@@ -161,8 +161,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
 
             static constexpr wmm::CaseInsensitiveStringComparator comparator;
             auto verify = [&]<class StrT, class DestT = void>(const std::array<StrT, 3>&s) {
-                std::array<StrT, 3> t = { s[0], s[1], s[2] };
-                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+                std::array<StrT, 3> t = { random_case(s[0]), s[1], s[2]};
                 if constexpr (std::is_same_v<DestT, void>) {
                     EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
                     EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
@@ -179,6 +178,11 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                     if (t[1] != t[2]) { EXPECT_FALSE(comparator(DestT(s[1].c_str()), DestT(s[2].c_str()))); } // these 2 strings converted to the same case are not identical
                     else { EXPECT_TRUE(comparator(DestT(s[1].c_str()), DestT(s[2].c_str()))); }
                 }
+            };
+            auto fill_non_std_string = []<class T>(T& str) {
+                const auto t = next_str(next_int(1ull, lmax));
+                str.reserve(t.size());
+                for (const auto c : t) { str.push_back(c); }
             };
 
             constexpr Type types[] = { 
@@ -200,14 +204,18 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                 } break;
                 case Type::const_char8_t_star: case Type::QUtf8StringView: {
                     std::array<std::u8string, 3> s;
-                    for (auto& str : s) {
-                        const auto t = next_str(next_int(1ull, lmax));
-                        str.reserve(t.size());
-                        for (const auto c : t) { str.push_back(c); }
-                    }
+                    for (auto& str : s) { fill_non_std_string(str); }
                     switch (T) {
                     case Type::const_char8_t_star: verify(s); break;
                     case Type::QUtf8StringView: verify.operator() < std::u8string, QUtf8StringView > (s); break;
+                    }
+                } break;
+                case Type::const_char16_t_star: case Type::const_uint16_t_star: case Type::const_QChar_star: case Type::QStringView: {
+                    std::array<std::u16string, 3> s;
+                    for (auto& str : s) { fill_non_std_string(str); }
+                    switch (T) {
+                    case Type::const_char16_t_star: case Type::const_uint16_t_star: case Type::const_QChar_star: verify(s); break;
+                    case Type::QStringView: verify.operator() < std::u16string, QStringView > (s); break;
                     }
                 } break;
                 }
