@@ -27,97 +27,98 @@
 #include "src/JSONFormatter.h"
 #include "src/MongoDBAccessor.h"
 
+constexpr auto next_int = [](const auto a, const auto b) noexcept -> auto {
+    return tiny_random::number::integer(a, b);
+};
+constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) noexcept {
+    return tiny_random::chr::ASCII_string(l, t);
+};
+
 // Tests of WMM begin here.
-TEST(Algorithm, StringIeq) { // ieq is from powershell
+TEST(Algorithm, CaseInsensitiveHasher) {
     namespace wmm = WritingMaterialsManager;
-    
-    constexpr auto next_int = [](const auto a, const auto b) noexcept -> auto {
-        return tiny_random::number::integer(a, b);
-    };
-    constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_type t = tiny_random::chr::ASCII_char_type::printable) noexcept {
-        return tiny_random::chr::ASCII_string(l, t);
-    };
 
-    { // case-insensitive hasher
-        constexpr size_t g = 5e6;       // group count of test data
-        constexpr size_t lmax = 1e3;    // max length of test strings
+    constexpr size_t g = 5e6;       // group count of test data
+    constexpr size_t lmax = 1e3;    // max length of test strings
 
-        constexpr wmm::CaseInsensitiveHasher hasher;
-        for (size_t i = 0; i < g; ++i) { // verify the hasher
-            {
-                std::vector<std::string> s(3);
-                std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
+    constexpr wmm::CaseInsensitiveHasher hasher;
+    for (size_t i = 0; i < g; ++i) { // verify the hasher
+        {
+            std::vector<std::string> s(3);
+            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
 
-                std::string t[3] = { s[0], s[1], s[2] };
-                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                const size_t h[2] = { hasher.operator() < QByteArrayView > (s[0].c_str()), hasher.operator() < QByteArrayView > (t[0].c_str()) };
-                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-                if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-                else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-            }
-            {
-                std::vector<QByteArray> s(3);
-                std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+            std::string t[3] = { s[0], s[1], s[2] };
+            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+            const size_t h[2] = { hasher.operator() < QByteArrayView > (s[0].c_str()), hasher.operator() < QByteArrayView > (t[0].c_str()) };
+            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
+            if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
+            else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
+        }
+        {
+            std::vector<QByteArray> s(3);
+            std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
 
-                const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                const size_t h[2] = { hasher(s[0]), hasher(t) };
-                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
-                else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
-            }
-            {
-                std::vector<QString> s(3);
-                std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+            const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+            const size_t h[2] = { hasher(s[0]), hasher(t) };
+            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+            else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
+        }
+        {
+            std::vector<QString> s(3);
+            std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
 
-                const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                const size_t h[2] = { hasher(s[0]), hasher(t) };
-                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
-                else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
-            }
+            const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+            const size_t h[2] = { hasher(s[0]), hasher(t) };
+            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+            else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
         }
     }
-    { // case-insensitive comparator
-        constexpr size_t g = 1e3;       // group count of test data
-        constexpr size_t lmax = 1e3;    // max length of test strings
+}
 
-        constexpr wmm::CaseInsensitiveStringComparator comparator;
-        for (size_t i = 0; i < g; ++i) { // verify the comparator
-            {
-                std::vector<std::string> s(3);
-                std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
+TEST(Algorithm, CaseInsensitiveComparator) {
+    namespace wmm = WritingMaterialsManager;
 
-                std::string t[3] = { s[0], s[1], s[2] };
-                next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-                EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
-                EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
-                EXPECT_TRUE(comparator(t[0].c_str(), t[0].c_str()));
-                for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
-                if (t[1] != t[2]) { EXPECT_FALSE(comparator(s[1].c_str(), s[2].c_str())); } // these 2 strings converted to the same case are not identical
-                else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
-            }
-            {
-                std::vector<QByteArray> s(3);
-                std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+    constexpr size_t g = 1e3;       // group count of test data
+    constexpr size_t lmax = 1e3;    // max length of test strings
 
-                const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
-                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
-                else { EXPECT_TRUE(comparator(s[1], s[2])); }
-            }
-            {
-                std::vector<QString> s(3);
-                std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+    constexpr wmm::CaseInsensitiveStringComparator comparator;
+    for (size_t i = 0; i < g; ++i) { // verify the comparator
+        {
+            std::vector<std::string> s(3);
+            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
 
-                const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-                EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
-                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
-                else { EXPECT_TRUE(comparator(s[1], s[2])); }
-            }
+            std::string t[3] = { s[0], s[1], s[2] };
+            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
+            EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
+            EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
+            EXPECT_TRUE(comparator(t[0].c_str(), t[0].c_str()));
+            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); }
+            if (t[1] != t[2]) { EXPECT_FALSE(comparator(s[1].c_str(), s[2].c_str())); } // these 2 strings converted to the same case are not identical
+            else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
+        }
+        {
+            std::vector<QByteArray> s(3);
+            std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+
+            const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+            EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
+            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
+            else { EXPECT_TRUE(comparator(s[1], s[2])); }
+        }
+        {
+            std::vector<QString> s(3);
+            std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+
+            const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+            EXPECT_TRUE(comparator(s[0], t)); EXPECT_TRUE(comparator(s[0], s[0])); EXPECT_TRUE(comparator(t, t));
+            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_FALSE(comparator(s[1], s[2])); }
+            else { EXPECT_TRUE(comparator(s[1], s[2])); }
         }
     }
 }
