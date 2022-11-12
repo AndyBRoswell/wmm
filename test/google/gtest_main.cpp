@@ -43,85 +43,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 
     constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) { // verify the hasher
-        // TODO: code reuse
-        { // const char*
-            std::vector<std::string> s(3);
-            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-            std::string t[3] = { s[0], s[1], s[2] };
-            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-            const size_t h[2] = { hasher(s[0].c_str()), hasher.operator()(t[0].c_str()) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-            if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-            else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        }
-        { // QByteArrayView
-            std::vector<std::string> s(3);
-            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-            std::string t[3] = { s[0], s[1], s[2] };
-            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-            const size_t h[2] = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-            if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-            else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        }
-        { // QLatin1StringView
-            std::vector<std::string> s(3);
-            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-            std::string t[3] = { s[0], s[1], s[2] };
-            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-            const size_t h[2] = { hasher(QLatin1StringView(s[0].c_str())), hasher(QLatin1StringView(t[0].c_str())) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-            if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-            else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        }
-        //{ // QUtf8StringView, compilation ERROR
-        //    std::vector<std::string> s(3);
-        //    std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-        //    std::string t[3] = { s[0], s[1], s[2] };
-        //    next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-        //    const size_t h[2] = { hasher(QUtf8StringView(s[0].c_str())), hasher(QUtf8StringView(t[0].c_str())) };
-        //    EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-        //    EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-        //    for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-        //    if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-        //    else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        //}
-        { // QAnyStringView
-            std::vector<std::string> s(3);
-            std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-            std::string t[3] = { s[0], s[1], s[2] };
-            next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-            const size_t h[2] = { hasher(QAnyStringView(s[0].c_str())), hasher(QAnyStringView(t[0].c_str())) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-            if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-            else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        }
-        //{ // const char8_t*, compilation ERROR
-        //    std::vector<std::u8string> s(3);
-        //    std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
-
-        //    std::u8string t[3] = { s[0], s[1], s[2] };
-        //    next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
-        //    const size_t h[2] = { hasher(s[0].c_str()), hasher.operator()(t[0].c_str()) };
-        //    EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-        //    EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-        //    for (size_t i = 1; i <= 2; ++i) { std::transform(t[i].cbegin(), t[i].cend(), t[i].begin(), ::toupper); } // t[i] = s[i].toUpper()
-        //    if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
-        //    else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
-        //}
         { // QByteArray
             std::vector<QByteArray> s(3);
             std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
@@ -175,22 +96,18 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
                 Type::const_char_star,
                 Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView,
             };
-
-            for (size_t h = 0; h < types.size(); ++h) {
+            for (const auto T: types) {
                 std::vector<std::string> s(3);
                 std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
 
                 std::string t[3] = { s[0], s[1], s[2] };
                 next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
                 std::vector<size_t> H;
-                H.reserve(2);
-                for (const auto T : types) {
-                    switch (T) {
-                    case Type::const_char_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
-                    case Type::QByteArrayView: H = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) }; break;
-                    case Type::QLatin1StringView: H = { hasher((QLatin1StringView(s[0].c_str()))), hasher(QLatin1StringView(t[0].c_str())) }; break;
-                    case Type::QAnyStringView: H = { hasher(QAnyStringView(s[0].c_str())), hasher(QAnyStringView(t[0].c_str())) }; break;
-                    }
+                switch (T) {
+                case Type::const_char_star: H = { hasher(s[0].c_str()), hasher(t[0].c_str()) }; break;
+                case Type::QByteArrayView: H = { hasher(QByteArrayView(s[0].c_str())), hasher(QByteArrayView(t[0].c_str())) }; break;
+                case Type::QLatin1StringView: H = { hasher((QLatin1StringView(s[0].c_str()))), hasher(QLatin1StringView(t[0].c_str())) }; break;
+                case Type::QAnyStringView: H = { hasher(QAnyStringView(s[0].c_str())), hasher(QAnyStringView(t[0].c_str())) }; break;
                 }
                 EXPECT_EQ(H[0], H[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
                 EXPECT_EQ(H[0], H[0]); EXPECT_EQ(H[1], H[1]);   // s -ceq t -> H(s) == H(t)
@@ -205,11 +122,34 @@ TEST(Algorithm, CaseInsensitiveHasher2) {
                 QByteArray, QString,
             };
 
-            const std::vector<Type> type_to_be_tested{
-                Type::QByteArray, Type::QString,
+            auto verify = []<class T>(const std::vector<T>&s) {
+                static constexpr wmm::CaseInsensitiveHasher hasher;
+
+                const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
+                const size_t h[2] = { hasher(s[0]), hasher(t) };
+                EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
+                EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
+                if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
+                else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             };
 
-
+            const std::vector<Type> types{
+                Type::QByteArray, Type::QString,
+            };
+            for (const auto T : types) {
+                switch (T) {
+                case Type::QByteArray: {
+                    std::vector<QByteArray> s(3);
+                    std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
+                    verify(s);
+                } break;
+                case Type::QString: {
+                    std::vector<QString> s(3);
+                    std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
+                    verify(s);
+                } break;
+                }
+            }
         }
     }
 }
