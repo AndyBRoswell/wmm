@@ -207,6 +207,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                     }
                     switch (T) {
                     case Type::const_char8_t_star: verify(s); break;
+                    case Type::QUtf8StringView: verify.operator() < std::u8string, QUtf8StringView > (s); break;
                     }
                 } break;
                 }
