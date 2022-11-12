@@ -46,7 +46,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
         {
             enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, };
 
-            const std::vector<Type> types{ Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
+            constexpr Type types[] = { Type::const_char_star, Type::QByteArrayView, Type::QLatin1StringView, Type::QAnyStringView, };
             for (const auto T: types) {
                 std::array<std::string, 3> s;
                 std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
@@ -70,7 +70,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
         {
             enum class Type{ const_char8_t_star, QUtf8StringView, };
 
-            const std::vector<Type> types{ Type::const_char8_t_star, Type::QUtf8StringView, };
+            constexpr Type types[] = {Type::const_char8_t_star, Type::QUtf8StringView,};
             for (const auto T : types) {
                 std::vector<std::u8string> s(3);
                 for (auto& str : s) {
@@ -107,7 +107,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
             };
 
-            const std::vector<Type> types{ Type::QByteArray, Type::QString, };
+            constexpr Type types[] = { Type::QByteArray, Type::QString, };
             for (const auto T : types) {
                 switch (T) {
                 case Type::QByteArray: {
