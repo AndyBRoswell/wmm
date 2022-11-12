@@ -47,10 +47,10 @@ namespace WritingMaterialsManager {
         bool operator()(const QUtf8StringView LHS, const QUtf8StringView RHS) const noexcept;
         template<class T = QByteArrayView> typename std::enable_if_t<supported_but_only_member_compare_v<T>, bool> operator()(const T LHS, const T RHS) const noexcept {
             if constexpr (std::is_class_v<T>) { return LHS.compare(RHS, Qt::CaseInsensitive) == 0; }
-                if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*>) {
-                    return QByteArrayView(LHS).compare(QByteArrayView(RHS), Qt::CaseInsensitive) == 0;
-                }
-                else { return QStringView(LHS).compare(QStringView(RHS), Qt::CaseInsensitive) == 0; }
+            else if constexpr (std::is_same_v<std::remove_cvref_t<T>, const char*>) {
+                return QByteArrayView(LHS).compare(QByteArrayView(RHS), Qt::CaseInsensitive) == 0;
+            }
+            else { return QStringView(LHS).compare(QStringView(RHS), Qt::CaseInsensitive) == 0; }
         }
         template<class T = QByteArray> typename std::enable_if_t<supported_but_should_be_by_ref_v<T>, bool> operator()(const T& LHS, const T& RHS) const noexcept {
             return LHS.compare(RHS, Qt::CaseInsensitive) == 0;

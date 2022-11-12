@@ -193,9 +193,9 @@ TEST(Algorithm, CaseInsensitiveComparator) {
                     std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
                     switch (T) {
                     case Type::const_char_star: verify(s); break;
-                    //case Type::QByteArrayView: verify.operator() < std::string, QByteArrayView > (s); break;
-                    //case Type::QLatin1StringView: verify.operator() < std::string, QLatin1StringView > (s); break;
-                    //case Type::QAnyStringView: verify.operator() < std::string, QAnyStringView > (s); break;
+                    case Type::QByteArrayView: verify.operator() < std::string, QByteArrayView > (s); break;
+                    case Type::QLatin1StringView: verify.operator() < std::string, QLatin1StringView > (s); break;
+                    case Type::QAnyStringView: verify.operator() < std::string, QAnyStringView > (s); break;
                     }
                 } break;
                 //case Type::const_char8_t_star: case Type::QUtf8StringView: {
