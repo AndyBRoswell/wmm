@@ -45,7 +45,7 @@ constexpr auto random_case = []<class T>(const T & s) noexcept {
 TEST(Algorithm, CaseInsensitiveHasher) {
     namespace wmm = WritingMaterialsManager;
 
-    constexpr size_t g = 2e6;       // group count of test data
+    constexpr size_t g = 1e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     for (size_t i = 0; i < g; ++i) {
@@ -150,7 +150,6 @@ TEST(Algorithm, CaseInsensitiveComparator) {
     constexpr size_t g = 1e5;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
-    constexpr wmm::CaseInsensitiveStringComparator comparator;
     for (size_t i = 0; i < g; ++i) { // verify the comparator
         {
             enum class Type { 
