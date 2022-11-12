@@ -38,7 +38,7 @@ constexpr auto next_str = [](const size_t l, const tiny_random::chr::ASCII_char_
 TEST(Algorithm, CaseInsensitiveHasher) {
     namespace wmm = WritingMaterialsManager;
 
-    constexpr size_t g = 2e6;       // group count of test data
+    constexpr size_t g = 1e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     constexpr wmm::CaseInsensitiveHasher hasher;
@@ -66,7 +66,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
                 if (t[1] != t[2]) { EXPECT_NE(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); } // It is almost inevitable that s[1] != s[2], then t[1] != t[2]
                 else { EXPECT_EQ(hasher(t[1].c_str()), hasher.operator()(t[2].c_str())); }
             }
-
         }
         {
             enum class Type { QByteArray, QString, };
@@ -104,7 +103,7 @@ TEST(Algorithm, CaseInsensitiveHasher) {
 TEST(Algorithm, CaseInsensitiveComparator) {
     namespace wmm = WritingMaterialsManager;
 
-    constexpr size_t g = 1e6;       // group count of test data
+    constexpr size_t g = 1e5;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     constexpr wmm::CaseInsensitiveStringComparator comparator;
