@@ -11,7 +11,7 @@ namespace WritingMaterialsManager {
     }
     size_t CaseInsensitiveHasher::operator()(const QAnyStringView Str) const noexcept {
         if (Str.size_bytes() / Str.size() == 1) { return this->operator()(QByteArray::fromRawData(static_cast<const char*>(Str.data()), Str.size_bytes())); }
-        else { return this->operator()(QString::fromRawData(static_cast<const QChar*>(Str.data()), Str.size_bytes())); }
+        else { return this->operator()(QString::fromRawData(static_cast<const QChar*>(Str.data()), Str.size_bytes())); } // NOTE: fromRawData doesn't make a deep copy
     }
     size_t CaseInsensitiveHasher::operator()(const QStringView Str) const noexcept {
         const QString STR = QString::fromRawData(Str.constData(), Str.size()).toUpper();
