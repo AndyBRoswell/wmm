@@ -41,7 +41,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     constexpr size_t g = 1e6;       // group count of test data
     constexpr size_t lmax = 1e3;    // max length of test strings
 
-    constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         {
             enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, const_char8_t_star, QUtf8StringView, };
@@ -134,10 +133,10 @@ TEST(Algorithm, CaseInsensitiveComparator) {
     constexpr wmm::CaseInsensitiveStringComparator comparator;
     for (size_t i = 0; i < g; ++i) { // verify the comparator
         {
-            std::vector<std::string> s(3);
+            std::array<std::string, 3> s;
             std::generate(s.begin(), s.end(), []() { return next_str(next_int(1ull, lmax)); });
 
-            std::string t[3] = { s[0], s[1], s[2] };
+            std::array<std::string, 3> t = { s[0], s[1], s[2] };
             next_int(0, 1) ? std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::toupper) : std::transform(t[0].cbegin(), t[0].cend(), t[0].begin(), ::tolower); // haphazardly select tolower or toupper
             EXPECT_TRUE(comparator(s[0].c_str(), t[0].c_str()));  // this should yield equal because 2 strings are equal when ignoring the case
             EXPECT_TRUE(comparator(s[0].c_str(), s[0].c_str()));  // comparison of 2 identical strings should yield equal
@@ -147,7 +146,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             else { EXPECT_TRUE(comparator(s[1].c_str(), s[2].c_str())); }
         }
         {
-            std::vector<QByteArray> s(3);
+            std::array<QByteArray, 3> s;
             std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
 
             const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
@@ -156,7 +155,7 @@ TEST(Algorithm, CaseInsensitiveComparator) {
             else { EXPECT_TRUE(comparator(s[1], s[2])); }
         }
         {
-            std::vector<QString> s(3);
+            std::array<QString, 3> s;
             std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
 
             const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
