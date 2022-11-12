@@ -289,13 +289,15 @@ TEST(FileSystemAccessor, Read) {
         EXPECT_TRUE(basenames.contains(fi->baseName().toULongLong()));
         EXPECT_TRUE(contents.contains(fsa::GetAllRawContents(f)));      // read file content
     }
-    bool has_open_exception = false; // open exception test
-    try { fsa::Open(QString::fromLocal8Bit(pwd + "/open-exception-test.t")); } // deliberately open a non-existing file
-    catch (const std::runtime_error& e) {
-        has_open_exception = true;
-        EXPECT_EQ(std::string(e.what()).substr(0, 10), std::string("Open file "));
+    for (size_t i = 0; i < N / 2; ++i) { // open exception test
+        bool has_open_exception = false;
+        try { fsa::Open(QString::fromLocal8Bit(pwd + "/open-exception-test" + tiny_random::chr::ASCII_string(32) + ".sys")); } // deliberately open a non-existing file
+        catch (const std::runtime_error& e) {
+            has_open_exception = true;
+            EXPECT_EQ(std::string(e.what()).substr(0, 10), std::string("Open file "));
+        }
+        EXPECT_TRUE(has_open_exception);
     }
-    EXPECT_TRUE(has_open_exception);
 }
 
 TEST(JSONFormatter, Default) {
