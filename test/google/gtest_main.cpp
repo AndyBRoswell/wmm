@@ -42,50 +42,6 @@ TEST(Algorithm, CaseInsensitiveHasher) {
     constexpr size_t lmax = 1e3;    // max length of test strings
 
     constexpr wmm::CaseInsensitiveHasher hasher;
-    for (size_t i = 0; i < g; ++i) { // verify the hasher
-        { // QByteArray
-            std::vector<QByteArray> s(3);
-            std::generate(s.begin(), s.end(), []() { return QByteArray::fromStdString(next_str(next_int(1ull, lmax))); });
-
-            const QByteArray t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-            const size_t h[2] = { hasher(s[0]), hasher(t) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
-            else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
-        }
-        { // QString
-            std::vector<QString> s(3);
-            std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
-
-            const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-            const size_t h[2] = { hasher(s[0]), hasher(t) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
-            else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
-        }
-        { // QStringView
-            std::vector<QString> s(3);
-            std::generate(s.begin(), s.end(), []() { return QString::fromStdString(next_str(next_int(1ull, lmax))); });
-
-            const QString t = next_int(0, 1) ? s[0].toUpper() : s[0].toLower();
-            const size_t h[2] = { hasher(QStringView(s[0])), hasher(QStringView(t)) };
-            EXPECT_EQ(h[0], h[1]);                          // s -ieq t -> H(s) == H(t), H is a hash function, t = s.toUpper()
-            EXPECT_EQ(h[0], h[0]); EXPECT_EQ(h[1], h[1]);   // s -ceq t -> H(s) == H(t)
-            if (s[1].toUpper() != s[2].toUpper()) { EXPECT_NE(hasher(s[1]), hasher(s[2])); } // // It is almost inevitable that s[1] != s[2], then s[1].toUpper() != s[2].toUpper()
-            else { EXPECT_EQ(hasher(s[1]), hasher(s[2])); }
-        }
-    }
-}
-
-TEST(Algorithm, CaseInsensitiveHasher2) {
-    namespace wmm = WritingMaterialsManager;
-
-    constexpr size_t g = 2e6;       // group count of test data
-    constexpr size_t lmax = 1e3;    // max length of test strings
-
-    constexpr wmm::CaseInsensitiveHasher hasher;
     for (size_t i = 0; i < g; ++i) {
         {
             enum class Type { const_char_star, QByteArrayView, QLatin1StringView, QAnyStringView, };
