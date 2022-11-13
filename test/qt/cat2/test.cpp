@@ -17,12 +17,11 @@
 
 // this software
 #include "tiny_random.h"
+#include "util.h"
 
 // files to be tested
 #include "src/TreeEditor.h"
 #include "src/TreeView.h"
-
-void test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {}
 
 class test : public QObject {
     Q_OBJECT
@@ -161,7 +160,7 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TreeView>();
         QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
-        qInstallMessageHandler(test_message_handler); // ignore warnings
+        util::disable_test_info_output();
         for (size_t i = 0; i < n; ++i) {
             for (const auto m : mouse_keys) {
                 QTest::mouseClick(tree_view.viewport(), m);
@@ -170,7 +169,7 @@ private slots:
                 QTest::mouseRelease(tree_view.viewport(), m);
             }
         }
-        qInstallMessageHandler(nullptr);
+        util::enable_test_info_output();
         QCOMPARE(spy.count(), 6 * n); // click, press
     }
 
@@ -181,7 +180,7 @@ private slots:
 
         wmm::QtTreeModel tree_model;
 
-        qInstallMessageHandler(test_message_handler); // ignore warnings
+        util::disable_test_info_output();
         for (size_t i = 0; i < n; ++i) {
             qDebug("[" + QByteArray::number(i + 1) + " / " + QByteArray::number(n) + "]");
             qDebug("Generating reference JSON ...");
@@ -194,7 +193,7 @@ private slots:
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
             qDebug("Congratulations: Reference JSON and generated JSON are equivalent, the tree model worked correctly.");
         }
-        qInstallMessageHandler(nullptr);
+        util::enable_test_info_output();
     }
 
     void TreeEditor__open_JSON() {

@@ -1,6 +1,20 @@
 #include "util.h"
 
+// std
 #include <iostream>
+
+// Qt
+#include <QTest>
+
+static void blank_test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {};
+
+void util::disable_test_info() noexcept {
+    qInstallMessageHandler(blank_test_message_handler); // ignore warnings
+}
+
+void util::enable_test_info() noexcept {
+    qInstallMessageHandler(nullptr);
+}
 
 void util::no_sync_with_stdio() noexcept {
     if (std::ios_base::sync_with_stdio() == true) { std::ios_base::sync_with_stdio(false); }

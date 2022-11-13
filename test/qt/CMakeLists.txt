@@ -46,6 +46,7 @@ target_link_libraries(wmmqtest-cat1 PUBLIC
 
 file(GLOB_RECURSE cat2-sources
     cat2/*.c*
+    ${common_test_utils}
 )
 file(GLOB_RECURSE cat2-headers
     cat2/*.h*

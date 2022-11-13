@@ -14,12 +14,6 @@
 #include "src/global.h"
 #include "src/TextArea.h"
 
-void test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {
-    //static const QString filter_msg = QString::fromUtf8("Mouse event \"Mouse");
-    //if (msg.indexOf(filter_msg) == 0) { return; }
-    //std::cout << msg.toUtf8().constData() << std::endl;
-}
-
 class test : public QObject {
     Q_OBJECT
 private:
@@ -67,7 +61,7 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TextArea>();
         QSignalSpy spy(&text_area, SIGNAL(MouseDown()));
-        qInstallMessageHandler(test_message_handler); // ignore warnings
+        util::disable_test_info();
         for (size_t i = 0; i < n; ++i) {
             for (const auto m : mouse_keys) {
                 QTest::mouseClick(text_area.viewport(), m);

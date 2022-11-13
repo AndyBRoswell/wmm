@@ -309,7 +309,7 @@ TEST(JSONFormatter, Default) {
     std::filesystem::create_directory("test/JSONFormatter");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSONFormatter")).string();
 
-    constexpr size_t N = 5; // number of test files
+    constexpr size_t N = 1; // number of test files
     
     std::set<uintmax_t> basenames;
     for (size_t i = 0; i < N; ++i) {
