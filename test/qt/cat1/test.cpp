@@ -20,6 +20,8 @@ private slots:
     void TextField__basic() {
         namespace wmm = WritingMaterialsManager;
 
+        constexpr size_t n = 1e6; // test count
+
         wmm::TextField text_field;
 
         // default settings
@@ -34,12 +36,14 @@ private slots:
             events.addMouseRelease(m);
         }
         QSignalSpy spy(&text_field, &wmm::TextField::MouseDown);
-        events.simulate(&text_field);
-        QCOMPARE(spy.count(), 6); // left & right & middle; click & press
+        for (size_t i = 0; i < n; ++i) { events.simulate(&text_field); }
+        QCOMPARE(spy.count(), 6 * n); // left & right & middle; click & press
     }
 
     void TextArea__basic() {
         namespace wmm = WritingMaterialsManager;
+
+        constexpr size_t n = 1e6; // test count
 
         wmm::TextArea text_area;
 
@@ -49,13 +53,15 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TextArea>();
         QSignalSpy spy(&text_area, SIGNAL(MouseDown()));
-        for (const auto m : mouse_keys) {
-            QTest::mouseClick(text_area.viewport(), m);
-            QTest::mouseDClick(text_area.viewport(), m);
-            QTest::mousePress(text_area.viewport(), m);
-            QTest::mouseRelease(text_area.viewport(), m);
+        for (size_t i = 0; i < n; ++i) {
+            for (const auto m : mouse_keys) {
+                QTest::mouseClick(text_area.viewport(), m);
+                QTest::mouseDClick(text_area.viewport(), m);
+                QTest::mousePress(text_area.viewport(), m);
+                QTest::mouseRelease(text_area.viewport(), m);
+            }
         }
-        QCOMPARE(spy.count(), 6); // left & right & middle; click & press
+        QCOMPARE(spy.count(), 6 * n); // left & right & middle; click & press
     }
 
     void cleanupTestCase() {
