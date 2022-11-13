@@ -15,8 +15,8 @@
 #include "src/TextArea.h"
 
 void test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {
-    const QByteArrayView function = context.function;
-    if (function.indexOf("void __cdecl QTest::mouseEvent") == 0) { return; }
+    static const QString filter_msg = QString::fromUtf8("Mouse event \"Mouse");
+    if (msg.indexOf(filter_msg) == 0) { return; }
     std::cout << msg.toUtf8().constData() << std::endl;
 }
 
