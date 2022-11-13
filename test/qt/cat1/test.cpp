@@ -1,11 +1,24 @@
-#include <QLineEdit>
+// std
+#include <iostream>
+
+// Qt
 #include <QObject>
 #include <QSignalSpy>
 #include <QTest>
 
+// this software
+#include "tiny_random.h"
+#include "util.h"
+
 // files to be tested
 #include "src/global.h"
 #include "src/TextArea.h"
+
+void test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {
+    const QByteArrayView function = context.function;
+    if (function.indexOf("void __cdecl QTest::mouseEvent") == 0) { return; }
+    std::cout << msg.toUtf8().constData() << std::endl;
+}
 
 class test : public QObject {
     Q_OBJECT
@@ -15,7 +28,8 @@ private:
 private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 1: Text Area");
-
+        util::no_sync_with_stdio();
+        qInstallMessageHandler(test_message_handler);
     }
 
     void TextField__basic() {
@@ -66,7 +80,7 @@ private slots:
     }
 
     void cleanupTestCase() {
-        qDebug("End GUI Test Cat. 1");
+        qDebug("End GUI Test Cat. 1: Text Area");
     }
 };
 

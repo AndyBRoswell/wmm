@@ -1,3 +1,7 @@
+set(common_test_utils
+    ${wmm_root}/test/util.cpp
+)
+
 # dependency: Qt
 find_package(Qt6 6.4 COMPONENTS Test REQUIRED)
 # ----------------------------------------------------------------
@@ -5,6 +9,7 @@ find_package(Qt6 6.4 COMPONENTS Test REQUIRED)
 # list files to be compiled
 file(GLOB_RECURSE cat1-sources
     cat1/*.c*
+    ${common_test_utils}
 )
 file(GLOB_RECURSE cat1-headers
     cat1/*.h*
