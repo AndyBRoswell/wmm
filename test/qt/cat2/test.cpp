@@ -154,17 +154,21 @@ private slots:
     void TreeView__basic() {
         namespace wmm = WritingMaterialsManager;
 
+        constexpr size_t n = 1e6; // test count
+
         wmm::TreeView tree_view;
 
         // signals
         qRegisterMetaType<wmm::TreeView>();
         QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
         qInstallMessageHandler(test_message_handler); // ignore warnings
-        for (const auto m : mouse_keys) {
-            QTest::mouseClick(tree_view.viewport(), m);
-            QTest::mouseDClick(tree_view.viewport(), m);
-            QTest::mousePress(tree_view.viewport(), m);
-            QTest::mouseRelease(tree_view.viewport(), m);
+        for (size_t i = 0; i < n; ++i) {
+            for (const auto m : mouse_keys) {
+                QTest::mouseClick(tree_view.viewport(), m);
+                QTest::mouseDClick(tree_view.viewport(), m);
+                QTest::mousePress(tree_view.viewport(), m);
+                QTest::mouseRelease(tree_view.viewport(), m);
+            }
         }
         qInstallMessageHandler(nullptr);
         QCOMPARE(spy.count(), 6); // click, press
