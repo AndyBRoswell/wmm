@@ -225,9 +225,9 @@ TEST(TestAlgorithm, JSON) {
         const QJsonDocument d = QJsonDocument::fromJson(json, &e);
         EXPECT_EQ(e.error, QJsonParseError::NoError);
 
-        QFile json_file(wd.path() + "/" + QString::number(i) + ".json");
-        json_file.open(QIODeviceBase::OpenModeFlag::WriteOnly);
-        json_file.write(json);
+        //QFile json_file(wd.path() + "/" + QString::number(i) + ".json");
+        //json_file.open(QIODeviceBase::OpenModeFlag::WriteOnly);
+        //json_file.write(json);
     }
 }
 

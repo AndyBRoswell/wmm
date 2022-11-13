@@ -309,7 +309,7 @@ TEST(JSONFormatter, Default) {
     std::filesystem::create_directory("test/JSONFormatter");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSONFormatter")).string();
 
-    constexpr size_t N = 10; // number of test files
+    constexpr size_t N = 5; // number of test files
     
     std::set<uintmax_t> basenames;
     for (size_t i = 0; i < N; ++i) {
@@ -325,16 +325,27 @@ TEST(JSONFormatter, Default) {
     }
 
     //GTEST_SKIP();
+    WritingMaterialsManager::JSONFormatter formatter;
     for (const auto& basename : basenames) { // format
         const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
         auto content = fsa::GetAllRawContents(f);
         auto json = QString::fromUtf8(content);
-        WritingMaterialsManager::JSONFormatter formatter;
         formatter.Format(json);
         const auto g = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::WriteOnly);
         g->write(json.toStdString().c_str());
         const auto h = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + "F.json", QIODevice::ReadOnly);
         EXPECT_EQ(content, fsa::GetAllRawContents(h));
+    }
+    for (size_t i = 0; i < N / 2; ++i) { // exception test
+        auto json = QString::fromUtf8(tiny_random::chr::JSON() + R"(,,/,{,.，，。}:::+_~!@#$%^&*(),,\,<<>><<<>>>??**?*?*?*)"); // construct illegal JSON
+        bool has_open_exception = false;
+        try { formatter.Format(json); }
+        catch (const std::runtime_error& e) {
+            has_open_exception = true;
+            const QByteArray exception_info = QByteArray::fromRawData(e.what(), strlen(e.what()));
+            QRegularExpression re(R"(Exception\s+at\s+.*JSONFormatter.*Format.*: Parsing ERROR)");
+            EXPECT_TRUE(re.match(exception_info).hasMatch());
+        }
     }
 }
 
