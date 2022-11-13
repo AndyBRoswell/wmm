@@ -14,7 +14,8 @@ private:
 
 private slots:
     void initTestCase() {
-        qDebug("GUI Test Cat. 1"); // cat. 1 for relatively simpler GUI components
+        qDebug("GUI Test Cat. 1: Text Area");
+
     }
 
     void TextField__basic() {

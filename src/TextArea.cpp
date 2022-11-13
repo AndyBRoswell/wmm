@@ -15,6 +15,7 @@ namespace WritingMaterialsManager {
         QLineEdit::mousePressEvent(E);
         emit MouseDown();
     }
+    // ----------------------------------------------------------------
 
     TextArea::TextArea(const QString& Text, QWidget* const Parent) : QPlainTextEdit(Text, Parent) {
         setFont(DefaultCodeFont);
