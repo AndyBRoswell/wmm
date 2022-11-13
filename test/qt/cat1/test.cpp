@@ -35,7 +35,7 @@ private slots:
         }
         QSignalSpy spy(&text_field, &wmm::TextField::MouseDown);
         events.simulate(&text_field);
-        QCOMPARE(spy.count(), 6);
+        QCOMPARE(spy.count(), 6); // left & right & middle; click & press
     }
 
     void TextArea__basic() {
@@ -55,7 +55,7 @@ private slots:
             QTest::mousePress(text_area.viewport(), m);
             QTest::mouseRelease(text_area.viewport(), m);
         }
-        QCOMPARE(spy.count(), 6);
+        QCOMPARE(spy.count(), 6); // left & right & middle; click & press
     }
 
     void cleanupTestCase() {
