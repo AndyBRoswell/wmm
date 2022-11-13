@@ -29,7 +29,6 @@ private slots:
     void initTestCase() {
         qDebug("GUI Test Cat. 1: Text Area");
         util::no_sync_with_stdio();
-        qInstallMessageHandler(test_message_handler);
     }
 
     void TextField__basic() {
@@ -68,6 +67,7 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TextArea>();
         QSignalSpy spy(&text_area, SIGNAL(MouseDown()));
+        qInstallMessageHandler(test_message_handler); // ignore warning
         for (size_t i = 0; i < n; ++i) {
             for (const auto m : mouse_keys) {
                 QTest::mouseClick(text_area.viewport(), m);
