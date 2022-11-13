@@ -67,7 +67,7 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TextArea>();
         QSignalSpy spy(&text_area, SIGNAL(MouseDown()));
-        qInstallMessageHandler(test_message_handler); // ignore warning
+        qInstallMessageHandler(test_message_handler); // ignore warnings
         for (size_t i = 0; i < n; ++i) {
             for (const auto m : mouse_keys) {
                 QTest::mouseClick(text_area.viewport(), m);

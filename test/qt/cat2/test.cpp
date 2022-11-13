@@ -22,6 +22,8 @@
 #include "src/TreeEditor.h"
 #include "src/TreeView.h"
 
+void test_message_handler(const QtMsgType type, const QMessageLogContext& context, const QString& msg) {}
+
 class test : public QObject {
     Q_OBJECT
 private:
@@ -157,22 +159,25 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TreeView>();
         QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
+        qInstallMessageHandler(test_message_handler); // ignore warnings
         for (const auto m : mouse_keys) {
             QTest::mouseClick(tree_view.viewport(), m);
             QTest::mouseDClick(tree_view.viewport(), m);
             QTest::mousePress(tree_view.viewport(), m);
             QTest::mouseRelease(tree_view.viewport(), m);
         }
+        qInstallMessageHandler(nullptr);
         QCOMPARE(spy.count(), 6); // click, press
     }
 
     void QtTreeModel__construct_from_JSON() {
         namespace wmm = WritingMaterialsManager;
 
-        constexpr size_t n = 200; // test count
+        constexpr size_t n = 500; // test count
 
         wmm::QtTreeModel tree_model;
 
+        qInstallMessageHandler(test_message_handler); // ignore warnings
         for (size_t i = 0; i < n; ++i) {
             qDebug("[" + QByteArray::number(i + 1) + " / " + QByteArray::number(n) + "]");
             qDebug("Generating reference JSON ...");
@@ -185,6 +190,7 @@ private slots:
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
             qDebug("Congratulations: Reference JSON and generated JSON are equivalent, the tree model worked correctly.");
         }
+        qInstallMessageHandler(nullptr);
     }
 
     void TreeEditor__open_JSON() {
