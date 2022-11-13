@@ -351,18 +351,41 @@ TEST(JSONFormatter, Default) {
 
 TEST(MongoDBAccessor, BasicInfo) {
     WritingMaterialsManager::MongoDBAccessor mongoa;
-    const QByteArray information[] = {
-        mongoa.GetDatabasesInformation(),
-        mongoa.GetCollectionsInformation("admin"), // these 3 databases are built-in
-        mongoa.GetCollectionsInformation("config"),
-        mongoa.GetCollectionsInformation("local"),
-        mongoa.GetDBsAndCollsInfo(),
-    };
-    for (const auto& i : information) {
-        QJsonParseError e;
-        const auto d = QJsonDocument::fromJson(i, &e);
+    QJsonParseError e;
+    { // database information
+        const auto db_inf = mongoa.GetDatabasesInformation();
+        const auto json = QJsonDocument::fromJson(db_inf, &e);
         EXPECT_EQ(e.error, QJsonParseError::ParseError::NoError);   // prove that the returned JSON exactly has NO lexical/syntax error
-        EXPECT_TRUE(d.array()[0].toObject().contains("name"));      // and the expected basic information
-        //std::cout << i.toStdString() << "\n" << std::endl;
+        const auto root = json.array();
+        for (const auto& subnode : root) {
+            const QJsonObject unwrapped_subnode = subnode.toObject();
+            constexpr const char* const keys[] = { "name", "sizeOnDisk", "empty", };
+            for (const auto key : keys) { EXPECT_TRUE(unwrapped_subnode.contains(key)); }
+        }
+    }
+    { // collection information
+        constexpr const char* const db_names[] = { "admin", "config", "local", };
+        for (const auto db_name : db_names) {
+            const auto coll_inf = mongoa.GetCollectionsInformation(db_name);
+            const auto json = QJsonDocument::fromJson(coll_inf, &e);
+            EXPECT_EQ(e.error, QJsonParseError::ParseError::NoError);   // prove that the returned JSON exactly has NO lexical/syntax error
+            const auto root = json.array();
+            for (const auto& subnode : root) {
+                const QJsonObject unwrapped_subnode = subnode.toObject();
+                constexpr const char* const keys[] = { "name", "type", "options", "info", "idIndex", };
+                for (const auto key : keys) { EXPECT_TRUE(unwrapped_subnode.contains(key)); }
+            }
+        }
+    }
+    { // information of database & collection
+        const auto general_inf = mongoa.GetDBsAndCollsInfo();
+        const auto json = QJsonDocument::fromJson(general_inf, &e);
+        EXPECT_EQ(e.error, QJsonParseError::ParseError::NoError);   // prove that the returned JSON exactly has NO lexical/syntax error
+        const auto root = json.array();
+        for (const auto& subnode : root) {
+            const QJsonObject unwrapped_subnode = subnode.toObject();
+            constexpr const char* const keys[] = { "name", "sizeOnDisk", "empty", "Collections", };
+            for (const auto key : keys) { EXPECT_TRUE(unwrapped_subnode.contains(key)); }
+        }
     }
 }
