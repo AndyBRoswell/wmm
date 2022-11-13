@@ -171,7 +171,7 @@ private slots:
             }
         }
         qInstallMessageHandler(nullptr);
-        QCOMPARE(spy.count(), 6); // click, press
+        QCOMPARE(spy.count(), 6 * n); // click, press
     }
 
     void QtTreeModel__construct_from_JSON() {
