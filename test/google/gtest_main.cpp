@@ -258,9 +258,9 @@ TEST(FileSystemAccessor, Read) {
     std::filesystem::create_directory("test/FileSystemAccessor");
     const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/FileSystemAccessor")).string();
 
-    constexpr size_t N = 1024;                      // number of test files
+    constexpr size_t N = 10000;                     // number of test files
     constexpr size_t Lu = 16;                       // u means unit
-    constexpr size_t Lmin = Lu, Lmax = 16ull << 20; // min/max length of test files
+    constexpr size_t Lmin = Lu, Lmax = 8ull << 20;  // min/max length of test files
 
     std::set<uintmax_t> basenames;              // basenames of test files
     std::unordered_set<QByteArray> contents;    // contents of test files
@@ -303,7 +303,7 @@ TEST(FileSystemAccessor, Read) {
 TEST(JSONFormatter, Default) {
     using fsa = WritingMaterialsManager::FileSystemAccessor;
 
-    GTEST_SKIP();
+    //GTEST_SKIP();
     // create test files
     std::filesystem::create_directory("test");
     std::filesystem::create_directory("test/JSONFormatter");
@@ -324,7 +324,7 @@ TEST(JSONFormatter, Default) {
         f.flush();
     }
 
-    GTEST_SKIP();
+    //GTEST_SKIP();
     for (const auto& basename : basenames) { // format
         const auto f = fsa::Open(QString::fromStdString(pwd) + '/' + std::to_string(basename).c_str() + ".json", QIODevice::ReadOnly);
         auto content = fsa::GetAllRawContents(f);
