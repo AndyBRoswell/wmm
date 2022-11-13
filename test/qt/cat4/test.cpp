@@ -25,7 +25,7 @@ private slots:
         
         QSKIP("");
         const QDir wd("test/ExtraFunctionWindow");
-        if (wd.exists() == false) { QDir("test").mkdir("ExtraFunctionWindow"); }
+        if (wd.exists() == false) { wd.mkpath("."); }
 
         constexpr size_t nf = 100;      // file count
         constexpr size_t np = 100;      // paragraph count of each file
