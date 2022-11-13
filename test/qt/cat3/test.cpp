@@ -57,15 +57,18 @@ private slots:
 
             wmm::DatabaseConsole database_console;
             { // signal test
+                constexpr size_t n = 1e6; // test count
                 static constexpr Qt::MouseButton mouse_keys[] = { Qt::MouseButton::LeftButton, Qt::MouseButton::RightButton, Qt::MouseButton::MiddleButton };
                 QSignalSpy spy(&database_console, SIGNAL(MouseDown()));
-                for (const auto m : mouse_keys) {
-                    QTest::mouseClick(&database_console, m);
-                    QTest::mouseDClick(&database_console, m);
-                    QTest::mousePress(&database_console, m);
-                    QTest::mouseRelease(&database_console, m);
+                for (size_t i = 0; i < n; ++i) {
+                    for (const auto m : mouse_keys) {
+                        QTest::mouseClick(&database_console, m);
+                        QTest::mouseDClick(&database_console, m);
+                        QTest::mousePress(&database_console, m);
+                        QTest::mouseRelease(&database_console, m);
+                    }
                 }
-                QCOMPARE(spy.count(), 9); // click, dclick, press
+                QCOMPARE(spy.count(), 9 * n); // click, dclick, press
             }
             std::vector<wmm::TreeEditor*> editor;
             for (size_t i = 0; i < nE; ++i) { 
