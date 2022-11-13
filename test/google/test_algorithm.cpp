@@ -4,6 +4,7 @@
 
 // Qt
 #include <QByteArray>
+#include <QDir>
 #include <QJsonDocument>
 
 // googletest
@@ -215,11 +216,18 @@ TEST(TestAlgorithm, ASCII) {
 TEST(TestAlgorithm, JSON) {
     constexpr size_t n = 500; // test count
     
+    QDir wd("test/JSON");
+    if (wd.exists() == false) { wd.mkpath("."); }
+
     for (size_t i = 0; i < n; ++i) {
         const auto json = QByteArray::fromStdString(tiny_random::chr::JSON());
         QJsonParseError e;
         const QJsonDocument d = QJsonDocument::fromJson(json, &e);
         EXPECT_EQ(e.error, QJsonParseError::NoError);
+
+        QFile json_file(wd.path() + "/" + QString::number(i) + ".json");
+        json_file.open(QIODeviceBase::OpenModeFlag::WriteOnly);
+        json_file.write(json);
     }
 }
 

@@ -306,8 +306,8 @@ TEST(JSONFormatter, Default) {
     GTEST_SKIP();
     // create test files
     std::filesystem::create_directory("test");
-    std::filesystem::create_directory("test/JSON");
-    const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSON")).string();
+    std::filesystem::create_directory("test/JSONFormatter");
+    const std::string pwd = std::filesystem::absolute(std::filesystem::path("test/JSONFormatter")).string();
 
     constexpr size_t N = 10; // number of test files
     
