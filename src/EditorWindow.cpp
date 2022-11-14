@@ -152,17 +152,17 @@ namespace WritingMaterialsManager {
     EditorWindow::PythonInteractorPage::PythonInteractorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         auto* const PyInteractor = new PythonInteractor;
         auto ShowPyInteractornWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("Python Interactor"); };
-        connect(PyInteractor->PyCommandForm, &TextField::MouseDown, this, [=]() {
+        connect(PyInteractor->PyCommandForm, &TextField::MouseDown, thisAtEditorWindow, [=]() {
             ShowPyInteractornWndTitle();
             OuterInstance->UpdateFileTypeLabel("Plain Text");
             OuterInstance->UpdateCharsetLabel("Unicode");
             });
-        connect(PyInteractor->CodeArea, &TextArea::MouseDown, this, [=]() {
+        connect(PyInteractor->CodeArea, &TextArea::MouseDown, thisAtEditorWindow, [=]() {
             ShowPyInteractornWndTitle();
             OuterInstance->UpdateFileTypeLabel("Python");
             OuterInstance->UpdateCharsetLabel("Unicode");
             });
-        connect(PyInteractor->ResultArea, &TextArea::MouseDown, this, [=]() {
+        connect(PyInteractor->ResultArea, &TextArea::MouseDown, thisAtEditorWindow, [=]() {
             ShowPyInteractornWndTitle();
             OuterInstance->UpdateFileTypeLabel("Plain Text");
             OuterInstance->UpdateCharsetLabel("<OS default charset>");
