@@ -29,11 +29,11 @@ namespace WritingMaterialsManager {
 
         QTabWidget* const TabView = new QTabWidget; {
             auto* const MDBCPage = new MongoConAndEditorPage(this);
-            auto* const AMDBCPage = new AnotherMongoConAndEditorPage(this);
+            //auto* const AMDBCPage = new AnotherMongoConAndEditorPage(this);
             auto* const EditorPage = new EditorOnlyPage(this);
             auto* const PyInteractorPage = new PythonInteractorPage(this);
             TabView->addTab(MDBCPage, "MongoDB Console");
-            TabView->addTab(AMDBCPage, "Another MongoDB Console");
+            //TabView->addTab(AMDBCPage, "Another MongoDB Console");
             TabView->addTab(EditorPage, "TreeEditor Only");
             TabView->addTab(PyInteractorPage, "Python Interactor");
         }
