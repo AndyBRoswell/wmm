@@ -77,22 +77,18 @@ namespace WritingMaterialsManager {
         using namespace std;
         using enum SupportedFileType;
 
-        try {
-            const auto I = FileTypeToEnumID.find(FileType);
-            if (I == FileTypeToEnumID.cend()) return; // not supported file type
-            switch (I->second) { // supported file type, set the corresponding formatter and highlighter
-            case JSON: case MongoDBExtendedJSON:
-                Formatter = make_shared<JSONFormatter>();
-                Highlighter = make_shared<JSONHighlighter>(RawView->document());
-                break;
-            }
-            this->FileType = I->first;
-            emit ShouldUpdateFileType();
-        }
-        catch (const out_of_range& e) {
+        const auto I = FileTypeToEnumID.find(FileType);
+        if (I == FileTypeToEnumID.cend()) { // not supported file type
             this->FileType = "/* File Type Not Supported */";
-            emit ShouldUpdateFileType();
         }
+        switch (I->second) { // supported file type, set the corresponding formatter and highlighter
+        case JSON: case MongoDBExtendedJSON:
+            Formatter = make_shared<JSONFormatter>();
+            Highlighter = make_shared<JSONHighlighter>(RawView->document());
+            this->FileType = I->first;
+            break;
+        }
+        emit ShouldUpdateFileType();
     }
 
     QByteArray TreeEditor::GetCharset() const { return Charset; }
