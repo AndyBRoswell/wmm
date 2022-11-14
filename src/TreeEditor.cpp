@@ -89,7 +89,7 @@ namespace WritingMaterialsManager {
             this->FileType = I->first;
             emit ShouldUpdateFileType();
         }
-        catch (const out_of_range& e) { qDebug() << "File type not supported:" << FileType; }
+        catch (const out_of_range& e) { qDebug() << "File type not supported: " << FileType; }
     }
 
     QByteArray TreeEditor::GetCharset() const { return Charset; }
@@ -111,7 +111,7 @@ namespace WritingMaterialsManager {
             Formatter->Format(PlainText);
             RawView->setPlainText(PlainText);
         }
-        catch (...) { // format failed
+        catch (const std::runtime_error& e) { // format failed
             RawView->setPlainText(PlainTextCopy); // restore the original text
         }
         Highlighter->setDocument(RawView->document());
@@ -168,7 +168,7 @@ namespace WritingMaterialsManager {
             FileContentsUTF16 = TextDecoder->toUnicode(FileContentsRaw);
             FileContentsUTF8 = FileContentsUTF16.toUtf8();
         }
-        RawView->setPlainText(FileContentsUTF16);
+        SetText(FileContentsUTF16);
         TreeModel->FromJSON(FileContentsUTF8);
         IntuitiveView->expandAll();
         IntuitiveView->resizeColumnToContents(0);
