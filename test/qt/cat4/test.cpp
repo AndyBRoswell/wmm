@@ -48,7 +48,7 @@ private slots:
                     }
                 }
                 test_doc.save();
-                expected_text.remove(expected_text.size() - 1, 1); // remove the trailing newline char
+                if (*expected_text.crbegin() == '\n') { expected_text.remove(expected_text.size() - 1, 1); }
             }
 
             doc_extract_page.OpenFile(file_name);
@@ -57,18 +57,24 @@ private slots:
                 QString ret;
                 ret.reserve(s.size());
                 for (auto c : s) {
-                    constexpr QChar::Category cats_to_be_removed[] = {
-                        QChar::Separator_Line, QChar::Separator_Paragraph, 
-                        QChar::Other_Control, QChar::Other_Format, QChar::Other_Surrogate, QChar::Other_PrivateUse, QChar::Other_NotAssigned,
-                    };
+                    //constexpr QChar::Category cats_to_be_removed[] = {
+                    //    QChar::Separator_Line, QChar::Separator_Paragraph, 
+                    //    QChar::Other_Control, QChar::Other_Format, QChar::Other_Surrogate, QChar::Other_PrivateUse, QChar::Other_NotAssigned,
+                    //};
+                    constexpr char16_t chrs_to_be_removed[] = { '\uFFFD', '\uFFFE', '\uFFFF', '\u0001', };
                     bool remove = false;
-                    for (const auto cat : cats_to_be_removed) { if (c.category() == cat) { remove = true; } }
+                    //for (const auto cat : cats_to_be_removed) { if (c.category() == cat) { remove = true; break; } }
+                    for (const auto chr : chrs_to_be_removed) { if (c == chr) { remove = true; break; } }
                     if (remove == false) { ret.push_back(c); }
                 }
                 return ret;
             };
             const auto actual_text = doc_text_with_special_char_removed();
             QCOMPARE(actual_text, expected_text);
+            //{
+            //    const bool ok = actual_text == expected_text;
+            //    QVERIFY(ok);
+            //}
         }
     }
 
