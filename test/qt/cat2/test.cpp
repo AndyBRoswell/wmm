@@ -204,10 +204,15 @@ private slots:
             constexpr size_t n = 1e3; // test count
 
             for (size_t i = 0; i < n; ++i) {
+                tree_editor.SetFileType("JSON");
+                QCOMPARE(tree_editor.GetFileType(), "JSON");
                 const auto invalid_file_type = QByteArray::fromStdString(tiny_random::chr::ASCII_string(1000));
                 tree_editor.SetFileType(invalid_file_type);
-                const auto invalid_JSON = QString::fromStdString(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, 1000ull)));
+                QCOMPARE(tree_editor.GetFileType(), "/* File Type Not Supported */");
+
+                const auto invalid_JSON = QString::fromStdString(tiny_random::chr::ASCII_string(tiny_random::number::integer(1ull, 1000ull)) + R"(,,<><<>><<<>>>\[,:.:]{:_:}[}{]..)");
                 tree_editor.SetText(invalid_JSON);
+                QCOMPARE(tree_editor.GetText(), invalid_JSON);
             }
         }
         { // TreeEditor::FromJSON

@@ -89,7 +89,10 @@ namespace WritingMaterialsManager {
             this->FileType = I->first;
             emit ShouldUpdateFileType();
         }
-        catch (const out_of_range& e) { qDebug() << "File type not supported: " << FileType; }
+        catch (const out_of_range& e) {
+            this->FileType = "/* File Type Not Supported */";
+            emit ShouldUpdateFileType();
+        }
     }
 
     QByteArray TreeEditor::GetCharset() const { return Charset; }
