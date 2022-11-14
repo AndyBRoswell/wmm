@@ -160,7 +160,7 @@ private slots:
         // signals
         qRegisterMetaType<wmm::TreeView>();
         QSignalSpy spy(&tree_view, SIGNAL(MouseDown()));
-        util::disable_test_info_output();
+        util::disable_test_info();
         for (size_t i = 0; i < n; ++i) {
             for (const auto m : mouse_keys) {
                 QTest::mouseClick(tree_view.viewport(), m);
@@ -169,7 +169,7 @@ private slots:
                 QTest::mouseRelease(tree_view.viewport(), m);
             }
         }
-        util::enable_test_info_output();
+        util::enable_test_info();
         QCOMPARE(spy.count(), 6 * n); // click, press
     }
 
@@ -180,7 +180,7 @@ private slots:
 
         wmm::QtTreeModel tree_model;
 
-        util::disable_test_info_output();
+        util::disable_test_info();
         for (size_t i = 0; i < n; ++i) {
             qDebug("[" + QByteArray::number(i + 1) + " / " + QByteArray::number(n) + "]");
             qDebug("Generating reference JSON ...");
@@ -193,7 +193,7 @@ private slots:
             QVERIFY(QtTreeModel_test(tree_model, test_JSON));
             qDebug("Congratulations: Reference JSON and generated JSON are equivalent, the tree model worked correctly.");
         }
-        util::enable_test_info_output();
+        util::enable_test_info();
     }
 
     void TreeEditor__open_JSON() {
