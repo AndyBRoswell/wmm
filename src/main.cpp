@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
         QApplication::setPalette(p);
     }
 
-    auto DataSourceManagerWnd = new class DataSourceManagerWindow;
-    DataSourceManagerWnd->showMaximized();
+    //auto DataSourceManagerWnd = new class DataSourceManagerWindow;
+    //DataSourceManagerWnd->showMaximized();
     auto EditorWnd = new class EditorWindow;
     EditorWnd->showMaximized();
     auto ExtFnWnd = new class ExtraFunctionWindow;
