@@ -32,7 +32,7 @@ namespace WritingMaterialsManager {
             auto* const EditorPage = new EditorOnlyPage(this);
             auto* const PyInteractorPage = new PythonInteractorPage(this);
             TabView->addTab(MDBCPage, "MongoDB Console");
-            TabView->addTab(EditorPage, "TreeEditor Only");
+            TabView->addTab(EditorPage, "Tree Editor Only");
             TabView->addTab(PyInteractorPage, "Python Interactor");
         }
         RootView->addWidget(TabView);
