@@ -25,10 +25,10 @@ private slots:
         const QDir wd("test/ExtraFunctionWindow");
         if (wd.exists() == false) { wd.mkpath("."); }
 
-        constexpr size_t nf = 100;      // file count
+        constexpr size_t nf = 10000;      // file count
         constexpr size_t np = 1;      // paragraph count of each file
         constexpr size_t nr = 1;      // run count of each paragraph
-        constexpr size_t lmax = 100;    // max length of random strings
+        constexpr size_t lmax = 10000;    // max length of random strings
 
         wmm::DocumentExtractPage doc_extract_page;
         QFile blank_source(wd.path() + "/blank.docx");
@@ -52,29 +52,28 @@ private slots:
             }
 
             doc_extract_page.OpenFile(file_name);
-            const auto doc_text_with_special_char_removed = [&]() {
-                const auto s = doc_extract_page.GetPlainTextFromOpenDocument();
-                QString ret;
-                ret.reserve(s.size());
-                for (auto c : s) {
-                    //constexpr QChar::Category cats_to_be_removed[] = {
-                    //    QChar::Separator_Line, QChar::Separator_Paragraph, 
-                    //    QChar::Other_Control, QChar::Other_Format, QChar::Other_Surrogate, QChar::Other_PrivateUse, QChar::Other_NotAssigned,
-                    //};
-                    constexpr char16_t chrs_to_be_removed[] = { '\uFFFD', '\uFFFE', '\uFFFF', '\u0001', };
-                    bool remove = false;
-                    //for (const auto cat : cats_to_be_removed) { if (c.category() == cat) { remove = true; break; } }
-                    for (const auto chr : chrs_to_be_removed) { if (c == chr) { remove = true; break; } }
-                    if (remove == false) { ret.push_back(c); }
-                }
-                return ret;
-            };
-            const auto actual_text = doc_text_with_special_char_removed();
+            //const auto doc_text_with_special_char_removed = [&]() {
+            //    const auto s = doc_extract_page.GetPlainTextFromOpenDocument();
+            //    QString ret;
+            //    ret.reserve(s.size());
+            //    for (auto c : s) {
+            //        //constexpr QChar::Category cats_to_be_removed[] = {
+            //        //    QChar::Separator_Line, QChar::Separator_Paragraph, 
+            //        //    QChar::Other_Control, QChar::Other_Format, QChar::Other_Surrogate, QChar::Other_PrivateUse, QChar::Other_NotAssigned,
+            //        //};
+            //        constexpr char16_t chrs_to_be_removed[] = { '\uFFFD', '\uFFFE', '\uFFFF', '\u0001', };
+            //        bool remove = false;
+            //        //for (const auto cat : cats_to_be_removed) { if (c.category() == cat) { remove = true; break; } }
+            //        for (const auto chr : chrs_to_be_removed) { if (c == chr) { remove = true; break; } }
+            //        if (remove == false) { ret.push_back(c); }
+            //    }
+            //    return ret;
+            //};
+            //const auto actual_text = doc_text_with_special_char_removed();
+            const auto actual_text = doc_extract_page.GetPlainTextFromOpenDocument();
             QCOMPARE(actual_text, expected_text);
-            //{
-            //    const bool ok = actual_text == expected_text;
-            //    QVERIFY(ok);
-            //}
+            //const bool ok = actual_text == expected_text;
+            //QVERIFY(ok);
         }
     }
 
