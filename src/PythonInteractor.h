@@ -17,7 +17,8 @@ namespace WritingMaterialsManager {
 
         void SendResult();
     public slots:
-        void ChangeInterpreter(const QString& PythonCommand = DefaultInterpreter);
+        QString GetInterpreter() const noexcept;
+        void SetInterpreter(const QString& PythonCommand = DefaultInterpreter) noexcept;
         void Execute(const QString& Code);
     signals:
         void MoreResult(const QString& Result);

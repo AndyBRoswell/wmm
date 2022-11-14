@@ -149,13 +149,24 @@ private slots:
             { "3.8", std::make_shared<wmm::PythonAccessor>("py/venv/3.8/Scripts/python") },
         };
         QString result;
-
         for (const auto& p : Python_accessor) {
             QObject::connect(p.second.get(), &wmm::PythonAccessor::MoreResult, [&](const QString& result_fragment) {
                 result += result_fragment;
                 });
         }
-
+        { // set interpreter
+            constexpr size_t n = 1e3; // test count
+            for (const auto& p : Python_accessor) {
+                const auto old_interpreter_path = p.second->GetInterpreter();
+                for (size_t i = 0; i < n; ++i) {
+                    const auto interpreter_path = QString::fromStdString(tiny_random::chr::ASCII_string(32));
+                    p.second->SetInterpreter(interpreter_path);
+                    QCOMPARE(p.second->GetInterpreter(), interpreter_path);
+                }
+                p.second->SetInterpreter(old_interpreter_path);
+                QCOMPARE(p.second->GetInterpreter(), old_interpreter_path);
+            }
+        }
         { // hello world
             for (const auto& e : Python_accessor) {
                 const auto p = e.second.get();

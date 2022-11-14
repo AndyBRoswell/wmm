@@ -11,7 +11,7 @@ namespace WritingMaterialsManager {
         PyAccessor.moveToThread(&PyAccessThread);
         connect(&PyAccessThread, &QThread::finished, &PyAccessor, &QObject::deleteLater);
         connect(ExecuteButton, &QPushButton::clicked, this, &PythonInteractor::ExecuteCode);
-        connect(PyCommandForm, &TextField::textChanged, &PyAccessor, &PythonAccessor::ChangeInterpreter);
+        connect(PyCommandForm, &TextField::textChanged, &PyAccessor, &PythonAccessor::SetInterpreter);
         connect(this, &PythonInteractor::NewCode, &PyAccessor, &PythonAccessor::Execute);
         connect(&PyAccessor, &PythonAccessor::MoreResult, ResultArea, &TextArea::appendPlainText);
         PyAccessThread.start();
@@ -54,9 +54,8 @@ namespace WritingMaterialsManager {
 
     PythonAccessor::PythonAccessor(const QString& PythonCommand) : PythonCommand(PythonCommand) {}
 
-    void PythonAccessor::ChangeInterpreter(const QString& PythonCommand) {
-        this->PythonCommand = PythonCommand;
-    }
+    QString PythonAccessor::GetInterpreter() const noexcept { return PythonCommand; }
+    void PythonAccessor::SetInterpreter(const QString& PythonCommand) noexcept { this->PythonCommand = PythonCommand; }
 
     void PythonAccessor::SendResult() {
         using namespace std::chrono;

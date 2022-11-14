@@ -63,7 +63,7 @@ Usage
         }
 "@
 
-if ($help -eq $true) {
+if (($help -eq $true) -or ($tasks.Length -eq 0)) {
     echo $usage
     exit
 }
