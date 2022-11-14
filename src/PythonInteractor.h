@@ -11,11 +11,13 @@ namespace WritingMaterialsManager {
     class PythonAccessor : public QObject {
     Q_OBJECT
     public:
-        explicit PythonAccessor(const QString& PythonCommand = "python");
+        static constexpr const char* const DefaultInterpreter = "py/venv/latest/scripts/python";
+
+        explicit PythonAccessor(const QString& PythonCommand = DefaultInterpreter);
 
         void SendResult();
     public slots:
-        void ChangeInterpreter(const QString& PythonCommand = "python");
+        void ChangeInterpreter(const QString& PythonCommand = DefaultInterpreter);
         void Execute(const QString& Code);
     signals:
         void MoreResult(const QString& Result);
@@ -33,7 +35,7 @@ namespace WritingMaterialsManager {
         TextArea* const CodeArea;
         TextArea* const ResultArea;
 
-        explicit PythonInteractor(const QString& PythonCommand = "py/venv/latest/scripts/python", QWidget* const Parent = nullptr);
+        explicit PythonInteractor(const QString& PythonCommand = PythonAccessor::DefaultInterpreter, QWidget* const Parent = nullptr);
         ~PythonInteractor();
 
         void ExecuteCode();
