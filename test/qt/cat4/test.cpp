@@ -25,10 +25,10 @@ private slots:
         const QDir wd("test/ExtraFunctionWindow");
         if (wd.exists() == false) { wd.mkpath("."); }
 
-        constexpr size_t nf = 10000;      // file count
+        constexpr size_t nf = 1000000;      // file count
         constexpr size_t np = 1;      // paragraph count of each file
         constexpr size_t nr = 1;      // run count of each paragraph
-        constexpr size_t lmax = 10000;    // max length of random strings
+        constexpr size_t lmax = 100;    // max length of random strings
 
         wmm::DocumentExtractPage doc_extract_page;
         QFile blank_source(wd.path() + "/blank.docx");
@@ -72,7 +72,7 @@ private slots:
             //const auto actual_text = doc_text_with_special_char_removed();
             const auto actual_text = doc_extract_page.GetPlainTextFromOpenDocument();
             QCOMPARE(actual_text, expected_text);
-            //const bool ok = actual_text == expected_text;
+            //const bool ok = actual_text == expected_text; // this line is for conditional breakpoints
             //QVERIFY(ok);
         }
     }
