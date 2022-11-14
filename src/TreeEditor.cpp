@@ -80,6 +80,7 @@ namespace WritingMaterialsManager {
         const auto I = FileTypeToEnumID.find(FileType);
         if (I == FileTypeToEnumID.cend()) { // not supported file type
             this->FileType = "/* File Type Not Supported */";
+            return;
         }
         switch (I->second) { // supported file type, set the corresponding formatter and highlighter
         case JSON: case MongoDBExtendedJSON:

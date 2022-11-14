@@ -90,12 +90,12 @@ namespace WritingMaterialsManager {
             ShowMongoDBInWndTitle();
             thisAtEditorWindow->UpdateFileTypeLabel("JavaScript");
             thisAtEditorWindow->UpdateCharsetLabel("UTF-8");
-        });
+            });
         {
             auto UpdateStatusInfo = [=]() {
+                ShowMongoDBInWndTitle();
                 thisAtEditorWindow->UpdateFileTypeLabel("Plain Text");
                 thisAtEditorWindow->UpdateCharsetLabel("Unicode");
-                ShowMongoDBInWndTitle();
             };
             connect(Console->URLForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
             connect(Console->mongoshCommandForm, &TextField::MouseDown, thisAtEditorWindow, UpdateStatusInfo);
@@ -151,21 +151,22 @@ namespace WritingMaterialsManager {
 
     EditorWindow::PythonInteractorPage::PythonInteractorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         auto* const PyInteractor = new PythonInteractor;
-        connect(PyInteractor->PyCommandForm, &TextField::MouseDown, this,
-                [OuterInstance]() {
-                    OuterInstance->UpdateFileTypeLabel("Plain Text");
-                    OuterInstance->UpdateCharsetLabel("Unicode");
-                });
-        connect(PyInteractor->CodeArea, &TextArea::MouseDown, this,
-                [OuterInstance]() {
-                    OuterInstance->UpdateFileTypeLabel("Python");
-                    OuterInstance->UpdateCharsetLabel("Unicode");
-                });
-        connect(PyInteractor->ResultArea, &TextArea::MouseDown, this,
-                [OuterInstance]() {
-                    OuterInstance->UpdateFileTypeLabel("Plain Text");
-                    OuterInstance->UpdateCharsetLabel("<OS default charset>");
-                });
+        auto ShowPyInteractornWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("Python Interactor"); };
+        connect(PyInteractor->PyCommandForm, &TextField::MouseDown, this, [=]() {
+            ShowPyInteractornWndTitle();
+            OuterInstance->UpdateFileTypeLabel("Plain Text");
+            OuterInstance->UpdateCharsetLabel("Unicode");
+            });
+        connect(PyInteractor->CodeArea, &TextArea::MouseDown, this, [=]() {
+            ShowPyInteractornWndTitle();
+            OuterInstance->UpdateFileTypeLabel("Python");
+            OuterInstance->UpdateCharsetLabel("Unicode");
+            });
+        connect(PyInteractor->ResultArea, &TextArea::MouseDown, this, [=]() {
+            ShowPyInteractornWndTitle();
+            OuterInstance->UpdateFileTypeLabel("Plain Text");
+            OuterInstance->UpdateCharsetLabel("<OS default charset>");
+            });
         RootView->addWidget(PyInteractor);
     }
 }
