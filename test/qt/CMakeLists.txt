@@ -139,6 +139,7 @@ target_link_libraries(wmmqtest-cat3 PUBLIC
 
 file(GLOB_RECURSE cat4-sources
     cat4/*.c*
+    ${common_test_utils}
 )
 file(GLOB_RECURSE cat4-headers
     cat4/*.h*
