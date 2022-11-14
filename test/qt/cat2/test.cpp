@@ -201,7 +201,7 @@ private slots:
 
         wmm::TreeEditor tree_editor;
         { // exception test
-            constexpr size_t n = 1e3; // test count
+            constexpr size_t n = 1e4; // test count
 
             for (size_t i = 0; i < n; ++i) {
                 tree_editor.SetFileType("JSON");
