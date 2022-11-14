@@ -31,6 +31,7 @@ private slots:
         constexpr size_t lmax = 100;    // max length of random strings
 
         wmm::DocumentExtractPage doc_extract_page;
+        QSignalSpy spy(&doc_extract_page, SIGNAL(DocumentOpened(const QString&)));
         QFile blank_source(wd.path() + "/blank.docx");
         for (size_t i = 0; i < nf; ++i) {
             const auto file_name = wd.path() + "/" + QString::number(util::get_tick_count()) + ".docx";
@@ -52,6 +53,7 @@ private slots:
             }
 
             doc_extract_page.OpenFile(file_name);
+            QCOMPARE(spy.count(), i + 1);
             //const auto doc_text_with_special_char_removed = [&]() {
             //    const auto s = doc_extract_page.GetPlainTextFromOpenDocument();
             //    QString ret;
