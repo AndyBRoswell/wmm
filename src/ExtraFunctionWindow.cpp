@@ -18,7 +18,6 @@ namespace WritingMaterialsManager {
         setCentralWidget(CentralWidget);
 
         MenuBar->setObjectName("MenuBar");
-        MenuBar->setGeometry(0, 0, 1280, 21);
         setMenuBar(MenuBar);
         
         StatusBar->setObjectName("StatusBar");
