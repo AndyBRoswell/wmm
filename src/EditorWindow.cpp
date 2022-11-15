@@ -61,11 +61,7 @@ namespace WritingMaterialsManager {
     void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
 
     void EditorWindow::UpdateCharsetLabel() {
-        qDebug("focusWidget() == " + QByteArray::number(reinterpret_cast<uintptr_t>(focusWidget())));
-        qDebug("sender() == " + QByteArray::number(reinterpret_cast<uintptr_t>(sender())));
-        /*if (focusWidget() == sender())*/ { 
-            CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset());
-        }
+        /*if (focusWidget() == sender())*/ { CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset()); }
     }
     void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
 /// ----------------------------------------------------------------
