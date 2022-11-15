@@ -49,19 +49,23 @@ namespace WritingMaterialsManager {
     EditorWindow::~EditorWindow() {}
 
     void EditorWindow::UpdateWindowTitleWithPathName() {
-        if (focusWidget() == sender()) setWindowTitle(tr(DefaultWindowTitlePrefix) + static_cast<TreeEditor*>(sender())->GetPathName());
+        /*if (focusWidget() == sender())*/ { setWindowTitle(tr(DefaultWindowTitlePrefix) + static_cast<TreeEditor*>(sender())->GetPathName()); }
     }
     void EditorWindow::UpdateWindowTitleWithSuffix(const QString& Suffix) {
-        if (focusWidget() == sender()) setWindowTitle(tr(DefaultWindowTitlePrefix) + Suffix);
+        /*if (focusWidget() == sender())*/ { setWindowTitle(tr(DefaultWindowTitlePrefix) + Suffix); }
     }
 
     void EditorWindow::UpdateFileTypeLabel() {
-        if (focusWidget() == sender()) FileTypeLabel->setText(static_cast<TreeEditor*>(sender())->GetFileType());
+        /*if (focusWidget() == sender())*/ { FileTypeLabel->setText(static_cast<TreeEditor*>(sender())->GetFileType()); }
     }
     void EditorWindow::UpdateFileTypeLabel(const QString& FileType) { FileTypeLabel->setText(FileType); }
 
     void EditorWindow::UpdateCharsetLabel() {
-        if (focusWidget() == sender()) CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset());
+        qDebug("focusWidget() == " + QByteArray::number(reinterpret_cast<uintptr_t>(focusWidget())));
+        qDebug("sender() == " + QByteArray::number(reinterpret_cast<uintptr_t>(sender())));
+        /*if (focusWidget() == sender())*/ { 
+            CharsetLabel->setText(static_cast<TreeEditor*>(sender())->GetCharset());
+        }
     }
     void EditorWindow::UpdateCharsetLabel(const QString& Charset) { CharsetLabel->setText(Charset); }
 /// ----------------------------------------------------------------
