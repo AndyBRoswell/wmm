@@ -43,7 +43,7 @@ namespace WritingMaterialsManager {
         TextField* const URLForm = new TextField(MongoDBAccessor::LocalMongoDBURI);
         TextField* const mongoshCommandForm;
         QPushButton* const ExecuteButton = new QPushButton("▶");
-        TextArea* const CommandForm = new TextArea("show dbs\n");
+        TextArea* const CommandForm = new TextArea("show dbs");
 
         explicit MongoDBConsole(const QString& mongoshCommand = "mongosh", QWidget* const Parent = nullptr);
         ~MongoDBConsole();

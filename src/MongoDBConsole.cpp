@@ -54,9 +54,16 @@ namespace WritingMaterialsManager {
         // Here we don't call MongoShAccessor::Execute(const QString& Command) directly.
         // Instead, we sent another signal 'cause parameters of connected signals and slots must match 
         // and QPushButton::clicked() can't carry a string (which is for the command to be executed).
-        qDebug() << "Attempting to send mongosh command" << CommandForm->toPlainText() << "to MongoDBShellAccessor ...";
-        emit NewShellCommand(CommandForm->toPlainText());
-        qDebug() << "mongosh command was sent to MongoDBShellAccessor.";
+        QString Command = CommandForm->toPlainText();
+        if (*Command.crbegin() != '\n') { Command.push_back('\n'); } // keep a single enter at the end
+        else {
+            for (auto i = Command.rbegin(); i != Command.rend(); ++i) {
+                if (*i == '\n') { Command.remove(*i); }
+                else { break; }
+            }
+            Command.push_back('\n');
+        }
+        emit NewShellCommand(Command);
     }
 
     void MongoDBConsole::ArrangeContentViewForAssociatedEditors() {

@@ -80,7 +80,9 @@ namespace WritingMaterialsManager {
 
     EditorWindow::MongoConAndEditorPage::MongoConAndEditorPage(EditorWindow* const OuterInstance, QWidget* const Parent) : Page(OuterInstance, Parent) {
         MongoDBConsole* const Console = new MongoDBConsole("mongosh", this);
-        TreeEditor* const Editor = new TreeEditor;
+        TreeEditor* const Editor = new TreeEditor; {
+            Editor->TabView->setCurrentIndex(1);
+        }
         Console->AddAssociatedEditor(Editor);
 
         auto ShowMongoDBInWndTitle = [=, this]() { this->thisAtEditorWindow->UpdateWindowTitleWithSuffix("MongoDB Console"); };
