@@ -11,7 +11,7 @@ namespace WritingMaterialsManager {
     class PythonAccessor : public QObject {
     Q_OBJECT
     public:
-        static constexpr const char* const DefaultInterpreter = "py/venv/latest/scripts/python";
+        static constexpr const char* const DefaultInterpreter = "py/venv/latest/Scripts/python";
 
         explicit PythonAccessor(const QString& PythonCommand = DefaultInterpreter);
 
