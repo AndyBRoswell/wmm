@@ -19,5 +19,9 @@ CMakeLists.txt.user
 /cmake-build-minsizerel/*
 /out/*
 
+# Install
+/install/*
+/inst/*
+
 # 3rd libraries
 /3rd/*
