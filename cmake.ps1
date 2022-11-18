@@ -14,7 +14,7 @@ Usage
         QtBinaryDir
             The binary directory (ABSOLUTE) of Qt. This is determined by the path you installed the Qt binaries and the compiler (MSVC / G++) you choosed.
         InstallPrefix
-            The install prefix of each build type of WMM.
+            The install prefix (absolute or relative) of each build type of WMM.
         BuildTypes
             The build types to be built and installed.
         Help
@@ -40,7 +40,7 @@ cd build
 foreach ($BuildType in $BuildTypes) {
     if ((test-path $BuildType) -eq $false) { mkdir $BuildType }
     cd $BuildType
-    cmake ../.. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$QtBinDir;$shsd/3rd/install/MSVC/googltest-main/$BuildType"
+    cmake ../.. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$QtBinDir;$shsd/3rd/install/MSVC/googletest-main/$BuildType"
     cmake --build . --config $BuildType -j
     $prefix = (split-path -path $InstallPrefix -IsAbsolute) ? "$cwd/" : ""
     $suffix = ($BuildTypes.Count -gt 1) ? "/$BuildType" : ""
