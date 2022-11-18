@@ -39,13 +39,11 @@ if ((test-path build) -eq $false) { mkdir build }
 cd build
 foreach ($BuildType in $BuildTypes) {
     if ((test-path $BuildType) -eq $false) { mkdir $BuildType }
-    cd $BuildType    
-    cmake .. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$QtBirDir;../3rd/install/MSVC/googltest-main/$BuildType"
+    cd $BuildType
+    cmake ../.. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$QtBirDir;../3rd/install/MSVC/googltest-main/$BuildType"
     cmake --build . --config $BuildType -j
-    $prefix = ""
-    $suffix = ""
-    if ((split-path -path $InstallPrefix -IsAbsolute) -eq $true) { $prefix = $cwd }
-    if ($BuildTypes.Count -gt 1) { $suffix = $BuildType }
+    $prefix = (split-path -path $InstallPrefix -IsAbsolute) ? "$cwd/" : ""
+    $suffix = ($BuildTypes.Count -gt 1) ? "/$BuildType" : ""
     cmake --install . --config $BuildType --prefix "$prefix$InstallPrefix$suffix"
     cd ..
 }
