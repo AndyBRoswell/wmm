@@ -32,6 +32,7 @@ if ([string]::IsNullOrEmpty($QtBinDir) -or $Help) {
 
 $cwd = $pwd
 $shsd = $PSScriptRoot
+$depd = "$shsd/3rd/install/MSVC"
 
 cd $shsd
 if ($BuildTypes -eq $null) { $BuildTypes = 'Debug', 'Release', 'RelWithDebInfo', 'MinSizeRel' }
@@ -40,7 +41,9 @@ cd build
 foreach ($BuildType in $BuildTypes) {
     if ((test-path $BuildType) -eq $false) { mkdir $BuildType }
     cd $BuildType
-    cmake ../.. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$QtBinDir;$shsd/3rd/install/MSVC/googletest-main/$BuildType"
+    $CMakePrefixPath = "$QtBinDir;" + "$depd/googletest-main/$BuildType;" + "$depd/mongo-c-driver-1.22.2/$BuildType/lib;" + "$depd/mongo-cxx-driver-r3.7.0/$BuildType/lib;" + "$depd/duckx-1.2.2/$BuildType/lib;"
+    echo $CMakePrefixPath
+    cmake ../.. -DCMAKE_BUILD_TYPE=$BuildType -DCMAKE_PREFIX_PATH="$CMakePrefixPath"
     cmake --build . --config $BuildType -j
     $prefix = (split-path -path $InstallPrefix -IsAbsolute) ? "$cwd/" : ""
     $suffix = ($BuildTypes.Count -gt 1) ? "/$BuildType" : ""
