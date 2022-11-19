@@ -224,6 +224,7 @@ private slots:
             const QDir wd("test/TreeEditor");
             const QStringList test_file_entry = wd.entryList({ "*.json" });
 
+            util::disable_test_info();
             for (auto i = 0; i < test_file_entry.size(); ++i) {
                 const auto& file_name = test_file_entry[i];
                 qDebug("[" + QByteArray::number(i) + "] " + "testing " + file_name.toUtf8());
@@ -258,6 +259,7 @@ private slots:
                 signal_spy_ShouldUpdateFileType.clear();
                 signal_spy_ShouldUpdateCharset.clear();
             }
+            util::enable_test_info();
         }
     }
 
