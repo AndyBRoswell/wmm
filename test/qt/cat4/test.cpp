@@ -25,7 +25,7 @@ private slots:
         const QDir wd("test/ExtraFunctionWindow");
         if (wd.exists() == false) { wd.mkpath("."); }
 
-        constexpr size_t nf = 1000;      // file count
+        constexpr size_t nf = 1000;     // file count
         constexpr size_t np = 100;      // paragraph count of each file
         constexpr size_t nr = 100;      // run count of each paragraph
         constexpr size_t lmax = 100;    // max length of random strings
